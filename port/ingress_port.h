@@ -3,6 +3,6 @@
 
 class IngressPort {
   public:
-    void RxBatch() = 0;
+    void RxBurst() = 0;
 };
 #endif // _INGRESS_PORT_H_

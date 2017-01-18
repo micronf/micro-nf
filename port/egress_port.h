@@ -1,8 +1,10 @@
 #ifndef _EGRESS_PORT_H_
 #define _EGRESS_PORT_H_
 
+#include <vector>
+
 class EgressPort {
   public:
-    void TxBatch() = 0;
+    void TxBurst() = 0;
 };
 #endif // _EGRESS_PORT_H_
