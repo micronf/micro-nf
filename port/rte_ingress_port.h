@@ -7,13 +7,15 @@
 #include <rte_ring.h>
 
 class RteIngressPort : public IngressPort {
-  public:
-    RteIngressPort() : rx_ring_(nullptr) {}
-    RteIngressPort(const std::string& ring_id);
-    inline struct rte_mbuf** RxBurst(int burst_size) override;
-    virtual ~RteIngressPort() {}
-  private:
-    rte_ring* rx_ring_;
+ public:
+  RteIngressPort() : rx_ring_(nullptr) {}
+  RteIngressPort(const std::string& ring_id, const unsigned int& port_id);
+  inline void** RxBurst(int burst_size);
+  virtual ~RteIngressPort() {}
+
+ private:
+  rte_ring* rx_ring_;
+  unsigned int port_id_;
 };
 
-#endif // _RTE_INGRESS_PORT_H_
+#endif  // _RTE_INGRESS_PORT_H_

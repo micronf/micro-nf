@@ -7,8 +7,10 @@
 int main(int argc, char* argv[]) {
   rte_eal_init(argc, argv);
   PacketProcessorConfig config;
-  HelloWorld hw_processor;
-  hw_processor.Init(config);
-  hw_processor.Run();
+  config.add_ingress_queue_id("queue0");
+  config.add_egress_queue_id("queue1");
+  MacSwapper mac_swapper;
+  mac_swapper.Init(config);
+  mac_swapper.Run();
   return 0;
 }

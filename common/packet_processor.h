@@ -26,8 +26,8 @@ class PacketProcessor {
     std::string instance_id_;
     int num_ingress_ports_;
     int num_egress_ports_;
-    std::vector<std::unique_ptr<IngressPortType> > ingress_ports_;
-    std::vector<std::unique_ptr<EgressPortType> > egress_ports_;
+    std::vector<IngressPortType> ingress_ports_;
+    std::vector<EgressPortType> egress_ports_;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {
