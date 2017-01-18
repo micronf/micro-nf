@@ -1,5 +1,5 @@
 #include "null_ingress_port.h"
 
-void** RxBurst(int burst_size) {
+void** NullIngressPort::RxBurst(int burst_size) {
   return nullptr;
 }

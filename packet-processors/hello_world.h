@@ -5,11 +5,12 @@
 
 class HelloWorld : public PacketProcessor <NullIngressPort, NullEgressPort> {
   public:
-    void HelloWorld() {};
-    void Init(const PacketProcessorConfig& config) override;
-    void Run() override;
-    void FlushState() override;
-    void RecoverState() override;
-}
+    HelloWorld() {};
+    virtual void Init(const PacketProcessorConfig& config);
+    virtual void Run();
+    virtual void FlushState();
+    virtual void RecoverState();
+    virtual ~HelloWorld() {}
+};
 
 #endif // _HELLO_WORLD_H_
