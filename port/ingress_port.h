@@ -3,6 +3,6 @@
 
 class IngressPort {
   public:
-    void RxBurst() = 0;
+    virtual void** RxBurst(uint16_t burst_size) = 0;
 };
 #endif // _INGRESS_PORT_H_
