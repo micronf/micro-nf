@@ -5,6 +5,6 @@
 
 class EgressPort {
   public:
-    virtual void** TxBurst(int burst_size) = 0;
+    virtual int TxBurst(void** packets, int burst_size) = 0;
 };
 #endif // _EGRESS_PORT_H_

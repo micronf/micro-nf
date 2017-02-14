@@ -8,11 +8,11 @@
 class MacSwapper : public PacketProcessor <RteIngressPort, RteEgressPort> {
   public:
     MacSwapper() {}
-    virtual void Init(PacketProcessorConfig& config);
+    virtual void Init(const PacketProcessorConfig& config);
     virtual void Run();
     virtual void FlushState();
     virtual void RecoverState();
-    virtual ~MacSwapper();
-}
+    virtual ~MacSwapper() {}
+};
 
 #endif // _MAC_SWAPPER_H_

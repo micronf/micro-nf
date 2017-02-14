@@ -12,7 +12,7 @@ class RteEgressPort : public EgressPort {
  public:
   RteEgressPort() : tx_ring_(nullptr) {}
   RteEgressPort(const std::string& queue_id, const unsigned int& port_id);
-  int TxBurst(void** packets, int burst_size);
+  virtual int TxBurst(void** packets, int burst_size);
 
  private:
   rte_ring* tx_ring_;

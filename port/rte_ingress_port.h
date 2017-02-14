@@ -5,12 +5,13 @@
 
 #include <rte_mbuf.h>
 #include <rte_ring.h>
+#include <string>
 
 class RteIngressPort : public IngressPort {
  public:
   RteIngressPort() : rx_ring_(nullptr) {}
   RteIngressPort(const std::string& ring_id, const unsigned int& port_id);
-  inline void** RxBurst(int burst_size);
+  void** RxBurst(int burst_size);
   virtual ~RteIngressPort() {}
 
  private:
