@@ -6,7 +6,7 @@
 class NullEgressPort : public EgressPort {
   public:
     NullEgressPort() {}
-    virtual int TxBurst(void** packets, int burst_size);
+    int TxBurst(void** packets, int burst_size) override;
     virtual ~NullEgressPort() {}
 };
 #endif // _NULL_EGRESS_PORT_H_

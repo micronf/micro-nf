@@ -11,7 +11,7 @@ class RteIngressPort : public IngressPort {
  public:
   RteIngressPort() : rx_ring_(nullptr) {}
   RteIngressPort(const std::string& ring_id, const unsigned int& port_id);
-  void** RxBurst(int burst_size);
+  void** RxBurst(int burst_size) override;
   virtual ~RteIngressPort() {}
 
  private:
