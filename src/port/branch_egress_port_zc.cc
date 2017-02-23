@@ -14,7 +14,7 @@ BranchEgressPortZC::BranchEgressPortZC(
   }
 }
 
-inline int BranchEgressPortZC::TxBurst(std::array<struct rte_mbuf*, TX_BURST_SIZE>& packets) {
+inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t& packets) {
   // Embed bitmap within the metadata area of each mbuf. i.e., set
   // kNumBitmapEntries bytes to 0.
   for (int i = 0; i < packets.size(); ++i) {
