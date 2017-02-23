@@ -1,22 +1,19 @@
 #ifndef _RTE_INGRESS_PORT_H_
 #define _RTE_INGRESS_PORT_H_
 
-#include "ingress_port.h"
+#include "port.h"
 
-#include <rte_mbuf.h>
-#include <rte_ring.h>
 #include <string>
 
 class RteIngressPort : public IngressPort {
- public:
+public:
   RteIngressPort() : rx_ring_(nullptr) {}
-  RteIngressPort(const std::string& ring_id, const unsigned int& port_id);
-  void** RxBurst(int burst_size) override;
+  RteIngressPort(const unsigned int port_id, const std::string &ring_id);
+  int RxBurst(std::array<struct rte_mbuf *, RX_BURST_SIZE> &packets) override;
   virtual ~RteIngressPort() {}
 
- private:
-  rte_ring* rx_ring_;
-  unsigned int port_id_;
+private:
+  rte_ring *rx_ring_;
 };
 
-#endif  // _RTE_INGRESS_PORT_H_
+#endif // _RTE_INGRESS_PORT_H_
