@@ -1,21 +1,17 @@
 #ifndef _RTE_EGRESS_PORT_H_
 #define _RTE_EGRESS_PORT_H_
 
-#include "egress_port.h"
-
-#include <rte_mbuf.h>
-#include <rte_ring.h>
+#include "port.h"
 
 #include <string>
 
 class RteEgressPort : public EgressPort {
- public:
+public:
   RteEgressPort() : tx_ring_(nullptr) {}
-  RteEgressPort(const std::string& queue_id, const unsigned int& port_id);
-  int TxBurst(void** packets, int burst_size) override;
+  RteEgressPort(const unsigned int port_id, const std::string &queue_id);
+  int TxBurst(std::array<struct rte_mbuf *, TX_BURST_SIZE> &packets) override;
 
- private:
-  rte_ring* tx_ring_;
-  unsigned int port_id_;
+private:
+  rte_ring *tx_ring_;
 };
-#endif  // _RTE_EGRESS_PORT_H_
+#endif // _RTE_EGRESS_PORT_H_
