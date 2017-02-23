@@ -7,7 +7,7 @@ RteEgressPort::RteEgressPort(const unsigned int port_id,
 }
 
 inline int
-RteEgressPort::TxBurst(std::array<struct rte_mbuf *, TX_BURST_SIZE> &packets) {
+RteEgressPort::TxBurst(tx_pkt_array_t &packets) {
   int num_tx = rte_ring_sp_enqueue_burst(
       this->tx_ring_, reinterpret_cast<void **>(packets.data()), TX_BURST_SIZE);
   return num_tx;

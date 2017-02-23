@@ -8,8 +8,8 @@
 class RteEgressPort : public EgressPort {
 public:
   RteEgressPort() : tx_ring_(nullptr) {}
-  RteEgressPort(const unsigned int port_id, const std::string &queue_id);
-  int TxBurst(std::array<struct rte_mbuf *, TX_BURST_SIZE> &packets) override;
+  RteEgressPort(const unsigned int port_id, const std::string &ring_id);
+  int TxBurst(tx_pkt_array_t &packets) override;
 
 private:
   rte_ring *tx_ring_;
