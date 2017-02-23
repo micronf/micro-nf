@@ -3,7 +3,6 @@
 
 #include "egress_port.h"
 
-#include <rte_ring.h>
 #include <string>
 #include <vector>
 
@@ -12,7 +11,7 @@ public:
   BranchEgressPortZC();
   BranchEgressPortZC(int num_branches,
                      const std::vector<std::string> &ring_ids);
-  int TxBurst(void **packets, int burst_size) override;
+  int TxBurst(std::array<struct rte_mbuf*, TX_BURST_SIZE>& packets) override;
 
 private:
   // Number of microservices this egress port is connected to.
