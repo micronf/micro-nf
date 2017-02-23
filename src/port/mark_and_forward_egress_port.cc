@@ -8,7 +8,8 @@ MarkAndForwardEgressPort::MarkAndForwardEgressPort() {
   this->tx_ring_ = nullptr;
 }
 
-MarkAndForwardEgressPort::MarkAndForwardEgressPort(int port_id, const std::string& ring_id) {
+MarkAndForwardEgressPort::MarkAndForwardEgressPort(int port_id,
+                                                   const std::string &ring_id) {
   this->port_id_ = port_id;
   this->tx_ring_ = rte_ring_lookup(ring_id.c_str());
   this->bitmap_index_ = port_id >> 3;
@@ -20,9 +21,9 @@ int MarkAndForwardEgressPort::TxBurst(void **packets, int burst_size) {
   for (int i = 0; i < burst_size; ++i) {
     char *mdata_ptr = reinterpret_cast<char *>(
         reinterpret_cast<unsigned long>(tx_mbufs[i]) + sizeof(struct rte_mbuf));
-    mdata_ptr[this->bitmap_index_] |= (1<<this->bitmap_offset_);
+    mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);
   }
-  int num_tx = 
-    rte_ring_sp_enqueue_burst(this->tx_ring_, (void**)tx_mbufs, burst_size);
+  int num_tx =
+      rte_ring_sp_enqueue_burst(this->tx_ring_, (void **)tx_mbufs, burst_size);
   return num_tx;
 }
