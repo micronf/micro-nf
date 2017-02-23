@@ -5,8 +5,8 @@
 
 BranchEgressPortZC::BranchEgressPortZC() { this->num_branches_ = 0; }
 
-BranchEgressPortZC::BranchEgressPortZC(int num_branches,
-                                       const std::vector<std::string> &ring_ids) {
+BranchEgressPortZC::BranchEgressPortZC(
+    int num_branches, const std::vector<std::string> &ring_ids) {
   this->num_branches_ = num_branches;
   this->num_bitmap_entries_ = num_branches >> 3 + (num_branches & 8) ? 1 : 0;
   for (auto &ring_id : ring_ids) {
