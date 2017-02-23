@@ -16,14 +16,13 @@ MarkAndForwardEgressPort::MarkAndForwardEgressPort(int port_id,
   this->bitmap_offset_ = port_id & 8;
 }
 
-int MarkAndForwardEgressPort::TxBurst(void **packets, int burst_size) {
-  struct rte_mbuf **tx_mbufs = reinterpret_cast<struct rte_mbuf **>(packets);
-  for (int i = 0; i < burst_size; ++i) {
+int MarkAndForwardEgressPort::TxBurst(tx_pkt_array_t& packets) {
+  for (int i = 0; i < packets.size(); ++i) {
     char *mdata_ptr = reinterpret_cast<char *>(
-        reinterpret_cast<unsigned long>(tx_mbufs[i]) + sizeof(struct rte_mbuf));
+        reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
     mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);
   }
   int num_tx =
-      rte_ring_sp_enqueue_burst(this->tx_ring_, (void **)tx_mbufs, burst_size);
+      rte_ring_sp_enqueue_burst(this->tx_ring_, reinterpret_cast<void**>(packets.data()), burst_size);
   return num_tx;
 }
