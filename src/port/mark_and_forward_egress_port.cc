@@ -23,6 +23,6 @@ int MarkAndForwardEgressPort::TxBurst(tx_pkt_array_t& packets) {
     mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);
   }
   int num_tx =
-      rte_ring_sp_enqueue_burst(this->tx_ring_, reinterpret_cast<void**>(packets.data()), burst_size);
+      rte_ring_sp_enqueue_burst(this->tx_ring_, reinterpret_cast<void**>(packets.data()), packets.size());
   return num_tx;
 }

@@ -11,29 +11,26 @@ void MacSwapper::Init(const PacketProcessorConfig& config) {
   assert(this->num_egress_ports_ == 0);
   for (int i = 0; i < this->num_ingress_ports_; ++i) {
     auto& s = config.ingress_queue_ids()[i];
-    this->ingress_ports_.emplace_back(s, i);
+    this->ingress_ports_.emplace_back(i, s);
   }
   for (int i = 0; i < this->num_egress_ports_; ++i) {
     auto& s = config.egress_queue_ids()[i];
-    this->egress_ports_.emplace_back(s, i);
+    this->egress_ports_.emplace_back(i, s);
   }
 }
 
 void MacSwapper::Run() {
+  rx_pkt_array_t rx_packets;
   while(true) {
-    struct rte_mbuf** rx_mbufs = reinterpret_cast<struct rte_mbuf**>(
-                                  this->ingress_ports_[0].RxBurst(64));
+    int num_rx = this->ingress_ports_[0].RxBurst(rx_packets);
     int i = 0;
-    for (i = 0; i < 64; ++i) {
-      if (!rx_mbufs[i]) break;
-      struct ether_hdr* eth_hdr = rte_pktmbuf_mtod(rx_mbufs[i], struct ether_hdr*);
+    for (i = 0; i < num_rx; ++i) {
+      struct ether_hdr* eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
       for (int j = 0; j < ETHER_ADDR_LEN; ++j) {
         std::swap(eth_hdr->s_addr.addr_bytes[j], eth_hdr->d_addr.addr_bytes[j]);
       }
-      rte_pktmbuf_dump(stdout, rx_mbufs[i], rx_mbufs[i]->pkt_len);
+      rte_pktmbuf_dump(stdout, rx_packets[i], rx_packets[i]->pkt_len);
     }
-    // this->egress_ports_[0].TxBurst(reinterpret_cast<void**>(rx_mbufs), i);
-    free(rx_mbufs);
   }
 }
 

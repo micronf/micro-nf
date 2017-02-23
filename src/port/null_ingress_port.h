@@ -6,7 +6,7 @@
 class NullIngressPort : public IngressPort {
   public:
     NullIngressPort() {}
-    void** RxBurst(int burst_size) override;
+    int RxBurst(rx_pkt_array_t& packets) override;
     virtual ~NullIngressPort() {}
 };
 #endif // _NULL_INGRESS_PORT_H_

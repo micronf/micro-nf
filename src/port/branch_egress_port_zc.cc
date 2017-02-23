@@ -23,7 +23,7 @@ inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t& packets) {
     memset(mdata_ptr, 0, this->num_bitmap_entries_);
   }
   for (auto ring_ptr : this->tx_rings_) {
-    rte_ring_sp_enqueue_burst(ring_ptr, (void **)tx_mbufs, burst_size);
+    rte_ring_sp_enqueue_burst(ring_ptr, reinterpret_cast<void **>(packets.data()), packets.size());
   }
   // TODO: Not sure what exactly to return :/.
   return 0;
