@@ -5,10 +5,10 @@
 #include <rte_malloc.h>
 #include <stdlib.h>
 
-RteIngressPort::RteIngressPort(const unsigned int port_id,
-                               const std::string &ring_id) {
-  this->port_id_ = port_id;
-  this->rx_ring_ = rte_ring_lookup(ring_id.c_str());
+inline void RteIngressPort::Init(
+    std::map<std::string, std::string>& port_config) {
+  this->port_id_ = std::stoi(port_config[IngressPort::kConfPortId]);
+  this->rx_ring_ = rte_ring_lookup(port_config[IngressPort::kConfRingId].c_str());
 }
 
 inline int

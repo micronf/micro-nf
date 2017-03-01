@@ -8,12 +8,12 @@ MarkAndForwardEgressPort::MarkAndForwardEgressPort() {
   this->tx_ring_ = nullptr;
 }
 
-MarkAndForwardEgressPort::MarkAndForwardEgressPort(int port_id,
-                                                   const std::string &ring_id) {
-  this->port_id_ = port_id;
-  this->tx_ring_ = rte_ring_lookup(ring_id.c_str());
-  this->bitmap_index_ = port_id >> 3;
-  this->bitmap_offset_ = port_id & 8;
+void MarkAndForwardEgressPort::Init(
+    std::map<std::string, std::string>& port_config) {
+  this->port_id_ = std::stoi(port_config[EgressPort::kConfPortId]);
+  this->tx_ring_ = rte_ring_lookup(port_config[EgressPort::kConfRingId].c_str());
+  this->bitmap_index_ = this->port_id_ >> 3;
+  this->bitmap_offset_ = this->port_id_ & 8;
 }
 
 int MarkAndForwardEgressPort::TxBurst(tx_pkt_array_t& packets) {

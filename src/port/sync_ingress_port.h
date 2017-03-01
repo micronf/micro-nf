@@ -9,8 +9,9 @@
 class SyncIngressPort : public IngressPort {
   public:
     SyncIngressPort() {}
-    SyncIngressPort(int num_prev_ms, const std::string& ring_id);
+    void Init(std::map<std::string, std::string>& port_config) override;
     int RxBurst(rx_pkt_array_t& packets) override;
+    const static std::string kConfNumPrevMs;
   private:
     // Helper function to count the number of bits set in the bitmap pointed by
     // mdata_ptr. Number of set bitmaps indicate the number of microservices

@@ -4,16 +4,18 @@
 
 #include <cstring>
 
-SyncIngressPort::SyncIngressPort(int num_prev_ms, const std::string& ring_id) {
-  this->num_prev_ms_ = num_prev_ms;
+const std::string SyncIngressPort::kConfNumPrevMs = "num_prev_ms";
+
+void SyncIngressPort::Init(std::map<std::string, std::string>& port_config) {
+  this->num_prev_ms_ = std::stoi(port_config[SyncIngressPort::kConfNumPrevMs]);
   this->num_bitmap_entries_ =
-      (num_prev_ms >> 3) + static_cast<int>((num_prev_ms & 8) != 0);
+      (num_prev_ms_ >> 3) + static_cast<int>((num_prev_ms_ & 8) != 0);
   this->mask_ = std::unique_ptr<unsigned char>(reinterpret_cast<unsigned char *>(
       rte_zmalloc(NULL, this->num_bitmap_entries_, 0)));
   memset(mask_.get(), 0xFF, this->num_bitmap_entries_);
   mask_.get()[this->num_bitmap_entries_ - 1] &=
-      static_cast<unsigned char>(~(0xFF << (num_prev_ms & 8)));
-  this->rx_ring_ = rte_ring_lookup(ring_id.c_str());
+      static_cast<unsigned char>(~(0xFF << (num_prev_ms_ & 8)));
+  this->rx_ring_ = rte_ring_lookup(port_config[IngressPort::kConfRingId].c_str());
 }
 
 inline int SyncIngressPort::RxBurst(rx_pkt_array_t &packets) {

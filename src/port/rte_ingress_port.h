@@ -8,7 +8,7 @@
 class RteIngressPort : public IngressPort {
 public:
   RteIngressPort() : rx_ring_(nullptr) {}
-  RteIngressPort(const unsigned int port_id, const std::string &ring_id);
+  void Init(std::map<std::string, std::string>& port_config) override;
   int RxBurst(rx_pkt_array_t &packets) override;
   virtual ~RteIngressPort() {}
 
