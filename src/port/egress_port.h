@@ -30,8 +30,4 @@ class EgressPort {
     // port and not necessarily globally unique.
     unsigned int port_id_;
 };
-
-const std::string kConfPortId = "port_id";
-const std::string kConfRingId = "ring_id";
-
 #endif // _EGRESS_PORT_H_

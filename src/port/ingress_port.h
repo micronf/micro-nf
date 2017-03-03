@@ -34,7 +34,4 @@ class IngressPort {
     // implementation.
     unsigned int port_id_;
 };
-
-const std::string IngressPort::kConfPortId = "port_id";
-const std::string IngressPort::kConfRingId = "ring_id";
 #endif // _INGRESS_PORT_H_

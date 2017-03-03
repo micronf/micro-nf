@@ -1,9 +1,8 @@
 #include "rte_egress_port.h"
 
-RteEgressPort::RteEgressPort(const unsigned int port_id,
-                             const std::string &queue_id) {
-  this->tx_ring_ = rte_ring_lookup(queue_id.c_str());
-  this->port_id_ = port_id;
+void RteEgressPort::Init(std::map<std::string, std::string>& port_config) {
+  this->tx_ring_ = rte_ring_lookup(port_config[EgressPort::kConfRingId].c_str());
+  this->port_id_ = std::stoi(port_config[EgressPort::kConfPortId]);
 }
 
 inline int

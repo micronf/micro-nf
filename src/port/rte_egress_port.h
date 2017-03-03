@@ -8,7 +8,7 @@
 class RteEgressPort : public EgressPort {
 public:
   RteEgressPort() : tx_ring_(nullptr) {}
-  RteEgressPort(const unsigned int port_id, const std::string &ring_id);
+  void Init(std::map<std::string, std::string>& port_config) override;
   int TxBurst(tx_pkt_array_t &packets) override;
 
 private:
