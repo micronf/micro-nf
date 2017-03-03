@@ -6,14 +6,14 @@
 #include <string>
 
 class RteIngressPort : public IngressPort {
-public:
+ public:
   RteIngressPort() : rx_ring_(nullptr) {}
-  void Init(std::map<std::string, std::string>& port_config) override;
+  void Init(std::map<std::string, std::string> &port_config) override;
   int RxBurst(rx_pkt_array_t &packets) override;
   virtual ~RteIngressPort() {}
 
-private:
+ private:
   rte_ring *rx_ring_;
 };
 
-#endif // _RTE_INGRESS_PORT_H_
+#endif  // _RTE_INGRESS_PORT_H_

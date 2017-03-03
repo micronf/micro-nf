@@ -14,7 +14,7 @@ BranchEgressPortZC::BranchEgressPortZC(
   }
 }
 
-inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t& packets) {
+inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets) {
   // Embed bitmap within the metadata area of each mbuf. i.e., set
   // kNumBitmapEntries bytes to 0.
   for (int i = 0; i < packets.size(); ++i) {
@@ -23,7 +23,8 @@ inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t& packets) {
     memset(mdata_ptr, 0, this->num_bitmap_entries_);
   }
   for (auto ring_ptr : this->tx_rings_) {
-    rte_ring_sp_enqueue_burst(ring_ptr, reinterpret_cast<void **>(packets.data()), packets.size());
+    rte_ring_sp_enqueue_burst(
+        ring_ptr, reinterpret_cast<void **>(packets.data()), packets.size());
   }
   // TODO: Not sure what exactly to return :/.
   return 0;

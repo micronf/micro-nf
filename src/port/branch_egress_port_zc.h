@@ -7,13 +7,13 @@
 #include <vector>
 
 class BranchEgressPortZC : public EgressPort {
-public:
+ public:
   BranchEgressPortZC();
   BranchEgressPortZC(int num_branches,
                      const std::vector<std::string> &ring_ids);
-  int TxBurst(tx_pkt_array_t& packets) override;
+  int TxBurst(tx_pkt_array_t &packets) override;
 
-private:
+ private:
   // Number of microservices this egress port is connected to.
   int num_branches_;
 
@@ -24,4 +24,4 @@ private:
   // microservices.
   std::vector<rte_ring *> tx_rings_;
 };
-#endif // _BRANCH_EGRESS_PORT_ZC_H_
+#endif  // _BRANCH_EGRESS_PORT_ZC_H_

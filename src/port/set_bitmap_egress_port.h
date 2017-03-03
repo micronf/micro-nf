@@ -7,15 +7,15 @@
 #include <string>
 
 class SetBitmapEgressPort : public EgressPort {
-public:
+ public:
   SetBitmapEgressPort();
   SetBitmapEgressPort(int port_id, const std::string &ring_id);
   int TxBurst(void **packets, int burst_size);
 
-private:
+ private:
   int port_id_;
   int bitmap_index_;
   int bitmap_offset_;
 };
 
-#endif // _SET_BITMAP_EGRESS_PORT_H_
+#endif  // _SET_BITMAP_EGRESS_PORT_H_
