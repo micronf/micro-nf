@@ -17,6 +17,9 @@ class PacketProcessor {
     const std::string& instance_id() const { return instance_id_; }
     inline uint16_t num_ingress_ports() const { return this->num_ingress_ports_; }
     inline uint16_t num_egress_ports() const { return this->num_egress_ports_; }
+    std::vector<std::unique_ptr<IngressPort>>& ingress_ports() { return ingress_ports_; }
+    std::vector<std::unique_ptr<EgressPort>>& egress_ports() { return egress_ports_; }
+
     virtual ~PacketProcessor() {};
   protected:
     std::string instance_id_;
