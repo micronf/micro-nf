@@ -10,7 +10,8 @@ class SetBitmapEgressPort : public EgressPort {
  public:
   SetBitmapEgressPort();
   SetBitmapEgressPort(int port_id, const std::string &ring_id);
-  int TxBurst(void **packets, int burst_size);
+  void Init(std::map<std::string, std::string>& port_config) override; 
+  int TxBurst(tx_pkt_array_t& packets) override;
 
  private:
   int port_id_;

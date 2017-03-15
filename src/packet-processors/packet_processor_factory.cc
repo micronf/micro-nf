@@ -27,8 +27,10 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
 
 template <class T>
 std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessorInternal() {
-  auto pp_ptr = std::unique_ptr<PacketProcessor>(
-      reinterpret_cast<T*>(rte_zmalloc(
-          NULL, sizeof(T), RTE_CACHE_LINE_SIZE)));
+  // size_t alloc_size = sizeof(T);
+  auto pp_ptr = std::unique_ptr<PacketProcessor>(new T());
+  // auto pp_ptr = std::unique_ptr<PacketProcessor>(
+  //     reinterpret_cast<T*>(rte_zmalloc(
+  //         NULL, alloc_size, RTE_CACHE_LINE_SIZE)));
   return std::move(pp_ptr);
 }

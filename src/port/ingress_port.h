@@ -23,8 +23,8 @@ class IngressPort {
   // packet will be populated with mbuf pointers.
   virtual int RxBurst(rx_pkt_array_t& packets) = 0;
 
-  int port_id() const { return this->port_id_; }
-
+  unsigned int port_id() const { return this->port_id_; }
+  virtual ~IngressPort() { }
   // The following constants define the keys corresponding to relevant
   // configuration.
   static const std::string kConfPortId;

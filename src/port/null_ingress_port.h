@@ -6,6 +6,7 @@
 class NullIngressPort : public IngressPort {
  public:
   NullIngressPort() {}
+  void Init(std::map<std::string, std::string>& port_config) override; 
   int RxBurst(rx_pkt_array_t& packets) override;
   virtual ~NullIngressPort() {}
 };

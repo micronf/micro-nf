@@ -5,7 +5,7 @@
 #include <rte_mbuf.h>
 #include <rte_tcp.h>
 
-void TCPIPClassifier::Init(const PacketProcessorConfig& config) {}
+void TCPIPClassifier::Init(const PacketProcessorConfig& pp_config) {}
 
 void TCPIPClassifier::Run() {
   rx_pkt_array_t packets;

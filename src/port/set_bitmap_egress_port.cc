@@ -15,11 +15,12 @@ SetBitmapEgressPort::SetBitmapEgressPort(int port_id,
   this->bitmap_offset_ = port_id & 8;
 }
 
-int SetBitmapEgressPort::TxBurst(void **packets, int burst_size) {
-  struct rte_mbuf **tx_mbufs = reinterpret_cast<rte_mbuf **>(packets);
-  for (int i = 0; i < burst_size; ++i) {
+void SetBitmapEgressPort::Init(std::map<std::string, std::string>& port_config) {}
+
+int SetBitmapEgressPort::TxBurst(tx_pkt_array_t& packets) {
+  for (int i = 0; i < packets.size(); ++i) {
     char *mdata_ptr = reinterpret_cast<char *>(
-        reinterpret_cast<unsigned long>(tx_mbufs[i]) + sizeof(struct rte_mbuf));
+        reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
     mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);
   }
   return 0;

@@ -6,7 +6,7 @@
 
 class TCPIPClassifier : public PacketProcessor {
   public:
-    void Init(const PacketProcessorConfig& config) override;
+    void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
     void FlushState() override;
     void RecoverState() override;

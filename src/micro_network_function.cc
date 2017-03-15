@@ -1,35 +1,75 @@
 #include "common/api_server.h"
-#include "packet-processors/packet_processor.h"
-#include "packet-processors/tcp_ip_classifier.h"
-#include "packet-processors/mac_swapper.h"
-#include "port/rte_ingress_port.h"
-#include "port/rte_egress_port.h"
-#include "port/rte_nic_ingress_port.h"
+#include "packet-processors/packet_processor_config.pb.h"
+#include "packet-processors/packet_processor_factory.h"
+#include "packet-processors/packet_processors.h"
+#include "port/port_factory.h"
 
+#include <rte_common.h>
 #include <rte_eal.h>
 #include <rte_ethdev.h>
+#include <rte_malloc.h>
 
-int main(int argc, char* argv[]) {
-  rte_eal_init(argc, argv);
-/*  PacketProcessor* pp = new MacSwapper();
-  PacketProcessorConfig pconfig;
-  std::unique_ptr<IngressPort> iport(new RteNICIngressPort());
-  std::unique_ptr<EgressPort> eport(new RteEgressPort());
-  std::map<std::string, std::string> iport_config;
-  std::map<std::string, std::string> eport_config;
-  
-  iport_config["nic_port_id"] = "1";
-  iport_config["nic_queue_id"] = "1";
-  eport_config["ring_id"] = "r1";
-  eport_config["port_id"] = "1";
+#include <cstring>
+#include <fcntl.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
+#include <map>
+#include <memory>
+#include <string>
 
-  iport->Init(iport_config);
-  eport->Init(eport_config);
+std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
+                                                              char *argv[]) {
+  auto ret_map = std::unique_ptr<std::map<std::string, std::string>>(
+      new std::map<std::string, std::string>());
+  const std::string kDel = "=";
+  for (int i = 0; i < argc; ++i) {
+    // Skip the -- part.
+    // argv[i] += 2;
 
-  pp->ingress_ports().push_back(std::move(iport));
-  pp->egress_ports().push_back(std::move(eport));
+    char *key = strtok(argv[i] + 2, kDel.c_str());
+    char *val = strtok(NULL, kDel.c_str());
+    ret_map->insert(std::make_pair(key, val));
+  }
+  return std::move(ret_map);
+}
 
-  pp->Run();
-  */
+int main(int argc, char *argv[]) {
+  int args_processed = rte_eal_init(argc, argv);
+  argc -= args_processed;
+  argv += args_processed;
+  auto arg_map = ParseArgs(argc - 1, argv + 1);
+  std::string config_file_path = "";
+  for (auto it = arg_map->begin(); it != arg_map->end(); ++it) {
+    printf("Key: %s, Val: %s\n", it->first.c_str(), it->second.c_str());
+    if (it->first == "config-file") {
+      config_file_path = it->second;
+    }
+  }
+  if (config_file_path == "")
+    rte_exit(EXIT_FAILURE, "No configuration file provided\n");
+
+  PacketProcessorConfig packet_processor_config;
+  int fd = open(config_file_path.c_str(), O_RDONLY);
+  if (fd < 0)
+    rte_exit(EXIT_FAILURE, "Cannot open configuration file %s\n",
+             config_file_path.c_str());
+
+  // Read the configuration file into a protobuf object.
+  google::protobuf::io::FileInputStream config_file_handle(fd);
+  config_file_handle.SetCloseOnDelete(true);
+  google::protobuf::TextFormat::Parse(&config_file_handle,
+                                      &packet_processor_config);
+
+  // For debugging purpose only.
+  std::string str = "";
+  google::protobuf::TextFormat::PrintToString(packet_processor_config, &str);
+  printf("%s\n", str.c_str());
+
+  PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();
+  auto packet_processor = pp_factory->CreatePacketProcessor(
+      packet_processor_config.packet_processor_class());
+  assert(packet_processor.get() != nullptr);
+  packet_processor->Init(packet_processor_config);
+  packet_processor->Run();
   return 0;
 }
