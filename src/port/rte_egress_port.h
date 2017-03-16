@@ -10,7 +10,8 @@ class RteEgressPort : public EgressPort {
   RteEgressPort() : tx_ring_(nullptr) {}
   void Init(std::map<std::string, std::string> &port_config) override;
   int TxBurst(tx_pkt_array_t &packets) override;
-  virtual ~RteEgressPort() { }
+  virtual ~RteEgressPort() {}
+
  private:
   rte_ring *tx_ring_;
 };

@@ -24,7 +24,7 @@ class IngressPort {
   virtual int RxBurst(rx_pkt_array_t& packets) = 0;
 
   unsigned int port_id() const { return this->port_id_; }
-  virtual ~IngressPort() { }
+  virtual ~IngressPort() {}
   // The following constants define the keys corresponding to relevant
   // configuration.
   static const std::string kConfPortId;

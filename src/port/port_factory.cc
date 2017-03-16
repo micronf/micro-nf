@@ -14,8 +14,8 @@ PortFactory *PortFactory::GetInstance() {
   return port_ptr.get();
 }
 
-std::unique_ptr<IngressPort>
-PortFactory::CreateIngressPort(const std::string &port_type) {
+std::unique_ptr<IngressPort> PortFactory::CreateIngressPort(
+    const std::string &port_type) {
   std::unique_ptr<IngressPort> port_ptr(nullptr);
   if (port_type == "NullIngressPort") {
     port_ptr = CreatePortInternal<IngressPort, NullIngressPort>();
@@ -29,8 +29,8 @@ PortFactory::CreateIngressPort(const std::string &port_type) {
   return std::move(port_ptr);
 }
 
-std::unique_ptr<EgressPort>
-PortFactory::CreateEgressPort(const std::string &port_type) {
+std::unique_ptr<EgressPort> PortFactory::CreateEgressPort(
+    const std::string &port_type) {
   std::unique_ptr<EgressPort> port_ptr(nullptr);
   if (port_type == "NullEgressPort") {
     port_ptr = CreatePortInternal<EgressPort, NullEgressPort>();
@@ -53,6 +53,7 @@ std::unique_ptr<P> PortFactory::CreatePortInternal() {
   auto port_ptr = std::unique_ptr<P>(new T());
   // size_t alloc_size = sizeof(T);
   // auto port_ptr = std::unique_ptr<P>(
-  //    reinterpret_cast<T*>(rte_zmalloc(NULL, alloc_size, RTE_CACHE_LINE_SIZE)));
+  //    reinterpret_cast<T*>(rte_zmalloc(NULL, alloc_size,
+  //    RTE_CACHE_LINE_SIZE)));
   return std::move(port_ptr);
 }

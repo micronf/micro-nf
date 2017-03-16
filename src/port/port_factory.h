@@ -1,14 +1,14 @@
 #ifndef _PORT_FACTORY_H_
 #define _PORT_FACTORY_H_
 
-#include "port.h"
-#include "ingress_ports.h"
 #include "egress_ports.h"
+#include "ingress_ports.h"
+#include "port.h"
 
 #include <memory>
 
 class PortFactory {
-public:
+ public:
   // Delete copy constructor and assignment operator to prevent duplication of
   // the same instance through copy and assignment.
   PortFactory(const PortFactory &) = delete;
@@ -29,7 +29,8 @@ public:
   // template type parameter is the type of the parent class, i.e., IngressPort
   // or EgressPort. The second type parameter is the type of actual port being
   // created, e.g., RteIngressPort or RteNICEgressPort etc.
-  template <class P, class T> std::unique_ptr<P> CreatePortInternal();
+  template <class P, class T>
+  std::unique_ptr<P> CreatePortInternal();
 };
 
-#endif // _PORT_FACTORY_H_
+#endif  // _PORT_FACTORY_H_

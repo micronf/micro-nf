@@ -14,7 +14,8 @@ BranchEgressPortZC::BranchEgressPortZC(
   }
 }
 
-void BranchEgressPortZC::Init(std::map<std::string, std::string>& port_config) {}
+void BranchEgressPortZC::Init(std::map<std::string, std::string> &port_config) {
+}
 
 inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets) {
   // Embed bitmap within the metadata area of each mbuf. i.e., set

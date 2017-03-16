@@ -9,4 +9,4 @@
 #include "rte_nic_egress_port.h"
 #include "set_bitmap_egress_port.h"
 
-#endif // _EGRESS_PORTS_H_
+#endif  // _EGRESS_PORTS_H_

@@ -5,11 +5,9 @@
 PacketProcessorFactory* PacketProcessorFactory::GetInstance() {
   static std::unique_ptr<PacketProcessorFactory> instance(nullptr);
   if (instance.get() == nullptr) {
-    instance.reset(
-        reinterpret_cast<PacketProcessorFactory*>(
-          rte_zmalloc("PacketProcessorFactory",
-                      sizeof(PacketProcessorFactory),
-                      RTE_CACHE_LINE_SIZE)));
+    instance.reset(reinterpret_cast<PacketProcessorFactory*>(
+        rte_zmalloc("PacketProcessorFactory", sizeof(PacketProcessorFactory),
+                    RTE_CACHE_LINE_SIZE)));
   }
   return instance.get();
 }
@@ -26,7 +24,8 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
 }
 
 template <class T>
-std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessorInternal() {
+std::unique_ptr<PacketProcessor>
+PacketProcessorFactory::CreatePacketProcessorInternal() {
   // size_t alloc_size = sizeof(T);
   auto pp_ptr = std::unique_ptr<PacketProcessor>(new T());
   // auto pp_ptr = std::unique_ptr<PacketProcessor>(

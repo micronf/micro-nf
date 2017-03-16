@@ -9,10 +9,10 @@
 #include <rte_ethdev.h>
 #include <rte_malloc.h>
 
-#include <cstring>
 #include <fcntl.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
+#include <cstring>
 #include <map>
 #include <memory>
 #include <string>

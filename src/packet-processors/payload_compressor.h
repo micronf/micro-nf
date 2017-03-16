@@ -2,10 +2,10 @@
 #define _PAYLOAD_COMPRESSOR_H_
 
 class PayloadCompressor : public PacketProcessor {
-  public:
-    void Init(const PacketProcessorConfig& config) override;
-    void Run() override;
-    void FlushState() override;
-    void RecoverState() override;
+ public:
+  void Init(const PacketProcessorConfig& config) override;
+  void Run() override;
+  void FlushState() override;
+  void RecoverState() override;
 };
-#endif // _PAYLOAD_COMPRESSOR_H_
+#endif  // _PAYLOAD_COMPRESSOR_H_

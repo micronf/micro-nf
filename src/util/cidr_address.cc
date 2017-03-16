@@ -6,7 +6,7 @@ CIDRAddress::CIDRAddress(const std::string& str) {
   auto mask_str = str.substr(slash_idx + 1);
   this->subnet_mask_ = (0xffffffff << (32 - std::stoi(mask_str)));
 
-  // Construct IP address octect by octect. 
+  // Construct IP address octect by octect.
   // First octect. (MSB)
   auto dot_idx = ip_str.find(".");
   this->ip_address_ = (std::stoi(ip_str.substr(0, dot_idx)) << 24);

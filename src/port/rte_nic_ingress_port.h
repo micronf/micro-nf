@@ -10,7 +10,7 @@ class RteNICIngressPort : public IngressPort {
   RteNICIngressPort() {}
   void Init(std::map<std::string, std::string> &port_config) override;
   int RxBurst(rx_pkt_array_t &packets) override;
-  virtual ~RteNICIngressPort() { }
+  virtual ~RteNICIngressPort() {}
   static const std::string kConfNICPortId;
   static const std::string kConfNICQueueId;
 

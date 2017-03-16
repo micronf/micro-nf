@@ -7,4 +7,4 @@
 #include "rte_nic_ingress_port.h"
 #include "sync_ingress_port.h"
 
-#endif // _INGRESS_PORTS_H_
+#endif  // _INGRESS_PORTS_H_

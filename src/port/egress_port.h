@@ -22,7 +22,7 @@ class EgressPort {
   virtual int TxBurst(tx_pkt_array_t& packets) = 0;
 
   int port_id() const { return this->port_id_; }
-  virtual ~EgressPort() { }
+  virtual ~EgressPort() {}
 
   static const std::string kConfPortId;
   static const std::string kConfRingId;
