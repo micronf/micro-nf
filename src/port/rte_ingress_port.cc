@@ -10,6 +10,7 @@ inline void RteIngressPort::Init(
   this->port_id_ = std::stoi(port_config[IngressPort::kConfPortId]);
   this->rx_ring_ =
       rte_ring_lookup(port_config[IngressPort::kConfRingId].c_str());
+  assert(this->rx_ring_ != nullptr);
 }
 
 inline int RteIngressPort::RxBurst(rx_pkt_array_t &packets) {

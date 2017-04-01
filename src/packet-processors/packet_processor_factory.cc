@@ -19,6 +19,8 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<MacSwapper>();
   } else if (packet_processor_type == "TCPIPClassifier") {
     pp_ptr = CreatePacketProcessorInternal<TCPIPClassifier>();
+  } else if (packet_processor_type == "DropPacket") {
+    pp_ptr = CreatePacketProcessorInternal<DropPacket>();
   }
   return std::move(pp_ptr);
 }

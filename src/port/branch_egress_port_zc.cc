@@ -17,10 +17,10 @@ BranchEgressPortZC::BranchEgressPortZC(
 void BranchEgressPortZC::Init(std::map<std::string, std::string> &port_config) {
 }
 
-inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets) {
+inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) {
   // Embed bitmap within the metadata area of each mbuf. i.e., set
   // kNumBitmapEntries bytes to 0.
-  for (int i = 0; i < packets.size(); ++i) {
+  for (int i = 0; i < burst_size; ++i) {
     char *mdata_ptr = reinterpret_cast<char *>(
         reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
     memset(mdata_ptr, 0, this->num_bitmap_entries_);

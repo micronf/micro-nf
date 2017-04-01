@@ -2,6 +2,7 @@
 #define _ACL_RULE_H_
 
 #include "cidr_address.h"
+#include <rte_byteorder.h>
 
 class ACLRule {
  public:
@@ -10,8 +11,8 @@ class ACLRule {
           uint16_t src_port, uint16_t dst_port, bool deny)
       : src_addr_(src_addr),
         dst_addr_(dst_addr),
-        src_port_(src_port),
-        dst_port_(dst_port),
+        src_port_(rte_cpu_to_be_16(src_port)),
+        dst_port_(rte_cpu_to_be_16(dst_port)),
         deny_(deny) {}
   bool Match(uint32_t src_ip, uint32_t dst_ip, uint16_t src_port,
              uint16_t dst_port) {

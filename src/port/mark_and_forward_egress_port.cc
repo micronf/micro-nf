@@ -17,8 +17,8 @@ void MarkAndForwardEgressPort::Init(
   this->bitmap_offset_ = this->port_id_ & 8;
 }
 
-int MarkAndForwardEgressPort::TxBurst(tx_pkt_array_t& packets) {
-  for (int i = 0; i < packets.size(); ++i) {
+int MarkAndForwardEgressPort::TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) {
+  for (int i = 0; i < burst_size; ++i) {
     char* mdata_ptr = reinterpret_cast<char*>(
         reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
     mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);

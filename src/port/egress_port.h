@@ -19,7 +19,7 @@ class EgressPort {
   // Send a burst of packets (maximum TX_BURST_SIZE packets) out of this port.
   // packets contains the mbuf pointers that need to be sent. Return value is
   // the number of actual mbufs sent over this port.
-  virtual int TxBurst(tx_pkt_array_t& packets) = 0;
+  virtual int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size = TX_BURST_SIZE) = 0;
 
   int port_id() const { return this->port_id_; }
   virtual ~EgressPort() {}

@@ -1,5 +1,5 @@
 CXX = g++
-CFLAGS = -mssse3 -std=c++0x -O0
+CFLAGS = -g -mssse3 -std=c++0x -O3
 INCS = -I$(RTE_SDK)/$(RTE_TARGET)/include
 LIBDIR = -L$(RTE_SDK)/$(RTE_TARGET)/lib
 LDFLAGS = -lprotobuf -lpthread -ldl -Wl,--whole-archive -ldpdk -ldl -libverbs -Wl,--no-whole-archive
@@ -18,7 +18,7 @@ OBJS := $(patsubst $(SRCDIRS)/%.cc,$(OBJDIR)/%.o,$(SRCS))
 default: $(BINDIR)/micronf
 
 $(BINDIR)/micronf: $(OBJS)
-	$(CXX) $(DEBUGON) $(CFLAGS) $(INCS) $(OBJS) $(LDFLAGS) $(LIBDIR) -o $@
+	$(CXX) $(CFLAGS) $(INCS) $(OBJS) $(LDFLAGS) $(LIBDIR) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIRS)/%.cc
 		$(CXX) -c $(CFLAGS) $(INCS) $< -o $@

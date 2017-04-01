@@ -10,12 +10,12 @@ class TCPIPClassifier : public PacketProcessor {
   void Run() override;
   void FlushState() override;
   void RecoverState() override;
-  void AddRule(const ACLRule& acl_rule) { acl_rules_.push_back(acl_rule); }
+  void AddRule(uint16_t table_idx, const ACLRule& acl_rule) { acl_rules_[table_idx].push_back(acl_rule); }
 
  private:
-  std::vector<ACLRule> acl_rules_;
-  int deny_port_index_;
-  int allow_port_index_;
+  std::vector<std::vector<ACLRule>> acl_rules_;
+  std::vector<uint16_t> deny_port_index_;
+  std::vector<uint16_t> allow_port_index_;
 };
 
 #endif  // _TCP_IP_CLASSIFIER_H_

@@ -7,7 +7,7 @@ class NullEgressPort : public EgressPort {
  public:
   NullEgressPort() {}
   void Init(std::map<std::string, std::string>& port_config) override;
-  int TxBurst(std::array<struct rte_mbuf*, TX_BURST_SIZE>& packets) override;
+  int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) override;
   virtual ~NullEgressPort() {}
 };
 #endif  // _NULL_EGRESS_PORT_H_

@@ -6,8 +6,8 @@ void RteEgressPort::Init(std::map<std::string, std::string> &port_config) {
   this->port_id_ = std::stoi(port_config[EgressPort::kConfPortId]);
 }
 
-inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets) {
+inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) {
   int num_tx = rte_ring_sp_enqueue_burst(
-      this->tx_ring_, reinterpret_cast<void **>(packets.data()), TX_BURST_SIZE);
+      this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
   return num_tx;
 }
