@@ -3,6 +3,10 @@
 
 #include <rte_mbuf.h>
 
+#include "../common/msstat.h"
+#include <rte_memzone.h>
+
+
 #include <array>
 #include <map>
 
@@ -31,5 +35,8 @@ class EgressPort {
   // An identifier assigned to this port. Identifier assignment is specific to
   // port and not necessarily globally unique.
   unsigned int port_id_;
+	
+	const struct rte_memzone *stat_mz;
+	MSStats* micronf_stats;
 };
 #endif  // _EGRESS_PORT_H_
