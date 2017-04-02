@@ -3,13 +3,14 @@
 
 #include <rte_mbuf.h>
 
-#include "../common/msstat.h"
+#include "../common/msstats.h"
 #include <rte_memzone.h>
 
 
 #include <array>
 #include <map>
 
+#define MZ_STAT "MZ_STAT"
 #define TX_BURST_SIZE 64
 
 typedef std::array<struct rte_mbuf*, TX_BURST_SIZE> tx_pkt_array_t;
