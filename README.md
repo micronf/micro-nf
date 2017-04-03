@@ -3,7 +3,7 @@ Microservices for building network functions.
 
 ## BUILD and RUN
 ```
-$ make clean` && make
+$ make clean && make
 $ sudo ./build/micronf -c <cpumask> -n <num-memory-channels> -- --config-file=<config-file-path>``
 ```
 
