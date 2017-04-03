@@ -2,13 +2,14 @@
 #define _EGRESS_PORT_H_
 
 #include <rte_mbuf.h>
-
-#include "../common/msstats.h"
 #include <rte_memzone.h>
 
+#include "../common/msstats.h"
+#include "../packet-processors/packet_processor.h"
 
 #include <array>
 #include <map>
+#include <string>
 
 #define MZ_STAT "MZ_STAT"
 #define TX_BURST_SIZE 64
@@ -19,7 +20,8 @@ class EgressPort {
  public:
   // Initializes the port. Since this is implementation specific, therefore,
   // each type of port should provide their own implementation of Init method.
-  virtual void Init(std::map<std::string, std::string>& port_config) = 0;
+  virtual void Init(std::map<std::string, std::string>& port_config, 
+									const PacketProcessor* owner_pp = nullptr) = 0;
 
   // Send a burst of packets (maximum TX_BURST_SIZE packets) out of this port.
   // packets contains the mbuf pointers that need to be sent. Return value is
@@ -27,6 +29,9 @@ class EgressPort {
   virtual int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size = TX_BURST_SIZE) = 0;
 
   int port_id() const { return this->port_id_; }
+	int owner_packet_processor() const { 
+		return std::stoi(this->owner_packet_processor_->instance_id()); 
+	}
   virtual ~EgressPort() {}
 
   static const std::string kConfPortId;
@@ -39,5 +44,7 @@ class EgressPort {
 	
 	const struct rte_memzone *stat_mz;
 	MSStats* micronf_stats;
+  const PacketProcessor* owner_packet_processor_;
+
 };
 #endif  // _EGRESS_PORT_H_

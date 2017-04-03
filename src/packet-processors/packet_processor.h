@@ -38,7 +38,8 @@ class PacketProcessor {
   // Configure the ports of this packet processor according to provided
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
-  inline void ConfigurePorts(const PacketProcessorConfig& pp_config) {
+  inline void ConfigurePorts(const PacketProcessorConfig& pp_config, 
+									const PacketProcessor* owner_pp = nullptr) {
     PortFactory* port_factory = PortFactory::GetInstance();
     int i = 0;
     for (i = 0; i < pp_config.port_configs_size(); ++i) {
@@ -60,7 +61,7 @@ class PacketProcessor {
       } else if (pconfig.port_type() == PortConfig::EGRESS_PORT) {
         auto eport = port_factory->CreateEgressPort(pconfig.port_class());
         assert(eport.get() != nullptr);
-        eport->Init(port_params);
+        eport->Init(port_params, owner_pp);
         this->egress_ports_[pconfig.port_index()] = std::move(eport);
       }
     }
