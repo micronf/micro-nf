@@ -11,7 +11,7 @@ void DropPacket::Init(const PacketProcessorConfig& pp_config) {
   for (int j = 0; j < num_egress_ports_; ++j) {
     egress_ports_.emplace_back(nullptr);
   }
-  PacketProcessor::ConfigurePorts(pp_config);
+  PacketProcessor::ConfigurePorts(pp_config, this);
 }
 
 void DropPacket::Run() {
