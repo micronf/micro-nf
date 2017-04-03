@@ -1,4 +1,3 @@
-#include "../port/port_factory.h"
 #include "drop_packet.h"
 
 #include <rte_mbuf.h>

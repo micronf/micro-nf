@@ -1,8 +1,4 @@
 #include "port_factory.h"
-
-#include "rte_egress_port.h"
-#include "rte_ingress_port.h"
-
 #include <rte_malloc.h>
 
 PortFactory *PortFactory::GetInstance() {

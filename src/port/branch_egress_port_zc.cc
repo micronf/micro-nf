@@ -15,7 +15,7 @@ BranchEgressPortZC::BranchEgressPortZC(
 }
 
 void BranchEgressPortZC::Init(std::map<std::string, std::string> &port_config,
-              const PacketProcessor* owner_pp) {
+              PacketProcessor* owner_pp) {
 }
 
 inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) {

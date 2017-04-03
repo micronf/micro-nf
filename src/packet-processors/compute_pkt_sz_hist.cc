@@ -1,6 +1,5 @@
 #include "compute_pkt_sz_hist.h"
 #include <google/protobuf/map.h>
-#include "../port/port_factory.h"
 
 inline void ComputePktSzHist::Init(const PacketProcessorConfig& pp_config) {
   this->num_ingress_ports_ = pp_config.num_ingress_ports();

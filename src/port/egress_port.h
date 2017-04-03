@@ -23,7 +23,7 @@ class EgressPort {
   // Initializes the port. Since this is implementation specific, therefore,
   // each type of port should provide their own implementation of Init method.
   virtual void Init(std::map<std::string, std::string>& port_config, 
-									const PacketProcessor* owner_pp = nullptr) = 0;
+									PacketProcessor* owner_pp = nullptr) = 0;
 
   // Send a burst of packets (maximum TX_BURST_SIZE packets) out of this port.
   // packets contains the mbuf pointers that need to be sent. Return value is
@@ -46,7 +46,7 @@ class EgressPort {
 	
 	const struct rte_memzone *stat_mz;
 	MSStats* micronf_stats;
-  const PacketProcessor* owner_packet_processor_;
+  PacketProcessor* owner_packet_processor_;
 
 };
 #endif  // _EGRESS_PORT_H_

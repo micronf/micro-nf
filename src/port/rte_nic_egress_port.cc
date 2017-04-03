@@ -8,7 +8,7 @@ const std::string RteNICEgressPort::kConfNICPortId = "nic_port_id";
 const std::string RteNICEgressPort::kConfNICQueueId = "nic_queue_id";
 
 void RteNICEgressPort::Init(std::map<std::string, std::string>& port_config,
-              const PacketProcessor* owner_pp) {
+              PacketProcessor* owner_pp) {
   this->nic_port_id_ = std::stoi(port_config[RteNICEgressPort::kConfNICPortId]);
   this->nic_queue_id_ =
       std::stoi(port_config[RteNICEgressPort::kConfNICQueueId]);

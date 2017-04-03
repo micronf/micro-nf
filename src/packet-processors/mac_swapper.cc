@@ -1,4 +1,3 @@
-#include "../port/port_factory.h"
 #include "mac_swapper.h"
 
 #include <algorithm>
@@ -22,7 +21,7 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
   for (i = 0; i < this->num_egress_ports_; ++i) {
     egress_ports_.emplace_back(nullptr);
   }
-  PacketProcessor::ConfigurePorts(pp_config);
+  PacketProcessor::ConfigurePorts(pp_config, this);
 
   // Packet processor specific configuration (if any).
 }
