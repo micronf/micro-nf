@@ -9,8 +9,7 @@
 class SyncIngressPort : public IngressPort {
  public:
   SyncIngressPort() {}
-  void Init(std::map<std::string, std::string>& port_config,
-              const PacketProcessor* owner_pp) override;
+  void Init(std::map<std::string, std::string>& port_config) override;
   int RxBurst(rx_pkt_array_t& packets) override;
   const static std::string kConfNumPrevMs;
 

@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+//class EgressPort;
+
 class PacketProcessor {
  public:
   PacketProcessor() : num_ingress_ports_(0), num_egress_ports_(0) {}

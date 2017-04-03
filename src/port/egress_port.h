@@ -5,7 +5,7 @@
 #include <rte_memzone.h>
 
 #include "../common/msstats.h"
-#include "../packet-processors/packet_processor.h"
+//#include "../packet-processors/packet_processor.h"
 
 #include <array>
 #include <map>
@@ -15,6 +15,8 @@
 #define TX_BURST_SIZE 64
 
 typedef std::array<struct rte_mbuf*, TX_BURST_SIZE> tx_pkt_array_t;
+
+class PacketProcessor;
 
 class EgressPort {
  public:
@@ -29,9 +31,9 @@ class EgressPort {
   virtual int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size = TX_BURST_SIZE) = 0;
 
   int port_id() const { return this->port_id_; }
-	int owner_packet_processor() const { 
-		return std::stoi(this->owner_packet_processor_->instance_id()); 
-	}
+	//int owner_packet_processor() const { 
+	//	return std::stoi(this->owner_packet_processor_->instance_id()); 
+	//}
   virtual ~EgressPort() {}
 
   static const std::string kConfPortId;
