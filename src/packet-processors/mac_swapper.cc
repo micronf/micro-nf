@@ -12,6 +12,7 @@
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
+	instance_id_ = pp_config.instance_id();
 
   // First, initialize the list of ingress and egress ports.
   int i = 0;

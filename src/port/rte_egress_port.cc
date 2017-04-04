@@ -20,6 +20,7 @@ inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) 
 
   if(num_tx == -ENOBUFS){
 		int idx = std::stoi(owner_packet_processor_->instance_id());
+		printf("idx: %d\n", idx);
     this->micronf_stats->packet_drop[idx] += burst_size;
     for(int i=0; i < burst_size; i++){
       rte_pktmbuf_free(packets[i]);
