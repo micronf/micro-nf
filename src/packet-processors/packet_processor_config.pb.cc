@@ -6,87 +6,79 @@
 
 #include <algorithm>
 
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
+#include <google/protobuf/stubs/once.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/wire_format_lite_inl.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/stubs/once.h>
-#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/wire_format.h>
-#include <google/protobuf/wire_format_lite_inl.h>
 // @@protoc_insertion_point(includes)
 
 namespace {
 
 const ::google::protobuf::Descriptor* PacketProcessorConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-    PacketProcessorConfig_reflection_ = NULL;
-const ::google::protobuf::Descriptor*
-    PacketProcessorConfig_PpParametersEntry_descriptor_ = NULL;
+  PacketProcessorConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* PacketProcessorConfig_PpParametersEntry_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* PortConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-    PortConfig_reflection_ = NULL;
-const ::google::protobuf::Descriptor*
-    PortConfig_PortParametersEntry_descriptor_ = NULL;
-const ::google::protobuf::EnumDescriptor* PortConfig_PortType_descriptor_ =
-    NULL;
+  PortConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* PortConfig_PortParametersEntry_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* PortConfig_PortType_descriptor_ = NULL;
 
 }  // namespace
 
-void protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto()
-    GOOGLE_ATTRIBUTE_COLD;
+
+void protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto() {
   protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
   const ::google::protobuf::FileDescriptor* file =
-      ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
-          "packet_processor_config.proto");
+    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+      "packet_processor_config.proto");
   GOOGLE_CHECK(file != NULL);
   PacketProcessorConfig_descriptor_ = file->message_type(0);
-  static const int PacketProcessorConfig_offsets_[5] = {
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                     packet_processor_class_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                     num_ingress_ports_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                     num_egress_ports_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                     pp_parameters_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                     port_configs_),
+  static const int PacketProcessorConfig_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, packet_processor_class_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, num_ingress_ports_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, num_egress_ports_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, pp_parameters_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, port_configs_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, instance_id_),
   };
-  PacketProcessorConfig_reflection_ = ::google::protobuf::internal::
-      GeneratedMessageReflection::NewGeneratedMessageReflection(
-          PacketProcessorConfig_descriptor_,
-          PacketProcessorConfig::default_instance_,
-          PacketProcessorConfig_offsets_,
-          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                         _has_bits_[0]),
-          -1, -1, sizeof(PacketProcessorConfig),
-          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig,
-                                                         _internal_metadata_),
-          -1);
-  PacketProcessorConfig_PpParametersEntry_descriptor_ =
-      PacketProcessorConfig_descriptor_->nested_type(0);
+  PacketProcessorConfig_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      PacketProcessorConfig_descriptor_,
+      PacketProcessorConfig::default_instance_,
+      PacketProcessorConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(PacketProcessorConfig),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, _internal_metadata_),
+      -1);
+  PacketProcessorConfig_PpParametersEntry_descriptor_ = PacketProcessorConfig_descriptor_->nested_type(0);
   PortConfig_descriptor_ = file->message_type(1);
   static const int PortConfig_offsets_[4] = {
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_index_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_type_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_class_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig,
-                                                     port_parameters_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_index_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_class_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, port_parameters_),
   };
-  PortConfig_reflection_ = ::google::protobuf::internal::
-      GeneratedMessageReflection::NewGeneratedMessageReflection(
-          PortConfig_descriptor_, PortConfig::default_instance_,
-          PortConfig_offsets_, GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(
-                                   PortConfig, _has_bits_[0]),
-          -1, -1, sizeof(PortConfig),
-          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig,
-                                                         _internal_metadata_),
-          -1);
-  PortConfig_PortParametersEntry_descriptor_ =
-      PortConfig_descriptor_->nested_type(0);
+  PortConfig_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      PortConfig_descriptor_,
+      PortConfig::default_instance_,
+      PortConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(PortConfig),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, _internal_metadata_),
+      -1);
+  PortConfig_PortParametersEntry_descriptor_ = PortConfig_descriptor_->nested_type(0);
   PortConfig_PortType_descriptor_ = PortConfig_descriptor_->enum_type(0);
 }
 
@@ -94,34 +86,35 @@ namespace {
 
 GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
 inline void protobuf_AssignDescriptorsOnce() {
-  ::google::protobuf::GoogleOnceInit(
-      &protobuf_AssignDescriptors_once_,
-      &protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto);
+  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+                 &protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto);
 }
 
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      PacketProcessorConfig_descriptor_,
-      &PacketProcessorConfig::default_instance());
+      PacketProcessorConfig_descriptor_, &PacketProcessorConfig::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      PacketProcessorConfig_PpParametersEntry_descriptor_,
-      ::google::protobuf::internal::MapEntry<
-          ::std::string, ::std::string,
-          ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-          ::google::protobuf::internal::WireFormatLite::TYPE_STRING, 0>::
-          CreateDefaultInstance(
-              PacketProcessorConfig_PpParametersEntry_descriptor_));
+        PacketProcessorConfig_PpParametersEntry_descriptor_,
+        ::google::protobuf::internal::MapEntry<
+            ::std::string,
+            ::std::string,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            0>::CreateDefaultInstance(
+                PacketProcessorConfig_PpParametersEntry_descriptor_));
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       PortConfig_descriptor_, &PortConfig::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      PortConfig_PortParametersEntry_descriptor_,
-      ::google::protobuf::internal::MapEntry<
-          ::std::string, ::std::string,
-          ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-          ::google::protobuf::internal::WireFormatLite::TYPE_STRING, 0>::
-          CreateDefaultInstance(PortConfig_PortParametersEntry_descriptor_));
+        PortConfig_PortParametersEntry_descriptor_,
+        ::google::protobuf::internal::MapEntry<
+            ::std::string,
+            ::std::string,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            0>::CreateDefaultInstance(
+                PortConfig_PortParametersEntry_descriptor_));
 }
 
 }  // namespace
@@ -133,8 +126,7 @@ void protobuf_ShutdownFile_packet_5fprocessor_5fconfig_2eproto() {
   delete PortConfig_reflection_;
 }
 
-void protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto()
-    GOOGLE_ATTRIBUTE_COLD;
+void protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto() {
   static bool already_here = false;
   if (already_here) return;
@@ -142,34 +134,28 @@ void protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      "\n\035packet_processor_config.proto\"\205\002\n\025Pack"
-      "etProcessorConfig\022\036\n\026packet_processor_cl"
-      "ass\030\001 \002(\t\022\031\n\021num_ingress_ports\030\002 "
-      "\002(\005\022\030\n\020"
-      "num_egress_ports\030\003 \002(\005\022\?\n\rpp_parameters\030"
-      "\004 \003(\0132(.PacketProcessorConfig.PpParamete"
-      "rsEntry\022!\n\014port_configs\030\005 \003(\0132\013.PortConf"
-      "ig\0323\n\021PpParametersEntry\022\013\n\003key\030\001 "
-      "\001(\t\022\r\n\005"
-      "value\030\002 "
-      "\001(\t:\0028\001\"\375\001\n\nPortConfig\022\022\n\nport_i"
-      "ndex\030\001 \002(\005\022\'\n\tport_type\030\002 "
-      "\002(\0162\024.PortConf"
-      "ig.PortType\022\022\n\nport_class\030\003 \002(\t\0228\n\017port_"
-      "parameters\030\004 \003(\0132\037.PortConfig.PortParame"
-      "tersEntry\0325\n\023PortParametersEntry\022\013\n\003key\030"
-      "\001 \001(\t\022\r\n\005value\030\002 "
-      "\001(\t:\0028\001\"-\n\010PortType\022\020\n\014"
-      "INGRESS_PORT\020\000\022\017\n\013EGRESS_PORT\020\001",
-      551);
+    "\n\035packet_processor_config.proto\"\232\002\n\025Pack"
+    "etProcessorConfig\022\036\n\026packet_processor_cl"
+    "ass\030\001 \002(\t\022\031\n\021num_ingress_ports\030\002 \002(\005\022\030\n\020"
+    "num_egress_ports\030\003 \002(\005\022\?\n\rpp_parameters\030"
+    "\004 \003(\0132(.PacketProcessorConfig.PpParamete"
+    "rsEntry\022!\n\014port_configs\030\005 \003(\0132\013.PortConf"
+    "ig\022\023\n\013instance_id\030\006 \002(\t\0323\n\021PpParametersE"
+    "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\375\001\n"
+    "\nPortConfig\022\022\n\nport_index\030\001 \002(\005\022\'\n\tport_"
+    "type\030\002 \002(\0162\024.PortConfig.PortType\022\022\n\nport"
+    "_class\030\003 \002(\t\0228\n\017port_parameters\030\004 \003(\0132\037."
+    "PortConfig.PortParametersEntry\0325\n\023PortPa"
+    "rametersEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001("
+    "\t:\0028\001\"-\n\010PortType\022\020\n\014INGRESS_PORT\020\000\022\017\n\013E"
+    "GRESS_PORT\020\001", 572);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
-      "packet_processor_config.proto", &protobuf_RegisterTypes);
+    "packet_processor_config.proto", &protobuf_RegisterTypes);
   PacketProcessorConfig::default_instance_ = new PacketProcessorConfig();
   PortConfig::default_instance_ = new PortConfig();
   PacketProcessorConfig::default_instance_->InitAsDefaultInstance();
   PortConfig::default_instance_->InitAsDefaultInstance();
-  ::google::protobuf::internal::OnShutdown(
-      &protobuf_ShutdownFile_packet_5fprocessor_5fconfig_2eproto);
+  ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_packet_5fprocessor_5fconfig_2eproto);
 }
 
 // Force AddDescriptors() to be called at static initialization time.
@@ -187,18 +173,21 @@ const int PacketProcessorConfig::kNumIngressPortsFieldNumber;
 const int PacketProcessorConfig::kNumEgressPortsFieldNumber;
 const int PacketProcessorConfig::kPpParametersFieldNumber;
 const int PacketProcessorConfig::kPortConfigsFieldNumber;
+const int PacketProcessorConfig::kInstanceIdFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PacketProcessorConfig::PacketProcessorConfig()
-    : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:PacketProcessorConfig)
 }
 
-void PacketProcessorConfig::InitAsDefaultInstance() {}
+void PacketProcessorConfig::InitAsDefaultInstance() {
+}
 
 PacketProcessorConfig::PacketProcessorConfig(const PacketProcessorConfig& from)
-    : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:PacketProcessorConfig)
@@ -207,13 +196,14 @@ PacketProcessorConfig::PacketProcessorConfig(const PacketProcessorConfig& from)
 void PacketProcessorConfig::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  packet_processor_class_.UnsafeSetDefault(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  packet_processor_class_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   num_ingress_ports_ = 0;
   num_egress_ports_ = 0;
-  pp_parameters_.SetAssignDescriptorCallback(protobuf_AssignDescriptorsOnce);
+  pp_parameters_.SetAssignDescriptorCallback(
+      protobuf_AssignDescriptorsOnce);
   pp_parameters_.SetEntryDescriptor(
       &::PacketProcessorConfig_PpParametersEntry_descriptor_);
+  instance_id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -223,8 +213,8 @@ PacketProcessorConfig::~PacketProcessorConfig() {
 }
 
 void PacketProcessorConfig::SharedDtor() {
-  packet_processor_class_.DestroyNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  packet_processor_class_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  instance_id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -240,15 +230,13 @@ const ::google::protobuf::Descriptor* PacketProcessorConfig::descriptor() {
 }
 
 const PacketProcessorConfig& PacketProcessorConfig::default_instance() {
-  if (default_instance_ == NULL)
-    protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
+  if (default_instance_ == NULL) protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
   return *default_instance_;
 }
 
 PacketProcessorConfig* PacketProcessorConfig::default_instance_ = NULL;
 
-PacketProcessorConfig* PacketProcessorConfig::New(
-    ::google::protobuf::Arena* arena) const {
+PacketProcessorConfig* PacketProcessorConfig::New(::google::protobuf::Arena* arena) const {
   PacketProcessorConfig* n = new PacketProcessorConfig;
   if (arena != NULL) {
     arena->Own(n);
@@ -259,28 +247,28 @@ PacketProcessorConfig* PacketProcessorConfig::New(
 void PacketProcessorConfig::Clear() {
 // @@protoc_insertion_point(message_clear_start:PacketProcessorConfig)
 #if defined(__clang__)
-#define ZR_HELPER_(f)                                                         \
-  _Pragma("clang diagnostic push")                                            \
-      _Pragma(                                                                \
-          "clang diagnostic ignored "                                         \
-          "\"-Winvalid-offsetof\"") __builtin_offsetof(PacketProcessorConfig, \
-                                                       f)                     \
-          _Pragma("clang diagnostic pop")
-#else
 #define ZR_HELPER_(f) \
-  reinterpret_cast<char*>(&reinterpret_cast<PacketProcessorConfig*>(16)->f)
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(PacketProcessorConfig, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<PacketProcessorConfig*>(16)->f)
 #endif
 
-#define ZR_(first, last)                                                      \
-  do {                                                                        \
-    ::memset(&first, 0, ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last)); \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 39u) {
     ZR_(num_ingress_ports_, num_egress_ports_);
     if (has_packet_processor_class()) {
-      packet_processor_class_.ClearToEmptyNoArena(
-          &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+      packet_processor_class_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    }
+    if (has_instance_id()) {
+      instance_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
 
@@ -297,27 +285,23 @@ void PacketProcessorConfig::Clear() {
 
 bool PacketProcessorConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) \
-  if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:PacketProcessorConfig)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p =
-        input->ReadTagWithCutoff(127);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-    switch (
-        ::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required string packet_processor_class = 1;
       case 1: {
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-              input, this->mutable_packet_processor_class()));
+                input, this->mutable_packet_processor_class()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              this->packet_processor_class().data(),
-              this->packet_processor_class().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PacketProcessorConfig.packet_processor_class");
+            this->packet_processor_class().data(), this->packet_processor_class().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PacketProcessorConfig.packet_processor_class");
         } else {
           goto handle_unusual;
         }
@@ -328,11 +312,10 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
       // required int32 num_ingress_ports = 2;
       case 2: {
         if (tag == 16) {
-        parse_num_ingress_ports:
+         parse_num_ingress_ports:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-               ::google::protobuf::int32,
-               ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-              input, &num_ingress_ports_)));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &num_ingress_ports_)));
           set_has_num_ingress_ports();
         } else {
           goto handle_unusual;
@@ -344,11 +327,10 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
       // required int32 num_egress_ports = 3;
       case 3: {
         if (tag == 24) {
-        parse_num_egress_ports:
+         parse_num_egress_ports:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-               ::google::protobuf::int32,
-               ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-              input, &num_egress_ports_)));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &num_egress_ports_)));
           set_has_num_egress_ports();
         } else {
           goto handle_unusual;
@@ -360,26 +342,25 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
       // map<string, string> pp_parameters = 4;
       case 4: {
         if (tag == 34) {
-        parse_pp_parameters:
+         parse_pp_parameters:
           DO_(input->IncrementRecursionDepth());
-        parse_loop_pp_parameters:
-          PacketProcessorConfig_PpParametersEntry::Parser<
-              ::google::protobuf::internal::MapField<
-                  ::std::string, ::std::string,
-                  ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-                  ::google::protobuf::internal::WireFormatLite::TYPE_STRING, 0>,
-              ::google::protobuf::Map< ::std::string, ::std::string> >
-              parser(&pp_parameters_);
-          DO_(::google::protobuf::internal::WireFormatLite::
-                  ReadMessageNoVirtual(input, &parser));
+         parse_loop_pp_parameters:
+          PacketProcessorConfig_PpParametersEntry::Parser< ::google::protobuf::internal::MapField<
+              ::std::string, ::std::string,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              0 >,
+            ::google::protobuf::Map< ::std::string, ::std::string > > parser(&pp_parameters_);
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+              input, &parser));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              parser.key().data(), parser.key().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PacketProcessorConfig.PpParametersEntry.key");
+            parser.key().data(), parser.key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PacketProcessorConfig.PpParametersEntry.key");
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              parser.value().data(), parser.value().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PacketProcessorConfig.PpParametersEntry.value");
+            parser.value().data(), parser.value().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PacketProcessorConfig.PpParametersEntry.value");
         } else {
           goto handle_unusual;
         }
@@ -393,15 +374,31 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
       case 5: {
         if (tag == 42) {
           DO_(input->IncrementRecursionDepth());
-        parse_loop_port_configs:
-          DO_(::google::protobuf::internal::WireFormatLite::
-                  ReadMessageNoVirtualNoRecursionDepth(input,
-                                                       add_port_configs()));
+         parse_loop_port_configs:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_port_configs()));
         } else {
           goto handle_unusual;
         }
         if (input->ExpectTag(42)) goto parse_loop_port_configs;
         input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(50)) goto parse_instance_id;
+        break;
+      }
+
+      // required string instance_id = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_instance_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_instance_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->instance_id().data(), this->instance_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PacketProcessorConfig.instance_id");
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -410,12 +407,11 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
       handle_unusual:
         if (tag == 0 ||
             ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-                ::google::protobuf::internal::WireFormatLite::
-                    WIRETYPE_END_GROUP) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
           goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
-            input, tag, mutable_unknown_fields()));
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -435,42 +431,39 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
   // required string packet_processor_class = 1;
   if (has_packet_processor_class()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-        this->packet_processor_class().data(),
-        this->packet_processor_class().length(),
-        ::google::protobuf::internal::WireFormat::SERIALIZE,
-        "PacketProcessorConfig.packet_processor_class");
+      this->packet_processor_class().data(), this->packet_processor_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PacketProcessorConfig.packet_processor_class");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-        1, this->packet_processor_class(), output);
+      1, this->packet_processor_class(), output);
   }
 
   // required int32 num_ingress_ports = 2;
   if (has_num_ingress_ports()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(
-        2, this->num_ingress_ports(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->num_ingress_ports(), output);
   }
 
   // required int32 num_egress_ports = 3;
   if (has_num_egress_ports()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(
-        3, this->num_egress_ports(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->num_egress_ports(), output);
   }
 
   // map<string, string> pp_parameters = 4;
   if (!this->pp_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string,
-                                     ::std::string>::const_pointer ConstPtr;
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
     struct Utf8Check {
       static void Check(ConstPtr p) {
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->first.data(), p->first.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PacketProcessorConfig.PpParametersEntry.key");
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PacketProcessorConfig.PpParametersEntry.key");
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->second.data(), p->second.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PacketProcessorConfig.PpParametersEntry.value");
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PacketProcessorConfig.PpParametersEntry.value");
       }
     };
 
@@ -478,33 +471,29 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
         this->pp_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->pp_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string>::size_type
-          size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator
-               it = this->pp_parameters().begin();
-           it != this->pp_parameters().end(); ++it, ++n) {
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->pp_parameters().begin();
+          it != this->pp_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
       }
       ::std::sort(&items[0], &items[n], Less());
-      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry>
-          entry;
+      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
       for (size_type i = 0; i < n; i++) {
-        entry.reset(
-            pp_parameters_.NewEntryWrapper(items[i]->first, items[i]->second));
+        entry.reset(pp_parameters_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
         ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
             4, *entry, output);
         Utf8Check::Check(items[i]);
       }
     } else {
-      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry>
-          entry;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator it =
-               this->pp_parameters().begin();
-           it != this->pp_parameters().end(); ++it) {
-        entry.reset(pp_parameters_.NewEntryWrapper(it->first, it->second));
+      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->pp_parameters().begin();
+          it != this->pp_parameters().end(); ++it) {
+        entry.reset(pp_parameters_.NewEntryWrapper(
+            it->first, it->second));
         ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
             4, *entry, output);
         Utf8Check::Check(&*it);
@@ -515,7 +504,17 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
   // repeated .PortConfig port_configs = 5;
   for (unsigned int i = 0, n = this->port_configs_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        5, this->port_configs(i), output);
+      5, this->port_configs(i), output);
+  }
+
+  // required string instance_id = 6;
+  if (has_instance_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->instance_id().data(), this->instance_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PacketProcessorConfig.instance_id");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      6, this->instance_id(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -525,88 +524,82 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_end:PacketProcessorConfig)
 }
 
-::google::protobuf::uint8*
-PacketProcessorConfig::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PacketProcessorConfig::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:PacketProcessorConfig)
   // required string packet_processor_class = 1;
   if (has_packet_processor_class()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-        this->packet_processor_class().data(),
-        this->packet_processor_class().length(),
-        ::google::protobuf::internal::WireFormat::SERIALIZE,
-        "PacketProcessorConfig.packet_processor_class");
-    target = ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      this->packet_processor_class().data(), this->packet_processor_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PacketProcessorConfig.packet_processor_class");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->packet_processor_class(), target);
   }
 
   // required int32 num_ingress_ports = 2;
   if (has_num_ingress_ports()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(
-        2, this->num_ingress_ports(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->num_ingress_ports(), target);
   }
 
   // required int32 num_egress_ports = 3;
   if (has_num_egress_ports()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(
-        3, this->num_egress_ports(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->num_egress_ports(), target);
   }
 
   // map<string, string> pp_parameters = 4;
   if (!this->pp_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string,
-                                     ::std::string>::const_pointer ConstPtr;
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
     struct Utf8Check {
       static void Check(ConstPtr p) {
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->first.data(), p->first.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PacketProcessorConfig.PpParametersEntry.key");
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PacketProcessorConfig.PpParametersEntry.key");
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->second.data(), p->second.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PacketProcessorConfig.PpParametersEntry.value");
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PacketProcessorConfig.PpParametersEntry.value");
       }
     };
 
-    if (deterministic && this->pp_parameters().size() > 1) {
+    if (deterministic &&
+        this->pp_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->pp_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string>::size_type
-          size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator
-               it = this->pp_parameters().begin();
-           it != this->pp_parameters().end(); ++it, ++n) {
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->pp_parameters().begin();
+          it != this->pp_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
       }
       ::std::sort(&items[0], &items[n], Less());
-      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry>
-          entry;
+      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
       for (size_type i = 0; i < n; i++) {
-        entry.reset(
-            pp_parameters_.NewEntryWrapper(items[i]->first, items[i]->second));
+        entry.reset(pp_parameters_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
         target = ::google::protobuf::internal::WireFormatLite::
-            InternalWriteMessageNoVirtualToArray(4, *entry, deterministic,
-                                                 target);
-        ;
+                   InternalWriteMessageNoVirtualToArray(
+                       4, *entry, deterministic, target);
+;
         Utf8Check::Check(items[i]);
       }
     } else {
-      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry>
-          entry;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator it =
-               this->pp_parameters().begin();
-           it != this->pp_parameters().end(); ++it) {
-        entry.reset(pp_parameters_.NewEntryWrapper(it->first, it->second));
+      ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->pp_parameters().begin();
+          it != this->pp_parameters().end(); ++it) {
+        entry.reset(pp_parameters_.NewEntryWrapper(
+            it->first, it->second));
         target = ::google::protobuf::internal::WireFormatLite::
-            InternalWriteMessageNoVirtualToArray(4, *entry, deterministic,
-                                                 target);
-        ;
+                   InternalWriteMessageNoVirtualToArray(
+                       4, *entry, deterministic, target);
+;
         Utf8Check::Check(&*it);
       }
     }
@@ -615,60 +608,87 @@ PacketProcessorConfig::InternalSerializeWithCachedSizesToArray(
   // repeated .PortConfig port_configs = 5;
   for (unsigned int i = 0, n = this->port_configs_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(5, this->port_configs(i), false,
-                                             target);
+      InternalWriteMessageNoVirtualToArray(
+        5, this->port_configs(i), false, target);
+  }
+
+  // required string instance_id = 6;
+  if (has_instance_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->instance_id().data(), this->instance_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PacketProcessorConfig.instance_id");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        6, this->instance_id(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
-    target =
-        ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-            unknown_fields(), target);
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:PacketProcessorConfig)
   return target;
 }
 
 int PacketProcessorConfig::RequiredFieldsByteSizeFallback() const {
-  // @@protoc_insertion_point(required_fields_byte_size_fallback_start:PacketProcessorConfig)
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:PacketProcessorConfig)
   int total_size = 0;
 
   if (has_packet_processor_class()) {
     // required string packet_processor_class = 1;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                          this->packet_processor_class());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->packet_processor_class());
   }
 
   if (has_num_ingress_ports()) {
     // required int32 num_ingress_ports = 2;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->num_ingress_ports());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->num_ingress_ports());
   }
 
   if (has_num_egress_ports()) {
     // required int32 num_egress_ports = 3;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->num_egress_ports());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->num_egress_ports());
+  }
+
+  if (has_instance_id()) {
+    // required string instance_id = 6;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->instance_id());
   }
 
   return total_size;
 }
 int PacketProcessorConfig::ByteSize() const {
-  // @@protoc_insertion_point(message_byte_size_start:PacketProcessorConfig)
+// @@protoc_insertion_point(message_byte_size_start:PacketProcessorConfig)
   int total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) ==
-      0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x00000027) ^ 0x00000027) == 0) {  // All required fields are present.
     // required string packet_processor_class = 1;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                          this->packet_processor_class());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->packet_processor_class());
 
     // required int32 num_ingress_ports = 2;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->num_ingress_ports());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->num_ingress_ports());
 
     // required int32 num_egress_ports = 3;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->num_egress_ports());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->num_egress_ports());
+
+    // required string instance_id = 6;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->instance_id());
 
   } else {
     total_size += RequiredFieldsByteSizeFallback();
@@ -676,15 +696,13 @@ int PacketProcessorConfig::ByteSize() const {
   // map<string, string> pp_parameters = 4;
   total_size += 1 * this->pp_parameters_size();
   {
-    ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry>
-        entry;
-    for (::google::protobuf::Map< ::std::string, ::std::string>::const_iterator
-             it = this->pp_parameters().begin();
-         it != this->pp_parameters().end(); ++it) {
+    ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+        it = this->pp_parameters().begin();
+        it != this->pp_parameters().end(); ++it) {
       entry.reset(pp_parameters_.NewEntryWrapper(it->first, it->second));
-      total_size +=
-          ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-              *entry);
+      total_size += ::google::protobuf::internal::WireFormatLite::
+          MessageSizeNoVirtual(*entry);
     }
   }
 
@@ -692,14 +710,14 @@ int PacketProcessorConfig::ByteSize() const {
   total_size += 1 * this->port_configs_size();
   for (int i = 0; i < this->port_configs_size(); i++) {
     total_size +=
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-            this->port_configs(i));
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->port_configs(i));
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
-        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-            unknown_fields());
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -708,24 +726,24 @@ int PacketProcessorConfig::ByteSize() const {
 }
 
 void PacketProcessorConfig::MergeFrom(const ::google::protobuf::Message& from) {
-  // @@protoc_insertion_point(generalized_merge_from_start:PacketProcessorConfig)
+// @@protoc_insertion_point(generalized_merge_from_start:PacketProcessorConfig)
   if (GOOGLE_PREDICT_FALSE(&from == this)) {
     ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  const PacketProcessorConfig* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<
-          const PacketProcessorConfig>(&from);
+  const PacketProcessorConfig* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const PacketProcessorConfig>(
+          &from);
   if (source == NULL) {
-    // @@protoc_insertion_point(generalized_merge_from_cast_fail:PacketProcessorConfig)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PacketProcessorConfig)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-    // @@protoc_insertion_point(generalized_merge_from_cast_success:PacketProcessorConfig)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:PacketProcessorConfig)
     MergeFrom(*source);
   }
 }
 
 void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
-  // @@protoc_insertion_point(class_specific_merge_from_start:PacketProcessorConfig)
+// @@protoc_insertion_point(class_specific_merge_from_start:PacketProcessorConfig)
   if (GOOGLE_PREDICT_FALSE(&from == this)) {
     ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
@@ -734,15 +752,17 @@ void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_packet_processor_class()) {
       set_has_packet_processor_class();
-      packet_processor_class_.AssignWithDefault(
-          &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-          from.packet_processor_class_);
+      packet_processor_class_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.packet_processor_class_);
     }
     if (from.has_num_ingress_ports()) {
       set_num_ingress_ports(from.num_ingress_ports());
     }
     if (from.has_num_egress_ports()) {
       set_num_egress_ports(from.num_egress_ports());
+    }
+    if (from.has_instance_id()) {
+      set_has_instance_id();
+      instance_id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.instance_id_);
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -751,24 +771,23 @@ void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
 }
 
 void PacketProcessorConfig::CopyFrom(const ::google::protobuf::Message& from) {
-  // @@protoc_insertion_point(generalized_copy_from_start:PacketProcessorConfig)
+// @@protoc_insertion_point(generalized_copy_from_start:PacketProcessorConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void PacketProcessorConfig::CopyFrom(const PacketProcessorConfig& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:PacketProcessorConfig)
+// @@protoc_insertion_point(class_specific_copy_from_start:PacketProcessorConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 bool PacketProcessorConfig::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x00000027) != 0x00000027) return false;
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->port_configs()))
-    return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->port_configs())) return false;
   return true;
 }
 
@@ -782,6 +801,7 @@ void PacketProcessorConfig::InternalSwap(PacketProcessorConfig* other) {
   std::swap(num_egress_ports_, other->num_egress_ports_);
   pp_parameters_.Swap(&other->pp_parameters_);
   port_configs_.UnsafeArenaSwap(&other->port_configs_);
+  instance_id_.Swap(&other->instance_id_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -809,59 +829,46 @@ void PacketProcessorConfig::clear_has_packet_processor_class() {
   _has_bits_[0] &= ~0x00000001u;
 }
 void PacketProcessorConfig::clear_packet_processor_class() {
-  packet_processor_class_.ClearToEmptyNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  packet_processor_class_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   clear_has_packet_processor_class();
 }
-const ::std::string& PacketProcessorConfig::packet_processor_class() const {
+ const ::std::string& PacketProcessorConfig::packet_processor_class() const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.packet_processor_class)
-  return packet_processor_class_.GetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return packet_processor_class_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void PacketProcessorConfig::set_packet_processor_class(
-    const ::std::string& value) {
+ void PacketProcessorConfig::set_packet_processor_class(const ::std::string& value) {
   set_has_packet_processor_class();
-  packet_processor_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  packet_processor_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.packet_processor_class)
 }
-void PacketProcessorConfig::set_packet_processor_class(const char* value) {
+ void PacketProcessorConfig::set_packet_processor_class(const char* value) {
   set_has_packet_processor_class();
-  packet_processor_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(value));
+  packet_processor_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:PacketProcessorConfig.packet_processor_class)
 }
-void PacketProcessorConfig::set_packet_processor_class(const char* value,
-                                                       size_t size) {
+ void PacketProcessorConfig::set_packet_processor_class(const char* value, size_t size) {
   set_has_packet_processor_class();
-  packet_processor_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  packet_processor_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:PacketProcessorConfig.packet_processor_class)
 }
-::std::string* PacketProcessorConfig::mutable_packet_processor_class() {
+ ::std::string* PacketProcessorConfig::mutable_packet_processor_class() {
   set_has_packet_processor_class();
   // @@protoc_insertion_point(field_mutable:PacketProcessorConfig.packet_processor_class)
-  return packet_processor_class_.MutableNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return packet_processor_class_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* PacketProcessorConfig::release_packet_processor_class() {
+ ::std::string* PacketProcessorConfig::release_packet_processor_class() {
   // @@protoc_insertion_point(field_release:PacketProcessorConfig.packet_processor_class)
   clear_has_packet_processor_class();
-  return packet_processor_class_.ReleaseNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return packet_processor_class_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void PacketProcessorConfig::set_allocated_packet_processor_class(
-    ::std::string* packet_processor_class) {
+ void PacketProcessorConfig::set_allocated_packet_processor_class(::std::string* packet_processor_class) {
   if (packet_processor_class != NULL) {
     set_has_packet_processor_class();
   } else {
     clear_has_packet_processor_class();
   }
-  packet_processor_class_.SetAllocatedNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      packet_processor_class);
+  packet_processor_class_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), packet_processor_class);
   // @@protoc_insertion_point(field_set_allocated:PacketProcessorConfig.packet_processor_class)
 }
 
@@ -879,12 +886,11 @@ void PacketProcessorConfig::clear_num_ingress_ports() {
   num_ingress_ports_ = 0;
   clear_has_num_ingress_ports();
 }
-::google::protobuf::int32 PacketProcessorConfig::num_ingress_ports() const {
+ ::google::protobuf::int32 PacketProcessorConfig::num_ingress_ports() const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.num_ingress_ports)
   return num_ingress_ports_;
 }
-void PacketProcessorConfig::set_num_ingress_ports(
-    ::google::protobuf::int32 value) {
+ void PacketProcessorConfig::set_num_ingress_ports(::google::protobuf::int32 value) {
   set_has_num_ingress_ports();
   num_ingress_ports_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.num_ingress_ports)
@@ -904,12 +910,11 @@ void PacketProcessorConfig::clear_num_egress_ports() {
   num_egress_ports_ = 0;
   clear_has_num_egress_ports();
 }
-::google::protobuf::int32 PacketProcessorConfig::num_egress_ports() const {
+ ::google::protobuf::int32 PacketProcessorConfig::num_egress_ports() const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.num_egress_ports)
   return num_egress_ports_;
 }
-void PacketProcessorConfig::set_num_egress_ports(
-    ::google::protobuf::int32 value) {
+ void PacketProcessorConfig::set_num_egress_ports(::google::protobuf::int32 value) {
   set_has_num_egress_ports();
   num_egress_ports_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.num_egress_ports)
@@ -919,13 +924,15 @@ void PacketProcessorConfig::set_num_egress_ports(
 int PacketProcessorConfig::pp_parameters_size() const {
   return pp_parameters_.size();
 }
-void PacketProcessorConfig::clear_pp_parameters() { pp_parameters_.Clear(); }
-const ::google::protobuf::Map< ::std::string, ::std::string>&
+void PacketProcessorConfig::clear_pp_parameters() {
+  pp_parameters_.Clear();
+}
+ const ::google::protobuf::Map< ::std::string, ::std::string >&
 PacketProcessorConfig::pp_parameters() const {
   // @@protoc_insertion_point(field_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.GetMap();
 }
-::google::protobuf::Map< ::std::string, ::std::string>*
+ ::google::protobuf::Map< ::std::string, ::std::string >*
 PacketProcessorConfig::mutable_pp_parameters() {
   // @@protoc_insertion_point(field_mutable_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.MutableMap();
@@ -935,7 +942,9 @@ PacketProcessorConfig::mutable_pp_parameters() {
 int PacketProcessorConfig::port_configs_size() const {
   return port_configs_.size();
 }
-void PacketProcessorConfig::clear_port_configs() { port_configs_.Clear(); }
+void PacketProcessorConfig::clear_port_configs() {
+  port_configs_.Clear();
+}
 const ::PortConfig& PacketProcessorConfig::port_configs(int index) const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.port_configs)
   return port_configs_.Get(index);
@@ -948,15 +957,69 @@ const ::PortConfig& PacketProcessorConfig::port_configs(int index) const {
   // @@protoc_insertion_point(field_add:PacketProcessorConfig.port_configs)
   return port_configs_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::PortConfig>*
+::google::protobuf::RepeatedPtrField< ::PortConfig >*
 PacketProcessorConfig::mutable_port_configs() {
   // @@protoc_insertion_point(field_mutable_list:PacketProcessorConfig.port_configs)
   return &port_configs_;
 }
-const ::google::protobuf::RepeatedPtrField< ::PortConfig>&
+const ::google::protobuf::RepeatedPtrField< ::PortConfig >&
 PacketProcessorConfig::port_configs() const {
   // @@protoc_insertion_point(field_list:PacketProcessorConfig.port_configs)
   return port_configs_;
+}
+
+// required string instance_id = 6;
+bool PacketProcessorConfig::has_instance_id() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void PacketProcessorConfig::set_has_instance_id() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void PacketProcessorConfig::clear_has_instance_id() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+void PacketProcessorConfig::clear_instance_id() {
+  instance_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_instance_id();
+}
+ const ::std::string& PacketProcessorConfig::instance_id() const {
+  // @@protoc_insertion_point(field_get:PacketProcessorConfig.instance_id)
+  return instance_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void PacketProcessorConfig::set_instance_id(const ::std::string& value) {
+  set_has_instance_id();
+  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
+}
+ void PacketProcessorConfig::set_instance_id(const char* value) {
+  set_has_instance_id();
+  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:PacketProcessorConfig.instance_id)
+}
+ void PacketProcessorConfig::set_instance_id(const char* value, size_t size) {
+  set_has_instance_id();
+  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:PacketProcessorConfig.instance_id)
+}
+ ::std::string* PacketProcessorConfig::mutable_instance_id() {
+  set_has_instance_id();
+  // @@protoc_insertion_point(field_mutable:PacketProcessorConfig.instance_id)
+  return instance_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* PacketProcessorConfig::release_instance_id() {
+  // @@protoc_insertion_point(field_release:PacketProcessorConfig.instance_id)
+  clear_has_instance_id();
+  return instance_id_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void PacketProcessorConfig::set_allocated_instance_id(::std::string* instance_id) {
+  if (instance_id != NULL) {
+    set_has_instance_id();
+  } else {
+    clear_has_instance_id();
+  }
+  instance_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), instance_id);
+  // @@protoc_insertion_point(field_set_allocated:PacketProcessorConfig.instance_id)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -968,7 +1031,7 @@ const ::google::protobuf::EnumDescriptor* PortConfig_PortType_descriptor() {
   return PortConfig_PortType_descriptor_;
 }
 bool PortConfig_PortType_IsValid(int value) {
-  switch (value) {
+  switch(value) {
     case 0:
     case 1:
       return true;
@@ -992,15 +1055,17 @@ const int PortConfig::kPortParametersFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PortConfig::PortConfig()
-    : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:PortConfig)
 }
 
-void PortConfig::InitAsDefaultInstance() {}
+void PortConfig::InitAsDefaultInstance() {
+}
 
 PortConfig::PortConfig(const PortConfig& from)
-    : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:PortConfig)
@@ -1011,9 +1076,9 @@ void PortConfig::SharedCtor() {
   _cached_size_ = 0;
   port_index_ = 0;
   port_type_ = 0;
-  port_class_.UnsafeSetDefault(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  port_parameters_.SetAssignDescriptorCallback(protobuf_AssignDescriptorsOnce);
+  port_class_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  port_parameters_.SetAssignDescriptorCallback(
+      protobuf_AssignDescriptorsOnce);
   port_parameters_.SetEntryDescriptor(
       &::PortConfig_PortParametersEntry_descriptor_);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1025,8 +1090,7 @@ PortConfig::~PortConfig() {
 }
 
 void PortConfig::SharedDtor() {
-  port_class_.DestroyNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  port_class_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -1042,8 +1106,7 @@ const ::google::protobuf::Descriptor* PortConfig::descriptor() {
 }
 
 const PortConfig& PortConfig::default_instance() {
-  if (default_instance_ == NULL)
-    protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
+  if (default_instance_ == NULL) protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
   return *default_instance_;
 }
 
@@ -1060,27 +1123,25 @@ PortConfig* PortConfig::New(::google::protobuf::Arena* arena) const {
 void PortConfig::Clear() {
 // @@protoc_insertion_point(message_clear_start:PortConfig)
 #if defined(__clang__)
-#define ZR_HELPER_(f)                                                 \
-  _Pragma("clang diagnostic push")                                    \
-      _Pragma(                                                        \
-          "clang diagnostic ignored "                                 \
-          "\"-Winvalid-offsetof\"") __builtin_offsetof(PortConfig, f) \
-          _Pragma("clang diagnostic pop")
-#else
 #define ZR_HELPER_(f) \
-  reinterpret_cast<char*>(&reinterpret_cast<PortConfig*>(16)->f)
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(PortConfig, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<PortConfig*>(16)->f)
 #endif
 
-#define ZR_(first, last)                                                      \
-  do {                                                                        \
-    ::memset(&first, 0, ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last)); \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
   if (_has_bits_[0 / 32] & 7u) {
     ZR_(port_index_, port_type_);
     if (has_port_class()) {
-      port_class_.ClearToEmptyNoArena(
-          &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+      port_class_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
 
@@ -1096,24 +1157,20 @@ void PortConfig::Clear() {
 
 bool PortConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) \
-  if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:PortConfig)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p =
-        input->ReadTagWithCutoff(127);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-    switch (
-        ::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required int32 port_index = 1;
       case 1: {
         if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-               ::google::protobuf::int32,
-               ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-              input, &port_index_)));
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &port_index_)));
           set_has_port_index();
         } else {
           goto handle_unusual;
@@ -1125,13 +1182,13 @@ bool PortConfig::MergePartialFromCodedStream(
       // required .PortConfig.PortType port_type = 2;
       case 2: {
         if (tag == 16) {
-        parse_port_type:
+         parse_port_type:
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-               int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-              input, &value)));
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
           if (::PortConfig_PortType_IsValid(value)) {
-            set_port_type(static_cast< ::PortConfig_PortType>(value));
+            set_port_type(static_cast< ::PortConfig_PortType >(value));
           } else {
             mutable_unknown_fields()->AddVarint(2, value);
           }
@@ -1145,13 +1202,13 @@ bool PortConfig::MergePartialFromCodedStream(
       // required string port_class = 3;
       case 3: {
         if (tag == 26) {
-        parse_port_class:
+         parse_port_class:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-              input, this->mutable_port_class()));
+                input, this->mutable_port_class()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              this->port_class().data(), this->port_class().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PortConfig.port_class");
+            this->port_class().data(), this->port_class().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PortConfig.port_class");
         } else {
           goto handle_unusual;
         }
@@ -1162,26 +1219,25 @@ bool PortConfig::MergePartialFromCodedStream(
       // map<string, string> port_parameters = 4;
       case 4: {
         if (tag == 34) {
-        parse_port_parameters:
+         parse_port_parameters:
           DO_(input->IncrementRecursionDepth());
-        parse_loop_port_parameters:
-          PortConfig_PortParametersEntry::Parser<
-              ::google::protobuf::internal::MapField<
-                  ::std::string, ::std::string,
-                  ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-                  ::google::protobuf::internal::WireFormatLite::TYPE_STRING, 0>,
-              ::google::protobuf::Map< ::std::string, ::std::string> >
-              parser(&port_parameters_);
-          DO_(::google::protobuf::internal::WireFormatLite::
-                  ReadMessageNoVirtual(input, &parser));
+         parse_loop_port_parameters:
+          PortConfig_PortParametersEntry::Parser< ::google::protobuf::internal::MapField<
+              ::std::string, ::std::string,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              0 >,
+            ::google::protobuf::Map< ::std::string, ::std::string > > parser(&port_parameters_);
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+              input, &parser));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              parser.key().data(), parser.key().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PortConfig.PortParametersEntry.key");
+            parser.key().data(), parser.key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PortConfig.PortParametersEntry.key");
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-              parser.value().data(), parser.value().length(),
-              ::google::protobuf::internal::WireFormat::PARSE,
-              "PortConfig.PortParametersEntry.value");
+            parser.value().data(), parser.value().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "PortConfig.PortParametersEntry.value");
         } else {
           goto handle_unusual;
         }
@@ -1195,12 +1251,11 @@ bool PortConfig::MergePartialFromCodedStream(
       handle_unusual:
         if (tag == 0 ||
             ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-                ::google::protobuf::internal::WireFormatLite::
-                    WIRETYPE_END_GROUP) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
           goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
-            input, tag, mutable_unknown_fields()));
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -1219,42 +1274,41 @@ void PortConfig::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:PortConfig)
   // required int32 port_index = 1;
   if (has_port_index()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(
-        1, this->port_index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->port_index(), output);
   }
 
   // required .PortConfig.PortType port_type = 2;
   if (has_port_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-        2, this->port_type(), output);
+      2, this->port_type(), output);
   }
 
   // required string port_class = 3;
   if (has_port_class()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-        this->port_class().data(), this->port_class().length(),
-        ::google::protobuf::internal::WireFormat::SERIALIZE,
-        "PortConfig.port_class");
+      this->port_class().data(), this->port_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PortConfig.port_class");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-        3, this->port_class(), output);
+      3, this->port_class(), output);
   }
 
   // map<string, string> port_parameters = 4;
   if (!this->port_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string,
-                                     ::std::string>::const_pointer ConstPtr;
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
     struct Utf8Check {
       static void Check(ConstPtr p) {
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->first.data(), p->first.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PortConfig.PortParametersEntry.key");
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PortConfig.PortParametersEntry.key");
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->second.data(), p->second.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PortConfig.PortParametersEntry.value");
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PortConfig.PortParametersEntry.value");
       }
     };
 
@@ -1262,31 +1316,29 @@ void PortConfig::SerializeWithCachedSizes(
         this->port_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->port_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string>::size_type
-          size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator
-               it = this->port_parameters().begin();
-           it != this->port_parameters().end(); ++it, ++n) {
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->port_parameters().begin();
+          it != this->port_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
       }
       ::std::sort(&items[0], &items[n], Less());
       ::google::protobuf::scoped_ptr<PortConfig_PortParametersEntry> entry;
       for (size_type i = 0; i < n; i++) {
-        entry.reset(port_parameters_.NewEntryWrapper(items[i]->first,
-                                                     items[i]->second));
+        entry.reset(port_parameters_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
         ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
             4, *entry, output);
         Utf8Check::Check(items[i]);
       }
     } else {
       ::google::protobuf::scoped_ptr<PortConfig_PortParametersEntry> entry;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator it =
-               this->port_parameters().begin();
-           it != this->port_parameters().end(); ++it) {
-        entry.reset(port_parameters_.NewEntryWrapper(it->first, it->second));
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->port_parameters().begin();
+          it != this->port_parameters().end(); ++it) {
+        entry.reset(port_parameters_.NewEntryWrapper(
+            it->first, it->second));
         ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
             4, *entry, output);
         Utf8Check::Check(&*it);
@@ -1306,134 +1358,135 @@ void PortConfig::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:PortConfig)
   // required int32 port_index = 1;
   if (has_port_index()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(
-        1, this->port_index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->port_index(), target);
   }
 
   // required .PortConfig.PortType port_type = 2;
   if (has_port_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-        2, this->port_type(), target);
+      2, this->port_type(), target);
   }
 
   // required string port_class = 3;
   if (has_port_class()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-        this->port_class().data(), this->port_class().length(),
-        ::google::protobuf::internal::WireFormat::SERIALIZE,
-        "PortConfig.port_class");
-    target = ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      this->port_class().data(), this->port_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "PortConfig.port_class");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->port_class(), target);
   }
 
   // map<string, string> port_parameters = 4;
   if (!this->port_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string,
-                                     ::std::string>::const_pointer ConstPtr;
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
     struct Utf8Check {
       static void Check(ConstPtr p) {
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->first.data(), p->first.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PortConfig.PortParametersEntry.key");
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PortConfig.PortParametersEntry.key");
         ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            p->second.data(), p->second.length(),
-            ::google::protobuf::internal::WireFormat::SERIALIZE,
-            "PortConfig.PortParametersEntry.value");
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormat::SERIALIZE,
+          "PortConfig.PortParametersEntry.value");
       }
     };
 
-    if (deterministic && this->port_parameters().size() > 1) {
+    if (deterministic &&
+        this->port_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->port_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string>::size_type
-          size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator
-               it = this->port_parameters().begin();
-           it != this->port_parameters().end(); ++it, ++n) {
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->port_parameters().begin();
+          it != this->port_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
       }
       ::std::sort(&items[0], &items[n], Less());
       ::google::protobuf::scoped_ptr<PortConfig_PortParametersEntry> entry;
       for (size_type i = 0; i < n; i++) {
-        entry.reset(port_parameters_.NewEntryWrapper(items[i]->first,
-                                                     items[i]->second));
+        entry.reset(port_parameters_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
         target = ::google::protobuf::internal::WireFormatLite::
-            InternalWriteMessageNoVirtualToArray(4, *entry, deterministic,
-                                                 target);
-        ;
+                   InternalWriteMessageNoVirtualToArray(
+                       4, *entry, deterministic, target);
+;
         Utf8Check::Check(items[i]);
       }
     } else {
       ::google::protobuf::scoped_ptr<PortConfig_PortParametersEntry> entry;
-      for (::google::protobuf::Map< ::std::string,
-                                    ::std::string>::const_iterator it =
-               this->port_parameters().begin();
-           it != this->port_parameters().end(); ++it) {
-        entry.reset(port_parameters_.NewEntryWrapper(it->first, it->second));
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->port_parameters().begin();
+          it != this->port_parameters().end(); ++it) {
+        entry.reset(port_parameters_.NewEntryWrapper(
+            it->first, it->second));
         target = ::google::protobuf::internal::WireFormatLite::
-            InternalWriteMessageNoVirtualToArray(4, *entry, deterministic,
-                                                 target);
-        ;
+                   InternalWriteMessageNoVirtualToArray(
+                       4, *entry, deterministic, target);
+;
         Utf8Check::Check(&*it);
       }
     }
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
-    target =
-        ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-            unknown_fields(), target);
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:PortConfig)
   return target;
 }
 
 int PortConfig::RequiredFieldsByteSizeFallback() const {
-  // @@protoc_insertion_point(required_fields_byte_size_fallback_start:PortConfig)
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:PortConfig)
   int total_size = 0;
 
   if (has_port_index()) {
     // required int32 port_index = 1;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->port_index());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->port_index());
   }
 
   if (has_port_type()) {
     // required .PortConfig.PortType port_type = 2;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::EnumSize(
-                          this->port_type());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->port_type());
   }
 
   if (has_port_class()) {
     // required string port_class = 3;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                          this->port_class());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->port_class());
   }
 
   return total_size;
 }
 int PortConfig::ByteSize() const {
-  // @@protoc_insertion_point(message_byte_size_start:PortConfig)
+// @@protoc_insertion_point(message_byte_size_start:PortConfig)
   int total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) ==
-      0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
     // required int32 port_index = 1;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::Int32Size(
-                          this->port_index());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->port_index());
 
     // required .PortConfig.PortType port_type = 2;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::EnumSize(
-                          this->port_type());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->port_type());
 
     // required string port_class = 3;
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                          this->port_class());
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->port_class());
 
   } else {
     total_size += RequiredFieldsByteSizeFallback();
@@ -1442,20 +1495,19 @@ int PortConfig::ByteSize() const {
   total_size += 1 * this->port_parameters_size();
   {
     ::google::protobuf::scoped_ptr<PortConfig_PortParametersEntry> entry;
-    for (::google::protobuf::Map< ::std::string, ::std::string>::const_iterator
-             it = this->port_parameters().begin();
-         it != this->port_parameters().end(); ++it) {
+    for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+        it = this->port_parameters().begin();
+        it != this->port_parameters().end(); ++it) {
       entry.reset(port_parameters_.NewEntryWrapper(it->first, it->second));
-      total_size +=
-          ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-              *entry);
+      total_size += ::google::protobuf::internal::WireFormatLite::
+          MessageSizeNoVirtual(*entry);
     }
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
-        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-            unknown_fields());
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -1464,24 +1516,24 @@ int PortConfig::ByteSize() const {
 }
 
 void PortConfig::MergeFrom(const ::google::protobuf::Message& from) {
-  // @@protoc_insertion_point(generalized_merge_from_start:PortConfig)
+// @@protoc_insertion_point(generalized_merge_from_start:PortConfig)
   if (GOOGLE_PREDICT_FALSE(&from == this)) {
     ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  const PortConfig* source =
+  const PortConfig* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const PortConfig>(
           &from);
   if (source == NULL) {
-    // @@protoc_insertion_point(generalized_merge_from_cast_fail:PortConfig)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PortConfig)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-    // @@protoc_insertion_point(generalized_merge_from_cast_success:PortConfig)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:PortConfig)
     MergeFrom(*source);
   }
 }
 
 void PortConfig::MergeFrom(const PortConfig& from) {
-  // @@protoc_insertion_point(class_specific_merge_from_start:PortConfig)
+// @@protoc_insertion_point(class_specific_merge_from_start:PortConfig)
   if (GOOGLE_PREDICT_FALSE(&from == this)) {
     ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
@@ -1495,9 +1547,7 @@ void PortConfig::MergeFrom(const PortConfig& from) {
     }
     if (from.has_port_class()) {
       set_has_port_class();
-      port_class_.AssignWithDefault(
-          &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-          from.port_class_);
+      port_class_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.port_class_);
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -1506,14 +1556,14 @@ void PortConfig::MergeFrom(const PortConfig& from) {
 }
 
 void PortConfig::CopyFrom(const ::google::protobuf::Message& from) {
-  // @@protoc_insertion_point(generalized_copy_from_start:PortConfig)
+// @@protoc_insertion_point(generalized_copy_from_start:PortConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void PortConfig::CopyFrom(const PortConfig& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:PortConfig)
+// @@protoc_insertion_point(class_specific_copy_from_start:PortConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1554,17 +1604,21 @@ void PortConfig::InternalSwap(PortConfig* other) {
 bool PortConfig::has_port_index() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-void PortConfig::set_has_port_index() { _has_bits_[0] |= 0x00000001u; }
-void PortConfig::clear_has_port_index() { _has_bits_[0] &= ~0x00000001u; }
+void PortConfig::set_has_port_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void PortConfig::clear_has_port_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
 void PortConfig::clear_port_index() {
   port_index_ = 0;
   clear_has_port_index();
 }
-::google::protobuf::int32 PortConfig::port_index() const {
+ ::google::protobuf::int32 PortConfig::port_index() const {
   // @@protoc_insertion_point(field_get:PortConfig.port_index)
   return port_index_;
 }
-void PortConfig::set_port_index(::google::protobuf::int32 value) {
+ void PortConfig::set_port_index(::google::protobuf::int32 value) {
   set_has_port_index();
   port_index_ = value;
   // @@protoc_insertion_point(field_set:PortConfig.port_index)
@@ -1574,17 +1628,21 @@ void PortConfig::set_port_index(::google::protobuf::int32 value) {
 bool PortConfig::has_port_type() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-void PortConfig::set_has_port_type() { _has_bits_[0] |= 0x00000002u; }
-void PortConfig::clear_has_port_type() { _has_bits_[0] &= ~0x00000002u; }
+void PortConfig::set_has_port_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void PortConfig::clear_has_port_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
 void PortConfig::clear_port_type() {
   port_type_ = 0;
   clear_has_port_type();
 }
-::PortConfig_PortType PortConfig::port_type() const {
+ ::PortConfig_PortType PortConfig::port_type() const {
   // @@protoc_insertion_point(field_get:PortConfig.port_type)
-  return static_cast< ::PortConfig_PortType>(port_type_);
+  return static_cast< ::PortConfig_PortType >(port_type_);
 }
-void PortConfig::set_port_type(::PortConfig_PortType value) {
+ void PortConfig::set_port_type(::PortConfig_PortType value) {
   assert(::PortConfig_PortType_IsValid(value));
   set_has_port_type();
   port_type_ = value;
@@ -1595,70 +1653,69 @@ void PortConfig::set_port_type(::PortConfig_PortType value) {
 bool PortConfig::has_port_class() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-void PortConfig::set_has_port_class() { _has_bits_[0] |= 0x00000004u; }
-void PortConfig::clear_has_port_class() { _has_bits_[0] &= ~0x00000004u; }
+void PortConfig::set_has_port_class() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void PortConfig::clear_has_port_class() {
+  _has_bits_[0] &= ~0x00000004u;
+}
 void PortConfig::clear_port_class() {
-  port_class_.ClearToEmptyNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  port_class_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   clear_has_port_class();
 }
-const ::std::string& PortConfig::port_class() const {
+ const ::std::string& PortConfig::port_class() const {
   // @@protoc_insertion_point(field_get:PortConfig.port_class)
-  return port_class_.GetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return port_class_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void PortConfig::set_port_class(const ::std::string& value) {
+ void PortConfig::set_port_class(const ::std::string& value) {
   set_has_port_class();
-  port_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  port_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:PortConfig.port_class)
 }
-void PortConfig::set_port_class(const char* value) {
+ void PortConfig::set_port_class(const char* value) {
   set_has_port_class();
-  port_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(value));
+  port_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:PortConfig.port_class)
 }
-void PortConfig::set_port_class(const char* value, size_t size) {
+ void PortConfig::set_port_class(const char* value, size_t size) {
   set_has_port_class();
-  port_class_.SetNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  port_class_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:PortConfig.port_class)
 }
-::std::string* PortConfig::mutable_port_class() {
+ ::std::string* PortConfig::mutable_port_class() {
   set_has_port_class();
   // @@protoc_insertion_point(field_mutable:PortConfig.port_class)
-  return port_class_.MutableNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return port_class_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* PortConfig::release_port_class() {
+ ::std::string* PortConfig::release_port_class() {
   // @@protoc_insertion_point(field_release:PortConfig.port_class)
   clear_has_port_class();
-  return port_class_.ReleaseNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return port_class_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void PortConfig::set_allocated_port_class(::std::string* port_class) {
+ void PortConfig::set_allocated_port_class(::std::string* port_class) {
   if (port_class != NULL) {
     set_has_port_class();
   } else {
     clear_has_port_class();
   }
-  port_class_.SetAllocatedNoArena(
-      &::google::protobuf::internal::GetEmptyStringAlreadyInited(), port_class);
+  port_class_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), port_class);
   // @@protoc_insertion_point(field_set_allocated:PortConfig.port_class)
 }
 
 // map<string, string> port_parameters = 4;
-int PortConfig::port_parameters_size() const { return port_parameters_.size(); }
-void PortConfig::clear_port_parameters() { port_parameters_.Clear(); }
-const ::google::protobuf::Map< ::std::string, ::std::string>&
+int PortConfig::port_parameters_size() const {
+  return port_parameters_.size();
+}
+void PortConfig::clear_port_parameters() {
+  port_parameters_.Clear();
+}
+ const ::google::protobuf::Map< ::std::string, ::std::string >&
 PortConfig::port_parameters() const {
   // @@protoc_insertion_point(field_map:PortConfig.port_parameters)
   return port_parameters_.GetMap();
 }
-::google::protobuf::Map< ::std::string, ::std::string>*
+ ::google::protobuf::Map< ::std::string, ::std::string >*
 PortConfig::mutable_port_parameters() {
   // @@protoc_insertion_point(field_mutable_map:PortConfig.port_parameters)
   return port_parameters_.MutableMap();

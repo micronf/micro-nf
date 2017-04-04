@@ -13,7 +13,6 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
 	instance_id_ = pp_config.instance_id();
-
   // First, initialize the list of ingress and egress ports.
   int i = 0;
   for (i = 0; i < this->num_ingress_ports_; ++i) {
@@ -49,6 +48,10 @@ inline void MacSwapper::Run() {
     for (i = 0; i < num_rx; ++i) {
       ether_hdr* eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
       std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+			//TESTING SLOWING DOWN
+			//for(int j=0; j<10000000; j++){
+			//	int a = 100; a++;
+			//}
     }
     total_tx += this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
   }
