@@ -7,6 +7,7 @@ inline void ComputePktSzHist::Init(const PacketProcessorConfig& pp_config) {
   assert(this->num_egress_ports_ == 1);
   PacketProcessor::ConfigurePorts(pp_config, this);
   pkt_size_bucket_.resize(kNumBuckets, 0);
+  this->instance_id_ = pp_config.instance_id();
 }
 
 inline void ComputePktSzHist::Run() {

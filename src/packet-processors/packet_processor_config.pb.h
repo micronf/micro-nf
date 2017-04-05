@@ -177,17 +177,12 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   const ::google::protobuf::RepeatedPtrField< ::PortConfig >&
       port_configs() const;
 
-  // required string instance_id = 6;
+  // required int32 instance_id = 6;
   bool has_instance_id() const;
   void clear_instance_id();
   static const int kInstanceIdFieldNumber = 6;
-  const ::std::string& instance_id() const;
-  void set_instance_id(const ::std::string& value);
-  void set_instance_id(const char* value);
-  void set_instance_id(const char* value, size_t size);
-  ::std::string* mutable_instance_id();
-  ::std::string* release_instance_id();
-  void set_allocated_instance_id(::std::string* instance_id);
+  ::google::protobuf::int32 instance_id() const;
+  void set_instance_id(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:PacketProcessorConfig)
  private:
@@ -221,7 +216,7 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
       0 > pp_parameters_;
   ::google::protobuf::RepeatedPtrField< ::PortConfig > port_configs_;
-  ::google::protobuf::internal::ArenaStringPtr instance_id_;
+  ::google::protobuf::int32 instance_id_;
   friend void  protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
   friend void protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto();
   friend void protobuf_ShutdownFile_packet_5fprocessor_5fconfig_2eproto();
@@ -555,7 +550,7 @@ PacketProcessorConfig::port_configs() const {
   return port_configs_;
 }
 
-// required string instance_id = 6;
+// required int32 instance_id = 6;
 inline bool PacketProcessorConfig::has_instance_id() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
@@ -566,47 +561,17 @@ inline void PacketProcessorConfig::clear_has_instance_id() {
   _has_bits_[0] &= ~0x00000020u;
 }
 inline void PacketProcessorConfig::clear_instance_id() {
-  instance_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  instance_id_ = 0;
   clear_has_instance_id();
 }
-inline const ::std::string& PacketProcessorConfig::instance_id() const {
+inline ::google::protobuf::int32 PacketProcessorConfig::instance_id() const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.instance_id)
-  return instance_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return instance_id_;
 }
-inline void PacketProcessorConfig::set_instance_id(const ::std::string& value) {
+inline void PacketProcessorConfig::set_instance_id(::google::protobuf::int32 value) {
   set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  instance_id_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
-}
-inline void PacketProcessorConfig::set_instance_id(const char* value) {
-  set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:PacketProcessorConfig.instance_id)
-}
-inline void PacketProcessorConfig::set_instance_id(const char* value, size_t size) {
-  set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:PacketProcessorConfig.instance_id)
-}
-inline ::std::string* PacketProcessorConfig::mutable_instance_id() {
-  set_has_instance_id();
-  // @@protoc_insertion_point(field_mutable:PacketProcessorConfig.instance_id)
-  return instance_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* PacketProcessorConfig::release_instance_id() {
-  // @@protoc_insertion_point(field_release:PacketProcessorConfig.instance_id)
-  clear_has_instance_id();
-  return instance_id_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void PacketProcessorConfig::set_allocated_instance_id(::std::string* instance_id) {
-  if (instance_id != NULL) {
-    set_has_instance_id();
-  } else {
-    clear_has_instance_id();
-  }
-  instance_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), instance_id);
-  // @@protoc_insertion_point(field_set_allocated:PacketProcessorConfig.instance_id)
 }
 
 // -------------------------------------------------------------------

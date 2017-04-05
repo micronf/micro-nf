@@ -140,7 +140,7 @@ void protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto() {
     "num_egress_ports\030\003 \002(\005\022\?\n\rpp_parameters\030"
     "\004 \003(\0132(.PacketProcessorConfig.PpParamete"
     "rsEntry\022!\n\014port_configs\030\005 \003(\0132\013.PortConf"
-    "ig\022\023\n\013instance_id\030\006 \002(\t\0323\n\021PpParametersE"
+    "ig\022\023\n\013instance_id\030\006 \002(\005\0323\n\021PpParametersE"
     "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\375\001\n"
     "\nPortConfig\022\022\n\nport_index\030\001 \002(\005\022\'\n\tport_"
     "type\030\002 \002(\0162\024.PortConfig.PortType\022\022\n\nport"
@@ -203,7 +203,7 @@ void PacketProcessorConfig::SharedCtor() {
       protobuf_AssignDescriptorsOnce);
   pp_parameters_.SetEntryDescriptor(
       &::PacketProcessorConfig_PpParametersEntry_descriptor_);
-  instance_id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  instance_id_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -214,7 +214,6 @@ PacketProcessorConfig::~PacketProcessorConfig() {
 
 void PacketProcessorConfig::SharedDtor() {
   packet_processor_class_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  instance_id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -267,9 +266,7 @@ void PacketProcessorConfig::Clear() {
     if (has_packet_processor_class()) {
       packet_processor_class_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
-    if (has_instance_id()) {
-      instance_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    }
+    instance_id_ = 0;
   }
 
 #undef ZR_HELPER_
@@ -382,20 +379,18 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
         }
         if (input->ExpectTag(42)) goto parse_loop_port_configs;
         input->UnsafeDecrementRecursionDepth();
-        if (input->ExpectTag(50)) goto parse_instance_id;
+        if (input->ExpectTag(48)) goto parse_instance_id;
         break;
       }
 
-      // required string instance_id = 6;
+      // required int32 instance_id = 6;
       case 6: {
-        if (tag == 50) {
+        if (tag == 48) {
          parse_instance_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_instance_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->instance_id().data(), this->instance_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "PacketProcessorConfig.instance_id");
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &instance_id_)));
+          set_has_instance_id();
         } else {
           goto handle_unusual;
         }
@@ -507,14 +502,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
       5, this->port_configs(i), output);
   }
 
-  // required string instance_id = 6;
+  // required int32 instance_id = 6;
   if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->instance_id().data(), this->instance_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "PacketProcessorConfig.instance_id");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      6, this->instance_id(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->instance_id(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -612,15 +602,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
         5, this->port_configs(i), false, target);
   }
 
-  // required string instance_id = 6;
+  // required int32 instance_id = 6;
   if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->instance_id().data(), this->instance_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "PacketProcessorConfig.instance_id");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        6, this->instance_id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->instance_id(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -657,9 +641,9 @@ int PacketProcessorConfig::RequiredFieldsByteSizeFallback() const {
   }
 
   if (has_instance_id()) {
-    // required string instance_id = 6;
+    // required int32 instance_id = 6;
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->instance_id());
   }
 
@@ -685,9 +669,9 @@ int PacketProcessorConfig::ByteSize() const {
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->num_egress_ports());
 
-    // required string instance_id = 6;
+    // required int32 instance_id = 6;
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->instance_id());
 
   } else {
@@ -761,8 +745,7 @@ void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
       set_num_egress_ports(from.num_egress_ports());
     }
     if (from.has_instance_id()) {
-      set_has_instance_id();
-      instance_id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.instance_id_);
+      set_instance_id(from.instance_id());
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -801,7 +784,7 @@ void PacketProcessorConfig::InternalSwap(PacketProcessorConfig* other) {
   std::swap(num_egress_ports_, other->num_egress_ports_);
   pp_parameters_.Swap(&other->pp_parameters_);
   port_configs_.UnsafeArenaSwap(&other->port_configs_);
-  instance_id_.Swap(&other->instance_id_);
+  std::swap(instance_id_, other->instance_id_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -968,7 +951,7 @@ PacketProcessorConfig::port_configs() const {
   return port_configs_;
 }
 
-// required string instance_id = 6;
+// required int32 instance_id = 6;
 bool PacketProcessorConfig::has_instance_id() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
@@ -979,47 +962,17 @@ void PacketProcessorConfig::clear_has_instance_id() {
   _has_bits_[0] &= ~0x00000020u;
 }
 void PacketProcessorConfig::clear_instance_id() {
-  instance_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  instance_id_ = 0;
   clear_has_instance_id();
 }
- const ::std::string& PacketProcessorConfig::instance_id() const {
+ ::google::protobuf::int32 PacketProcessorConfig::instance_id() const {
   // @@protoc_insertion_point(field_get:PacketProcessorConfig.instance_id)
-  return instance_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return instance_id_;
 }
- void PacketProcessorConfig::set_instance_id(const ::std::string& value) {
+ void PacketProcessorConfig::set_instance_id(::google::protobuf::int32 value) {
   set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  instance_id_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
-}
- void PacketProcessorConfig::set_instance_id(const char* value) {
-  set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:PacketProcessorConfig.instance_id)
-}
- void PacketProcessorConfig::set_instance_id(const char* value, size_t size) {
-  set_has_instance_id();
-  instance_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:PacketProcessorConfig.instance_id)
-}
- ::std::string* PacketProcessorConfig::mutable_instance_id() {
-  set_has_instance_id();
-  // @@protoc_insertion_point(field_mutable:PacketProcessorConfig.instance_id)
-  return instance_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- ::std::string* PacketProcessorConfig::release_instance_id() {
-  // @@protoc_insertion_point(field_release:PacketProcessorConfig.instance_id)
-  clear_has_instance_id();
-  return instance_id_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void PacketProcessorConfig::set_allocated_instance_id(::std::string* instance_id) {
-  if (instance_id != NULL) {
-    set_has_instance_id();
-  } else {
-    clear_has_instance_id();
-  }
-  instance_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), instance_id);
-  // @@protoc_insertion_point(field_set_allocated:PacketProcessorConfig.instance_id)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

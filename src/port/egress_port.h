@@ -31,9 +31,6 @@ class EgressPort {
   virtual int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size = TX_BURST_SIZE) = 0;
 
   int port_id() const { return this->port_id_; }
-	//int owner_packet_processor() const { 
-	//	return std::stoi(this->owner_packet_processor_->instance_id()); 
-	//}
   virtual ~EgressPort() {}
 
   static const std::string kConfPortId;

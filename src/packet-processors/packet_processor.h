@@ -24,7 +24,7 @@ class PacketProcessor {
 
   virtual void FlushState() = 0;
   virtual void RecoverState() = 0;
-  const std::string& instance_id() const { return instance_id_; }
+  const int instance_id() const { return instance_id_; }
   inline uint16_t num_ingress_ports() const { return this->num_ingress_ports_; }
   inline uint16_t num_egress_ports() const { return this->num_egress_ports_; }
   std::vector<std::unique_ptr<IngressPort>>& ingress_ports() {
@@ -43,7 +43,7 @@ class PacketProcessor {
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
 									PacketProcessor* owner_pp = nullptr);
 
-  std::string instance_id_;
+  int instance_id_;
   uint16_t num_ingress_ports_;
   uint16_t num_egress_ports_;
   std::vector<std::unique_ptr<IngressPort>> ingress_ports_;
