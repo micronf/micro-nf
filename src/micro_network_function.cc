@@ -1,18 +1,18 @@
 #include <fcntl.h>
-#include <string.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
 #include <pthread.h>
-#include <map>
-#include <memory>
-#include <string>
 #include <rte_common.h>
 #include <rte_eal.h>
 #include <rte_ethdev.h>
 #include <rte_malloc.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-#include <google/protobuf/text_format.h>
-#include "packet-processors/packet_processors.h"
+#include <string.h>
+#include <map>
+#include <memory>
+#include <string>
 #include "packet-processors/packet_processor_config.pb.h"
 #include "packet-processors/packet_processor_factory.h"
+#include "packet-processors/packet_processors.h"
 #include "port/port_factory.h"
 
 std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
