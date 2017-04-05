@@ -23,6 +23,8 @@ message PacketProcessorConfig {
   // A list of port configurations. Port configurations will contain
   // configurations for both ingress and egress ports.
   repeated PortConfig port_configs = 5;
+
+	required int32 instance_id = 6;
 };
 
 message PortConfig {

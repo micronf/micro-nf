@@ -13,10 +13,12 @@ SetBitmapEgressPort::SetBitmapEgressPort(int port_id,
   this->port_id_ = port_id;
   this->bitmap_index_ = port_id >> 3;
   this->bitmap_offset_ = port_id & 8;
+
 }
 
 void SetBitmapEgressPort::Init(
-    std::map<std::string, std::string> &port_config) {}
+    std::map<std::string, std::string> &port_config,
+              PacketProcessor* owner_pp) {}
 
 int SetBitmapEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) {
   for (int i = 0; i < burst_size; ++i) {

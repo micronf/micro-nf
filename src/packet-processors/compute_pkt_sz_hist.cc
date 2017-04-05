@@ -1,13 +1,13 @@
 #include "compute_pkt_sz_hist.h"
 #include <google/protobuf/map.h>
-#include "../port/port_factory.h"
 
 inline void ComputePktSzHist::Init(const PacketProcessorConfig& pp_config) {
   this->num_ingress_ports_ = pp_config.num_ingress_ports();
   this->num_egress_ports_ = pp_config.num_egress_ports();
   assert(this->num_egress_ports_ == 1);
-  PacketProcessor::ConfigurePorts(pp_config);
+  PacketProcessor::ConfigurePorts(pp_config, this);
   pkt_size_bucket_.resize(kNumBuckets, 0);
+  this->instance_id_ = pp_config.instance_id();
 }
 
 inline void ComputePktSzHist::Run() {

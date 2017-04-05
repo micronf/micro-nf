@@ -7,13 +7,14 @@
 void TCPIPClassifier::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
+	this->instance_id_ = pp_config.instance_id();
   for (int i = 0; i < num_ingress_ports_; ++i) {
     ingress_ports_.emplace_back(nullptr);
   }
   for (int i = 0; i < num_egress_ports_; ++i) {
     egress_ports_.emplace_back(nullptr);
   }
-  PacketProcessor::ConfigurePorts(pp_config);
+  PacketProcessor::ConfigurePorts(pp_config, this);
   acl_rules_.resize(num_ingress_ports_);
   const auto& pp_params = pp_config.pp_parameters();
   // FIXME: The following should not be hardcoded, rather it should be
