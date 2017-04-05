@@ -33,12 +33,6 @@ std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
   return std::move(ret_map);
 }
 
-int LaunchMicroservice(void* arg) {
-  PacketProcessor* packet_processor = reinterpret_cast<PacketProcessor*>(arg);
-  packet_processor->Run();
-  return 0;
-}
-  
 int main(int argc, char *argv[]) {
   int args_processed = rte_eal_init(argc, argv);
   argc -= args_processed;
@@ -71,15 +65,20 @@ int main(int argc, char *argv[]) {
   google::protobuf::TextFormat::PrintToString(packet_processor_config, &str);
   printf("%s\n", str.c_str());
 
+  // First, pin the current thread to the CPU specified in CPU mask.
+  int ms_lcore_id = rte_lcore_id();
+  pthread_t current_thread = pthread_self();
+  cpu_set_t cpuset;
+  CPU_ZERO(cpuset);
+  CPU_SET(ms_lcore_id, &cpuset);
+  pthread_set_affinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
+
+  // Initialize and run the packet processor.
   PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();
   auto packet_processor = pp_factory->CreatePacketProcessor(
       packet_processor_config.packet_processor_class());
   assert(packet_processor.get() != nullptr);
   packet_processor->Init(packet_processor_config);
-  int ms_lcore_id = rte_get_next_lcore(rte_lcore_id(), 1, 1);
-  rte_eal_remote_launch(LaunchMicroservice, 
-                        reinterpret_cast<void*>(packet_processor.get()), 
-                        ms_lcore_id);
-  rte_eal_wait_lcore(ms_lcore_id);
+  packet_processor->Run();
   return 0;
 }
