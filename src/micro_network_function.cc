@@ -33,6 +33,12 @@ std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
   return std::move(ret_map);
 }
 
+int LaunchMicroservice(void* arg) {
+  PacketProcessor* packet_processor = reinterpret_cast<PacketProcessor*>(arg);
+  packet_processor->Run();
+  return 0;
+}
+  
 int main(int argc, char *argv[]) {
   int args_processed = rte_eal_init(argc, argv);
   argc -= args_processed;
@@ -70,6 +76,10 @@ int main(int argc, char *argv[]) {
       packet_processor_config.packet_processor_class());
   assert(packet_processor.get() != nullptr);
   packet_processor->Init(packet_processor_config);
-  packet_processor->Run();
+  int ms_lcore_id = rte_get_next_lcore(rte_lcore_id(), 1, 1);
+  rte_eal_remote_launch(LaunchMicroservice, 
+                        reinterpret_cast<void*>(packet_processor.get()), 
+                        ms_lcore_id);
+  rte_eal_wait_lcore(ms_lcore_id);
   return 0;
 }
