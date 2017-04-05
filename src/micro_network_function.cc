@@ -1,21 +1,19 @@
-#include "common/api_server.h"
-#include "packet-processors/packet_processor_config.pb.h"
-#include "packet-processors/packet_processor_factory.h"
-#include "packet-processors/packet_processors.h"
-#include "port/port_factory.h"
-
+#include <fcntl.h>
+#include <string.h>
+#include <pthread.h>
+#include <map>
+#include <memory>
+#include <string>
 #include <rte_common.h>
 #include <rte_eal.h>
 #include <rte_ethdev.h>
 #include <rte_malloc.h>
-
-#include <fcntl.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
-#include <cstring>
-#include <map>
-#include <memory>
-#include <string>
+#include "packet-processors/packet_processors.h"
+#include "packet-processors/packet_processor_config.pb.h"
+#include "packet-processors/packet_processor_factory.h"
+#include "port/port_factory.h"
 
 std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
                                                               char *argv[]) {
@@ -23,9 +21,6 @@ std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
       new std::map<std::string, std::string>());
   const std::string kDel = "=";
   for (int i = 0; i < argc; ++i) {
-    // Skip the -- part.
-    // argv[i] += 2;
-
     char *key = strtok(argv[i] + 2, kDel.c_str());
     char *val = strtok(NULL, kDel.c_str());
     ret_map->insert(std::make_pair(key, val));
@@ -47,7 +42,6 @@ int main(int argc, char *argv[]) {
   }
   if (config_file_path == "")
     rte_exit(EXIT_FAILURE, "No configuration file provided\n");
-
   PacketProcessorConfig packet_processor_config;
   int fd = open(config_file_path.c_str(), O_RDONLY);
   if (fd < 0)
@@ -69,9 +63,9 @@ int main(int argc, char *argv[]) {
   int ms_lcore_id = rte_lcore_id();
   pthread_t current_thread = pthread_self();
   cpu_set_t cpuset;
-  CPU_ZERO(cpuset);
+  CPU_ZERO(&cpuset);
   CPU_SET(ms_lcore_id, &cpuset);
-  pthread_set_affinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
+  pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
 
   // Initialize and run the packet processor.
   PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();
