@@ -8,7 +8,10 @@ inline void CountSubnetPackets::Init(const PacketProcessorConfig& pp_config) {
   PacketProcessor::ConfigurePorts(pp_config, this);
   subnet_pkt_counter_.clear();
   i_to_e_port_map_.resize(num_ingress_ports_);
+
+  // Hardcoded configuration for convenience.
   for (int i = 0; i < num_ingress_ports_; ++i) i_to_e_port_map_.push_back(i);
+  AddSubnet("10.10.0.0/24");
 }
 
 inline void CountSubnetPackets::AddSubnet(const std::string& subnet_str) {
