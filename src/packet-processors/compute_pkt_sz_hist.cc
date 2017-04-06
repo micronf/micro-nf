@@ -2,27 +2,32 @@
 #include <google/protobuf/map.h>
 
 inline void ComputePktSzHist::Init(const PacketProcessorConfig& pp_config) {
-  this->num_ingress_ports_ = pp_config.num_ingress_ports();
-  this->num_egress_ports_ = pp_config.num_egress_ports();
+  num_ingress_ports_ = pp_config.num_ingress_ports();
+  num_egress_ports_ = pp_config.num_egress_ports();
+	instance_id_ = pp_config.instance_id();
+  // First, initialize the list of ingress and egress ports.
+  int i = 0;
+  for (i = 0; i < this->num_ingress_ports_; ++i) {
+    ingress_ports_.emplace_back(nullptr);
+  }
+  for (i = 0; i < this->num_egress_ports_; ++i) {
+    egress_ports_.emplace_back(nullptr);
+  }
   assert(this->num_egress_ports_ == 1);
   PacketProcessor::ConfigurePorts(pp_config, this);
   pkt_size_bucket_.resize(kNumBuckets, 0);
-  this->instance_id_ = pp_config.instance_id();
 }
 
 inline void ComputePktSzHist::Run() {
   rx_pkt_array_t rx_packets;
-  tx_pkt_array_t tx_packets;
   uint16_t num_rx = 0;
   register int i = 0;
   while (true) {
     for (auto& iport : this->ingress_ports_) {
       num_rx = iport->RxBurst(rx_packets);
-      for (i = 0; i < num_rx; ++i) {
+      for (i = 0; i < num_rx; ++i) 
         ++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
-        tx_packets[i] = rx_packets[i];
-      }
-      this->egress_ports_[0]->TxBurst(tx_packets);
+      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
     }
   }
 }
