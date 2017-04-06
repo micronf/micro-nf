@@ -19,6 +19,10 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<MacSwapper>();
   } else if (packet_processor_type == "TCPIPClassifier") {
     pp_ptr = CreatePacketProcessorInternal<TCPIPClassifier>();
+  } else if (packet_processor_type == "ComputePktSzHist") {
+    pp_ptr = CreatePacketProcessorInternal<ComputePktSzHist>();
+  } else if (packet_processor_type == "CountSubnetPackets") {
+    pp_ptr = CreatePacketProcessorInternal<CountSubnetPackets>();
   } else if (packet_processor_type == "DropPacket") {
     pp_ptr = CreatePacketProcessorInternal<DropPacket>();
   }
@@ -28,10 +32,6 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
 template <class T>
 std::unique_ptr<PacketProcessor>
 PacketProcessorFactory::CreatePacketProcessorInternal() {
-  // size_t alloc_size = sizeof(T);
   auto pp_ptr = std::unique_ptr<PacketProcessor>(new T());
-  // auto pp_ptr = std::unique_ptr<PacketProcessor>(
-  //     reinterpret_cast<T*>(rte_zmalloc(
-  //         NULL, alloc_size, RTE_CACHE_LINE_SIZE)));
   return std::move(pp_ptr);
 }
