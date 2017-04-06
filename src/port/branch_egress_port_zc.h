@@ -2,20 +2,19 @@
 #define _BRANCH_EGRESS_PORT_ZC_H_
 
 #include "egress_port.h"
-#include "../packet-processors/packet_processor.h"
-
+#include "packet-processors/packet_processor.h"
 #include <string>
 #include <vector>
 
 class BranchEgressPortZC : public EgressPort {
  public:
-  BranchEgressPortZC();
-  BranchEgressPortZC(int num_branches,
-                     const std::vector<std::string> &ring_ids);
+  BranchEgressPortZC() : num_branches_(0) {};
   void Init(std::map<std::string, std::string> &port_config,
               PacketProcessor* owner_pp) override;
   int TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) override;
+  virtual ~BranchEgressPortZC() {}
 
+  static const std::string kConfNumBranches;
  private:
   // Number of microservices this egress port is connected to.
   int num_branches_;
