@@ -4,11 +4,10 @@ void RteEgressPort::Init(std::map<std::string, std::string> &port_config,
 											PacketProcessor* owner_pp) {
   this->tx_ring_ = 
       rte_ring_lookup(port_config[EgressPort::kConfRingId].c_str());
+  assert(this->tx_ring_ != nullptr);
   this->port_id_ = std::stoi(port_config[EgressPort::kConfPortId]);
-
 	this->stat_mz = rte_memzone_lookup(MZ_STAT);
   this->micronf_stats = (MSStats*) this->stat_mz->addr;
-
 	this->owner_packet_processor_ = owner_pp;
 }
 
