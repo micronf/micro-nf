@@ -48,10 +48,6 @@ inline void MacSwapper::Run() {
     for (i = 0; i < num_rx; ++i) {
       ether_hdr* eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
       std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
-			//TESTING SLOWING DOWN
-			//for(int j=0; j<10000000; j++){
-			//	int a = 100; a++;
-			//}
     }
     total_tx += this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
   }

@@ -5,13 +5,12 @@
 #include <rte_memzone.h>
 
 #include "../common/msstats.h"
-//#include "../packet-processors/packet_processor.h"
+#include "../common/scale_bit_vector.h"
 
 #include <array>
 #include <map>
 #include <string>
 
-#define MZ_STAT "MZ_STAT"
 #define TX_BURST_SIZE 64
 
 typedef std::array<struct rte_mbuf*, TX_BURST_SIZE> tx_pkt_array_t;
@@ -43,6 +42,9 @@ class EgressPort {
 	
 	const struct rte_memzone *stat_mz;
 	MSStats* micronf_stats;
+  const struct rte_memzone *scale_bits_mz;
+  ScaleBitVector *scale_bits;
+
   PacketProcessor* owner_packet_processor_;
 
 };
