@@ -9,7 +9,8 @@
 
 class MarkAndForwardEgressPort : public EgressPort {
  public:
-  MarkAndForwardEgressPort();
+  MarkAndForwardEgressPort() : 
+    bitmap_index_(-1), bitmap_offset_(-1), tx_ring_(nullptr) {}
   void Init(std::map<std::string, std::string>& port_config,
               PacketProcessor* owner_pp) override;
   int TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) override;
@@ -20,6 +21,7 @@ class MarkAndForwardEgressPort : public EgressPort {
 
   // Bit offset inside a bitmap entry.
   int bitmap_offset_;
+
   rte_ring* tx_ring_;
 };
 

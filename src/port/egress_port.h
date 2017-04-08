@@ -38,7 +38,7 @@ class EgressPort {
  protected:
   // An identifier assigned to this port. Identifier assignment is specific to
   // port and not necessarily globally unique.
-  unsigned int port_id_;
+  int port_id_;
 	
 	const struct rte_memzone *stat_mz;
 	MSStats* micronf_stats;

@@ -1,8 +1,8 @@
 #include "sync_ingress_port.h"
-
+#include <assert.h>
 #include <rte_malloc.h>
-
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 const std::string SyncIngressPort::kConfNumPrevMs = "num_prev_ms";
 
@@ -12,27 +12,27 @@ void SyncIngressPort::Init(std::map<std::string, std::string> &port_config) {
       (num_prev_ms_ >> 3) + static_cast<int>((num_prev_ms_ & 8) != 0);
   this->mask_ =
       std::unique_ptr<unsigned char>(reinterpret_cast<unsigned char *>(
-          rte_zmalloc(NULL, this->num_bitmap_entries_, 0)));
+          malloc(this->num_bitmap_entries_ * sizeof(unsigned char))));
   memset(mask_.get(), 0xFF, this->num_bitmap_entries_);
   mask_.get()[this->num_bitmap_entries_ - 1] &=
       static_cast<unsigned char>(~(0xFF << (num_prev_ms_ & 8)));
   this->rx_ring_ =
       rte_ring_lookup(port_config[IngressPort::kConfRingId].c_str());
+  assert(this->rx_ring_ != nullptr);
 }
 
 inline int SyncIngressPort::RxBurst(rx_pkt_array_t &packets) {
   // First check if there are packets that can be pulled from pending mbuf
   // queue.
   int num_rx = 0, i = 0;
-  while (!pending_mbuf_q_.empty()) {
+  while (num_rx <= RX_BURST_SIZE && !pending_mbuf_q_.empty()) {
     auto mbuf = pending_mbuf_q_.front();
     char *mdata_ptr = MDATA_PTR(mbuf);
-    if (likely(!std::memcmp(mdata_ptr, this->mask_.get(),
+    if (likely(!memcmp(mdata_ptr, this->mask_.get(),
                             this->num_bitmap_entries_))) {
       packets[num_rx++] = mbuf;
       pending_mbuf_q_.pop();
-    } else
-      break;
+    } else break;
   }
 
   // If the number of packets pulled from the pending queue is equal to
@@ -45,7 +45,7 @@ inline int SyncIngressPort::RxBurst(rx_pkt_array_t &packets) {
   // If there is room for more packets and the pending_mbuf_q_ is empty, then
   // pull from the ring.
   rx_pkt_array_t rx_packets;
-  int num_rx_from_ring = rte_ring_sc_dequeue_burst(
+  int num_rx_from_ring = rte_ring_dequeue_burst(
       this->rx_ring_, reinterpret_cast<void **>(rx_packets.data()),
       RX_BURST_SIZE - num_rx);
 
@@ -53,11 +53,10 @@ inline int SyncIngressPort::RxBurst(rx_pkt_array_t &packets) {
   // packets that are not ready push them to pending_mbuf_q_.
   for (i = 0; i < num_rx_from_ring; ++i) {
     char *mdata_ptr = MDATA_PTR(rx_packets[i]);
-    if (likely(!std::memcmp(mdata_ptr, this->mask_.get(),
+    if (likely(!memcmp(mdata_ptr, this->mask_.get(),
                             this->num_bitmap_entries_))) {
       packets[num_rx++] = rx_packets[i];
-    } else
-      break;
+    } else break;
   }
 
   // Push the rest of the packets in pending_mbuf_q_.
