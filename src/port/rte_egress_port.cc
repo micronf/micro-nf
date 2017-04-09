@@ -9,9 +9,6 @@ void RteEgressPort::Init(std::map<std::string, std::string> &port_config,
 	this->stat_mz = rte_memzone_lookup(MZ_STAT);
   this->micronf_stats = (MSStats*) this->stat_mz->addr;
 
-	this->scale_bits_mz = rte_memzone_lookup(MZ_SCALE);
-	this->scale_bits = (ScaleBitVector*) this->scale_bits_mz->addr;
-
 	this->owner_packet_processor_ = owner_pp;
 }
 
@@ -28,11 +25,6 @@ inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) 
       rte_pktmbuf_free(packets[i]);
     }
   }
-	
-	if(this->scale_bits->bits.test(owner_packet_processor_->instance_id())) {
-			// TODO 
-			// Change port to smart port. How?? need to change the caller of this function
-	}	
 	
   return num_tx;
 }

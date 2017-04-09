@@ -1,6 +1,6 @@
 CXX = g++
-CFLAGS = -mssse3 -std=c++0x -O3
-INCS = -I$(RTE_SDK)/$(RTE_TARGET)/include
+CFLAGS = -mssse3 -std=c++0x -O3 
+INCS = -I$(RTE_SDK)/$(RTE_TARGET)/include -I./src
 LIBDIR = -L$(RTE_SDK)/$(RTE_TARGET)/lib
 LDFLAGS = -lprotobuf -lpthread -ldl -Wl,--whole-archive -ldpdk -ldl -libverbs -Wl,--no-whole-archive
 

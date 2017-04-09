@@ -5,7 +5,6 @@
 #include <rte_memzone.h>
 
 #include "../common/msstats.h"
-#include "../common/scale_bit_vector.h"
 
 #include <array>
 #include <map>
@@ -42,9 +41,6 @@ class EgressPort {
 	
 	const struct rte_memzone *stat_mz;
 	MSStats* micronf_stats;
-  const struct rte_memzone *scale_bits_mz;
-  ScaleBitVector *scale_bits;
-
   PacketProcessor* owner_packet_processor_;
 
 };

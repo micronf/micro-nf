@@ -16,6 +16,7 @@ inline void ComputePktSzHist::Init(const PacketProcessorConfig& pp_config) {
   assert(this->num_egress_ports_ == 1);
   PacketProcessor::ConfigurePorts(pp_config, this);
   pkt_size_bucket_.resize(kNumBuckets, 0);
+
 }
 
 inline void ComputePktSzHist::Run() {
@@ -29,6 +30,12 @@ inline void ComputePktSzHist::Run() {
         ++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
     }
+		
+		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
+    if(this->scale_bits->bits.test(this->instance_id_)){
+        // TODO Change port to smart port. 
+    }
+
   }
 }
 
