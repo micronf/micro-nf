@@ -18,7 +18,7 @@ inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) 
   int num_tx = rte_ring_enqueue_burst(
       this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
 
-  if(num_tx == -ENOBUFS){
+  if(unlikely(num_tx < burst_size)){
     this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()] += 
 			burst_size - num_tx; 
     for(int i= num_tx; i < burst_size; i++){
