@@ -40,12 +40,14 @@ inline void MacSwapper::Run() {
       std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
     }
     this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
-		
-		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
-		if(this->scale_bits->bits.test(this->instance_id_)){
-				// TODO 
-				// Change port to smart port.
-		}
+
+		for(i=0; i < num_egress_ports_; i++){
+      if(this->scale_bits->bits[this->instance_id_].test(i)){
+          // TODO 
+          // Change port to smart port.
+      }
+    }
+	
   }
 }
 

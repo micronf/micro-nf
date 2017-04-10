@@ -27,11 +27,13 @@ void DropPacket::Run() {
       }
     }
 
-		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
-    if(this->scale_bits->bits.test(this->instance_id_)){
-        // TODO 
-        // Change port to smart port.
+		for(int i; i < num_egress_ports_; i++){
+      if(this->scale_bits->bits[this->instance_id_].test(i)){
+          // TODO 
+          // Change port to smart port.
+      }
     }
+
   }
 }
 

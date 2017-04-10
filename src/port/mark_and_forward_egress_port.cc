@@ -11,6 +11,7 @@ void MarkAndForwardEgressPort::Init(
   assert(this->tx_ring_ != nullptr);
   this->bitmap_index_ = this->port_id_ >> 3;
   this->bitmap_offset_ = this->port_id_ & 8;
+
   this->stat_mz = rte_memzone_lookup(MZ_STAT);
   this->micronf_stats = (MSStats*) this->stat_mz->addr;
   this->owner_packet_processor_ = owner_pp;
@@ -26,7 +27,7 @@ inline int MarkAndForwardEgressPort::TxBurst(
 	uint16_t num_tx = rte_ring_enqueue_burst(
       this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
 	if(unlikely((num_tx < burst_size))){
-		this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()] += 
+		this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 
 			(burst_size - num_tx);
 		for (i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);
 	}

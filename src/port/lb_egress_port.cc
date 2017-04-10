@@ -10,6 +10,11 @@ inline void LBEgressPort::Init(std::map<std::string, std::string>& port_config,
     auto& ring_name = port_config[std::to_string(i)];
     this->tx_rings_.push_back(rte_ring_lookup(ring_name.c_str()));
   }
+	
+	this->stat_mz = rte_memzone_lookup(MZ_STAT);
+  this->micronf_stats = (MSStats*) this->stat_mz->addr;
+  this->owner_packet_processor_ = owner_pp;
+
 }
 
 inline int LBEgressPort::TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) {
@@ -20,11 +25,11 @@ inline int LBEgressPort::TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) {
   for (i = 0; i < num_destination_ms_; ++i, packets_remaining -= burst_per_ms) {
     if (unlikely(packets_remaining < burst_per_ms))
       burst_per_ms = packets_remaining;
-    num_tx += rte_ring_enqueue_burst(
+   		num_tx += rte_ring_enqueue_burst(
         this->tx_rings_[i], reinterpret_cast<void**>(packets.data() + num_tx),
         burst_per_ms);
   }
-  micronf_stats->packet_drop[owner_packet_processor_->instance_id()] +=
+  micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] +=
       burst_size - num_tx;
   for (i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);
   return num_tx;

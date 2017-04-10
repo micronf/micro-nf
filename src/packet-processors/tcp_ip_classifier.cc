@@ -67,11 +67,13 @@ void TCPIPClassifier::Run() {
       this->egress_ports_[deny_port_index_[iport_idx]]->TxBurst(
           deny_packets, nb_deny);
     }
-		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
-    if(this->scale_bits->bits.test(this->instance_id_)){
-        // TODO 
-        // Change port to smart port.
-    }
+
+		for(i=0; i < this->num_egress_ports_; i++){
+			if(this->scale_bits->bits[this->instance_id_].test(i)){
+					// TODO 
+					// Change port to smart port.
+			}
+		}
 
   }
 }
