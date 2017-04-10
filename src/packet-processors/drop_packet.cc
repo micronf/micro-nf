@@ -26,6 +26,12 @@ void DropPacket::Run() {
         rte_pktmbuf_free(packets[i]);
       }
     }
+
+		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
+    if(this->scale_bits->bits.test(this->instance_id_)){
+        // TODO 
+        // Change port to smart port.
+    }
   }
 }
 

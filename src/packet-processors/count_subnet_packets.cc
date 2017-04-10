@@ -52,6 +52,13 @@ inline void CountSubnetPackets::Run() {
       out_port = i_to_e_port_map_[i];
       egress_ports_[out_port]->TxBurst(rx_packets, num_rx);
     }
+
+		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
+    if(this->scale_bits->bits.test(this->instance_id_)){
+        // TODO 
+        // Change port to smart port. How?? need to change the caller of this function
+    }
+
   }
 }
 

@@ -5,13 +5,11 @@
 #include <rte_memzone.h>
 
 #include "../common/msstats.h"
-//#include "../packet-processors/packet_processor.h"
 
 #include <array>
 #include <map>
 #include <string>
 
-#define MZ_STAT "MZ_STAT"
 #define TX_BURST_SIZE 64
 
 typedef std::array<struct rte_mbuf*, TX_BURST_SIZE> tx_pkt_array_t;

@@ -2,6 +2,7 @@
 #define _MSSTATS_H_
 
 #define MAX_NUM_MS 100
+#define MZ_STAT "MZ_STAT"
 
 class MSStats {
 	public:

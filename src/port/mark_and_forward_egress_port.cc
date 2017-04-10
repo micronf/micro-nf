@@ -25,8 +25,10 @@ inline int MarkAndForwardEgressPort::TxBurst(
   }
 	uint16_t num_tx = rte_ring_enqueue_burst(
       this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
-  this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()] += 
-    (burst_size - num_tx);
-  for (i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);
+	if(unlikely((num_tx < burst_size))){
+		this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()] += 
+			(burst_size - num_tx);
+		for (i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);
+	}
   return num_tx;
 }

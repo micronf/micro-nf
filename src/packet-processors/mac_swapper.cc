@@ -20,7 +20,12 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
     egress_ports_.emplace_back(nullptr);
   }
   PacketProcessor::ConfigurePorts(pp_config, this);
+
+//	this->scale_bits_mz = rte_memzone_lookup(MZ_SCALE);
+//  this->scale_bits = (ScaleBitVector*) this->scale_bits_mz->addr;
+
   // Packet processor specific configuration (if any).
+	
 }
 
 inline void MacSwapper::Run() {
@@ -35,6 +40,12 @@ inline void MacSwapper::Run() {
       std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
     }
     this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+		
+		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
+		if(this->scale_bits->bits.test(this->instance_id_)){
+				// TODO 
+				// Change port to smart port.
+		}
   }
 }
 
