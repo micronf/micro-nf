@@ -31,9 +31,13 @@ inline void ComputePktSzHist::Run() {
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
     }
 		
-		//printf("bit: %d\n", this->scale_bits->bits.test(this->instance_id_));
-    if(this->scale_bits->bits.test(this->instance_id_)){
-        // TODO Change port to smart port. 
+		for(i = 0; i < this->num_egress_ports_; i++){
+      if(this->scale_bits->bits[this->instance_id_].test(i)){
+          // TODO 
+          // Change port to smart port.
+
+          this->scale_bits->bits[this->instance_id_].set(i, false);
+      }
     }
 
   }
