@@ -43,8 +43,9 @@ inline void MacSwapper::Run() {
 
 		for(i=0; i < num_egress_ports_; i++){
       if(this->scale_bits->bits[this->instance_id_].test(i)){
-          // TODO 
-          // Change port to smart port.
+          // TODO  Change port to smart port.
+					
+					this->scale_bits->bits[this->instance_id_].set(i, false);
       }
     }
 	

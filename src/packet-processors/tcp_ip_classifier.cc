@@ -72,6 +72,8 @@ void TCPIPClassifier::Run() {
 			if(this->scale_bits->bits[this->instance_id_].test(i)){
 					// TODO 
 					// Change port to smart port.
+
+          this->scale_bits->bits[this->instance_id_].set(i, false);
 			}
 		}
 
