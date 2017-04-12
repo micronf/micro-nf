@@ -25,6 +25,8 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<CountSubnetPackets>();
   } else if (packet_processor_type == "DropPacket") {
     pp_ptr = CreatePacketProcessorInternal<DropPacket>();
+  } else if (packet_processor_type == "HeaderParser") {
+    pp_ptr = CreatePacketProcessorInternal<HeaderParser>();
   }
   return std::move(pp_ptr);
 }
