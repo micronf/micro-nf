@@ -4,7 +4,7 @@
 #include "packet_processor.h"
 
 class HeaderParser : public PacketProcessor {
-  private:
+  public:
     HeaderParser() {}
     void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
