@@ -3,13 +3,14 @@
 
 #define MAX_NUM_MS 100
 #define MAX_NUM_PORT 50
+#define MAX_SCALE_OUT 50
 
 #define MZ_STAT "MZ_STAT"
 
 class MSStats {
 	public:
 		int num_nf;
-		unsigned int packet_drop[MAX_NUM_MS][MAX_NUM_PORT];
+		unsigned int packet_drop[MAX_NUM_MS + MAX_SCALE_OUT][MAX_NUM_PORT];
 
 };
 
