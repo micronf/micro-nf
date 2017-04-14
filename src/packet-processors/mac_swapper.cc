@@ -21,9 +21,6 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
   }
   PacketProcessor::ConfigurePorts(pp_config, this);
 
-//	this->scale_bits_mz = rte_memzone_lookup(MZ_SCALE);
-//  this->scale_bits = (ScaleBitVector*) this->scale_bits_mz->addr;
-
   // Packet processor specific configuration (if any).
 	
 }

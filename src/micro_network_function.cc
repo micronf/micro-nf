@@ -21,11 +21,8 @@ std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
       new std::map<std::string, std::string>());
   const std::string kDel = "=";
   for (int i = 0; i < argc; ++i) {
-		printf("in ParseArgs i: %d\n", i);
     char *key = strtok(argv[i] + 2, kDel.c_str());
     char *val = strtok(NULL, kDel.c_str());
-		printf("in ParseArgs key: %s\n", key);
-		printf("in ParseArgs value: %s\n", val);
     ret_map->insert(std::make_pair(key, val));
   }
   return std::move(ret_map);
@@ -33,20 +30,10 @@ std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
 
 int main(int argc, char *argv[]) {
 
-	printf("\nargc: %d\n", argc);
-	for(int i=0; i<argc; i++)	
-		printf("argv: %s\n", argv[i]);
   int args_processed = rte_eal_init(argc, argv);
-	printf("\nargc: %d\n", argc);
-	for(int i=0; i<argc; i++)	
-		printf("argv: %s\n", argv[i]);
-
-	printf("args_processed: %d\n", args_processed);
   argc -= args_processed;
   argv += args_processed;
-	printf("Before ParseArgs\n");
   auto arg_map = ParseArgs(argc - 1, argv + 1);
-	printf("After ParseArgs\n");
 
   std::string config_file_path = "";
   for (auto it = arg_map->begin(); it != arg_map->end(); ++it) {
@@ -55,7 +42,6 @@ int main(int argc, char *argv[]) {
       config_file_path = it->second;
     }
   }
-	printf("After Loop: %s\n", config_file_path.c_str());
 	
   if (config_file_path == "")
     rte_exit(EXIT_FAILURE, "No configuration file provided\n");
@@ -83,7 +69,7 @@ int main(int argc, char *argv[]) {
   CPU_ZERO(&cpuset);
   CPU_SET(ms_lcore_id, &cpuset);
   pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
-
+	
   // Initialize and run the packet processor.
   PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();
   auto packet_processor = pp_factory->CreatePacketProcessor(
