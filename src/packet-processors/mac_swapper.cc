@@ -6,6 +6,7 @@
 #include <rte_ether.h>
 #include <rte_prefetch.h>
 #include <stdlib.h>
+#include <rte_cycles.h>
 
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
@@ -42,7 +43,8 @@ inline void MacSwapper::Run() {
     for ( ; i < num_rx; ++i) {
       eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
       std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
-    }
+    	rte_delay_us_block(1);
+		}
     this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
     for(i=0; i < num_egress_ports_; i++){
       if(this->scale_bits->bits[this->instance_id_].test(i)){
