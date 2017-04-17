@@ -6,6 +6,7 @@
 
 class Sleepy : public PacketProcessor {
  public:
+  Sleepy() : sleep_duration_us_(0) { }
   void Init(const PacketProcessorConfig& pp_config) override;
   void Run() override;
   void FlushState() override;
