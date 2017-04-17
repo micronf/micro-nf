@@ -27,6 +27,8 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<DropPacket>();
   } else if (packet_processor_type == "HeaderParser") {
     pp_ptr = CreatePacketProcessorInternal<HeaderParser>();
+  } else if (packet_processor_type == "Looper") {
+    pp_ptr = CreatePacketProcessorInternal<Looper>();
   }
   return std::move(pp_ptr);
 }
