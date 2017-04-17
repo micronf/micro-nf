@@ -8,6 +8,7 @@
 #include "looper.h"
 #include "mac_swapper.h"
 #include "packet_processor.h"
+#include "sleepy.h"
 #include "tcp_ip_classifier.h"
 
 #endif  // _PACKET_PROCESSORS_H_
