@@ -14,7 +14,7 @@ inline void Sleepy::Init(const PacketProcessorConfig& pp_config) {
     this->ingress_ports_.emplace_back(nullptr);
   for (i = 0; i < this->num_egress_ports_; ++i)
     this->egress_ports_.emplace_back(nullptr);
-  PacketProcessor::ConfigurePorts(pp_config);
+  PacketProcessor::ConfigurePorts(pp_config, this);
   this->sleep_duration_us_ = std::stoi(
       pp_config.pp_parameters().find(Sleepy::kConfSleepDurationUs)->second);
 }
@@ -28,12 +28,12 @@ inline void Sleepy::Run() {
     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
     for (i = 0; i < num_rx; ++i) {
       eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-      rte_delay_us(this->sleep_duration_us_);
     }
+    rte_delay_us(this->sleep_duration_us_);
     num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
-    for (i = num_tx; i < num_rx; ++i) {
-      rte_pktmbuf_free(rx_packets[i]);
-    }
+    //for (i = num_tx; i < num_rx; ++i) {
+    //  rte_pktmbuf_free(rx_packets[i]);
+   	//}
   }
 }
 

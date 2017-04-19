@@ -47,7 +47,7 @@ class PacketProcessor {
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
-									PacketProcessor* owner_pp = nullptr);
+									PacketProcessor* owner_pp);
 
   int instance_id_;
   uint16_t num_ingress_ports_;

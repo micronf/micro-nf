@@ -6,7 +6,8 @@
 const std::string BranchEgressPortZC::kConfNumBranches = "num_branches";
 
 void BranchEgressPortZC::Init(std::map<std::string, std::string> &port_config,
-              PacketProcessor* owner_pp) {
+              PacketProcessor* owner_pp){ 
+	this->port_id_ = std::stoi(port_config[EgressPort::kConfPortId]);
   this->num_branches_ = std::stoi(port_config[BranchEgressPortZC::kConfNumBranches]);
   this->num_bitmap_entries_ = num_branches_ >> 3 + (num_branches_ & 8) ? 1 : 0;
   for (int i = 0; i < num_branches_; ++i) {
