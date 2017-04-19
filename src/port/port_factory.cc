@@ -34,7 +34,7 @@ std::unique_ptr<EgressPort> PortFactory::CreateEgressPort(
     port_ptr = CreatePortInternal<EgressPort, RteEgressPort>();
   } else if (port_type == "RteNICEgressPort") {
     port_ptr = CreatePortInternal<EgressPort, RteNICEgressPort>();
-  } else if (port_type == "BranchIngressPortZC") {
+  } else if (port_type == "BranchEgressPortZC") {
     port_ptr = CreatePortInternal<EgressPort, BranchEgressPortZC>();
   } else if (port_type == "MarkAndForwardEgressPort") {
     port_ptr = CreatePortInternal<EgressPort, MarkAndForwardEgressPort>();
