@@ -184,6 +184,20 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   ::google::protobuf::int32 instance_id() const;
   void set_instance_id(::google::protobuf::int32 value);
 
+  // required bool share_core = 7;
+  bool has_share_core() const;
+  void clear_share_core();
+  static const int kShareCoreFieldNumber = 7;
+  bool share_core() const;
+  void set_share_core(bool value);
+
+  // required int32 semaphore_cpuid = 8;
+  bool has_semaphore_cpuid() const;
+  void clear_semaphore_cpuid();
+  static const int kSemaphoreCpuidFieldNumber = 8;
+  ::google::protobuf::int32 semaphore_cpuid() const;
+  void set_semaphore_cpuid(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:PacketProcessorConfig)
  private:
   inline void set_has_packet_processor_class();
@@ -194,6 +208,10 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   inline void clear_has_num_egress_ports();
   inline void set_has_instance_id();
   inline void clear_has_instance_id();
+  inline void set_has_share_core();
+  inline void clear_has_share_core();
+  inline void set_has_semaphore_cpuid();
+  inline void clear_has_semaphore_cpuid();
 
   // helper for ByteSize()
   int RequiredFieldsByteSizeFallback() const;
@@ -217,6 +235,8 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
       0 > pp_parameters_;
   ::google::protobuf::RepeatedPtrField< ::PortConfig > port_configs_;
   ::google::protobuf::int32 instance_id_;
+  bool share_core_;
+  ::google::protobuf::int32 semaphore_cpuid_;
   friend void  protobuf_AddDesc_packet_5fprocessor_5fconfig_2eproto();
   friend void protobuf_AssignDesc_packet_5fprocessor_5fconfig_2eproto();
   friend void protobuf_ShutdownFile_packet_5fprocessor_5fconfig_2eproto();
@@ -572,6 +592,54 @@ inline void PacketProcessorConfig::set_instance_id(::google::protobuf::int32 val
   set_has_instance_id();
   instance_id_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
+}
+
+// required bool share_core = 7;
+inline bool PacketProcessorConfig::has_share_core() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void PacketProcessorConfig::set_has_share_core() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void PacketProcessorConfig::clear_has_share_core() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void PacketProcessorConfig::clear_share_core() {
+  share_core_ = false;
+  clear_has_share_core();
+}
+inline bool PacketProcessorConfig::share_core() const {
+  // @@protoc_insertion_point(field_get:PacketProcessorConfig.share_core)
+  return share_core_;
+}
+inline void PacketProcessorConfig::set_share_core(bool value) {
+  set_has_share_core();
+  share_core_ = value;
+  // @@protoc_insertion_point(field_set:PacketProcessorConfig.share_core)
+}
+
+// required int32 semaphore_cpuid = 8;
+inline bool PacketProcessorConfig::has_semaphore_cpuid() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void PacketProcessorConfig::set_has_semaphore_cpuid() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void PacketProcessorConfig::clear_has_semaphore_cpuid() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void PacketProcessorConfig::clear_semaphore_cpuid() {
+  semaphore_cpuid_ = 0;
+  clear_has_semaphore_cpuid();
+}
+inline ::google::protobuf::int32 PacketProcessorConfig::semaphore_cpuid() const {
+  // @@protoc_insertion_point(field_get:PacketProcessorConfig.semaphore_cpuid)
+  return semaphore_cpuid_;
+}
+inline void PacketProcessorConfig::set_semaphore_cpuid(::google::protobuf::int32 value) {
+  set_has_semaphore_cpuid();
+  semaphore_cpuid_ = value;
+  // @@protoc_insertion_point(field_set:PacketProcessorConfig.semaphore_cpuid)
 }
 
 // -------------------------------------------------------------------

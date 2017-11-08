@@ -7,11 +7,10 @@
 #include "packet_processor_config.pb.h"
 #include "../common/scale_bit_vector.h"
 
-
 #include <memory>
 #include <vector>
-
-//class EgressPort;
+#include <semaphore.h>
+#include <sched.h>
 
 class PacketProcessor {
  public:
@@ -55,9 +54,12 @@ class PacketProcessor {
   std::vector<std::unique_ptr<IngressPort>> ingress_ports_;
   std::vector<std::unique_ptr<EgressPort>> egress_ports_;
 
-	const struct rte_memzone *scale_bits_mz;
+  const struct rte_memzone *scale_bits_mz;
   ScaleBitVector *scale_bits;
 
+  sem_t* semaphore_;
+  bool share_core_;
+  bool sem_enable_;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {
