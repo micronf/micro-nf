@@ -16,7 +16,7 @@ inline int RteEgressPort::TxBurst(tx_pkt_array_t &packets, uint16_t burst_size) 
 	// This function calls the multi-producer or the single-producer version 
 	// depending on the default behavior that was specified at ring creation time.
   int num_tx = rte_ring_enqueue_burst(
-      this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
+        this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size, NULL );
 
   if(unlikely(num_tx < burst_size)){
     this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 

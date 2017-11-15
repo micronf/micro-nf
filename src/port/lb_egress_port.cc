@@ -27,7 +27,7 @@ inline int LBEgressPort::TxBurst(tx_pkt_array_t& packets, uint16_t burst_size) {
       burst_per_ms = packets_remaining;
    		num_tx += rte_ring_enqueue_burst(
         this->tx_rings_[i], reinterpret_cast<void**>(packets.data() + num_tx),
-        burst_per_ms);
+        burst_per_ms, NULL );
   }
   micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] +=
       burst_size - num_tx;
