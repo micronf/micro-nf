@@ -32,7 +32,7 @@ inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets, uint16_t burst_s
   }
   for (auto ring_ptr : this->tx_rings_) {
 		num_tx = rte_ring_enqueue_burst(
-      ring_ptr, reinterpret_cast<void **>(packets.data()), burst_size);
+                      ring_ptr, reinterpret_cast<void **>(packets.data()), burst_size, NULL );
     this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 
       (burst_size - num_tx);
 		for(i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);

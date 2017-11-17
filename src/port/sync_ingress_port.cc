@@ -47,7 +47,7 @@ inline int SyncIngressPort::RxBurst(rx_pkt_array_t &packets) {
   rx_pkt_array_t rx_packets;
   int num_rx_from_ring = rte_ring_dequeue_burst(
       this->rx_ring_, reinterpret_cast<void **>(rx_packets.data()),
-      RX_BURST_SIZE - num_rx);
+      RX_BURST_SIZE - num_rx, NULL );
 
   // Check if more packets can be returned, i.e., they are ready. If there are
   // packets that are not ready push them to pending_mbuf_q_.

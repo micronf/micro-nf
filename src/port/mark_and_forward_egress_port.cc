@@ -25,7 +25,7 @@ inline int MarkAndForwardEgressPort::TxBurst(
     mdata_ptr[this->bitmap_index_] |= (1 << this->bitmap_offset_);
   }
 	uint16_t num_tx = rte_ring_enqueue_burst(
-      this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size);
+              this->tx_ring_, reinterpret_cast<void **>(packets.data()), burst_size, NULL );
 	if(unlikely((num_tx < burst_size))){
 		this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 
 			(burst_size - num_tx);
