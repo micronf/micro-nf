@@ -14,7 +14,7 @@ inline void RteIngressPort::Init(
 }
 
 inline int RteIngressPort::RxBurst(rx_pkt_array_t &packets) {
-  int num_rx = rte_ring_sc_dequeue_burst(
+  int num_rx = rte_ring_dequeue_burst(
         this->rx_ring_, reinterpret_cast<void **>(packets.data()), RX_BURST_SIZE, NULL );
   return num_rx;
 }
