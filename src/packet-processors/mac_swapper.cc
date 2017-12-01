@@ -13,6 +13,7 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_ = pp_config.num_egress_ports();
    instance_id_ = pp_config.instance_id();
+
    // First, initialize the list of ingress and egress ports.
    int i = 0;
    for (i = 0; i < this->num_ingress_ports_; ++i) {
@@ -22,31 +23,34 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
       egress_ports_.emplace_back(nullptr);
    }
    
-   share_core_ = pp_config.share_core();
+   // Retrieve share cpu config
+   share_core_ = pp_config.pp_parameters().find( 
+         PacketProcessor::shareCoreFlag )->second;
+   sem_enable_ = pp_config.pp_parameters().find(
+         PacketProcessor::semaphoreFlag )->second;
+   cpu_id_ = pp_config.pp_parameters().find( PacketProcessor::cpuId )->second;
 
-   int cpuid = pp_config.semaphore_cpuid();
-   sem_enable_ = cpuid == -1 ? false : true;
-   std::cout << "!!!!!!!!!!!!!!!!!! sem_enable" << sem_enable_ << std::endl;
+   fprintf( stdout, "mac_swapper.cc: share_core_: %d. sem_enable_: %d. cpu_id_:%d\n", share_core_, sem_enable_, cpu_id_ );
    if ( sem_enable_ ) {
-      std::string sname = "SEM_CORE_" + std::to_string( cpuid );
-      std::cout << "\n!!!!!!!!!!!! sname: " << sname << std::endl;
+      std::string sname = "/SEM_CORE_" + std::to_string( cpu_id_ );
+      std::cout << "!!!!!!!!!!!! sname: " << sname << std::endl;
       semaphore_ = sem_open( sname.c_str(), 0 );
-      if ( semaphore_ == SEM_FAILED ) {
-         std::cerr << "sem_open failed!\n";
-         return;
-      }
+
       int val;
       sem_getvalue(semaphore_, &val);
-      std::cout << "!!!!! Val: " << val <<std::endl;
+      std::cout << this->instance_id_ << " MacSwapper Init Val: " << val << std::endl;
+
+      if ( semaphore_ == SEM_FAILED ) {
+         std::cerr << "sem_open failed!" << std::endl ;
+         return;
+      }
    } 
    else {
-      std::cout << "else\n" ;
+      std::cout << "!!!!!!!!!!!!!!!!! sem_enable is 0" << std::endl;
    }
-
    
    PacketProcessor::ConfigurePorts(pp_config, this);
   
-  // Packet processor specific configuration (if any).
 }
 
 inline void MacSwapper::Run() {
@@ -56,13 +60,18 @@ inline void MacSwapper::Run() {
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
-
+//   int n = 0;
    while (true) {
-
       if ( sem_enable_ ) {
          res = sem_wait( semaphore_ );
       }
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
+      // FIXME delete later
+/*      if (!(n++ % 100000)) {
+         if(this->instance_id_ != 3)
+            printf( "[%d] num_rx: %d\n", this->instance_id_, num_rx );
+      }
+*/
       for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - kNumPrefetch; ++i) {
@@ -85,14 +94,21 @@ inline void MacSwapper::Run() {
     
       // Signal Semaphore and yield CPU
       if ( sem_enable_ ) {
+         int val;
+         sem_getvalue(semaphore_, &val);
+         //std::cout << this->instance_id_ << " MacSwapper Before Val: " << val << std::endl;
          res = sem_post( semaphore_ );
+         sem_getvalue(semaphore_, &val);
+         //std::cout << this->instance_id_ << " MacSwapper After Val: " << val << std::endl;
+
       }
-      if ( this->share_core_ ) {
+      if ( share_core_ ) {
          res = sched_yield();
          if ( res == -1 ) {
-            std::cerr << "sched_yield failed! Exitting.\n";
+            std::cerr << "sched_yield failed! Exitting." << std::endl;
             return;
          }
+         //rte_delay_us_block(32);
       }
    }
 }

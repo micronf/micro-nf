@@ -64,16 +64,12 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, pp_parameters_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, port_configs_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, instance_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, share_core_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketProcessorConfig, semaphore_cpuid_),
   0,
   1,
   2,
   ~0u,
   ~0u,
   3,
-  4,
-  5,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PortConfig, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -90,8 +86,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
 };
 
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
-  { 0, 13, sizeof(PacketProcessorConfig)},
-  { 21, 30, sizeof(PortConfig)},
+  { 0, 11, sizeof(PacketProcessorConfig)},
+  { 17, 26, sizeof(PortConfig)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -156,25 +152,24 @@ void InitDefaults() {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] = {
-      "\n\035packet_processor_config.proto\"\307\002\n\025Pack"
+      "\n\035packet_processor_config.proto\"\232\002\n\025Pack"
       "etProcessorConfig\022\036\n\026packet_processor_cl"
       "ass\030\001 \002(\t\022\031\n\021num_ingress_ports\030\002 \002(\005\022\030\n\020"
       "num_egress_ports\030\003 \002(\005\022\?\n\rpp_parameters\030"
       "\004 \003(\0132(.PacketProcessorConfig.PpParamete"
       "rsEntry\022!\n\014port_configs\030\005 \003(\0132\013.PortConf"
-      "ig\022\023\n\013instance_id\030\006 \002(\005\022\022\n\nshare_core\030\007 "
-      "\002(\010\022\027\n\017semaphore_cpuid\030\010 \002(\005\0323\n\021PpParame"
-      "tersEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028"
-      "\001\"\375\001\n\nPortConfig\022\022\n\nport_index\030\001 \002(\005\022\'\n\t"
-      "port_type\030\002 \002(\0162\024.PortConfig.PortType\022\022\n"
-      "\nport_class\030\003 \002(\t\0228\n\017port_parameters\030\004 \003"
-      "(\0132\037.PortConfig.PortParametersEntry\0325\n\023P"
-      "ortParametersEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value"
-      "\030\002 \001(\t:\0028\001\"-\n\010PortType\022\020\n\014INGRESS_PORT\020\000"
-      "\022\017\n\013EGRESS_PORT\020\001"
+      "ig\022\023\n\013instance_id\030\006 \002(\005\0323\n\021PpParametersE"
+      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"\375\001\n"
+      "\nPortConfig\022\022\n\nport_index\030\001 \002(\005\022\'\n\tport_"
+      "type\030\002 \002(\0162\024.PortConfig.PortType\022\022\n\nport"
+      "_class\030\003 \002(\t\0228\n\017port_parameters\030\004 \003(\0132\037."
+      "PortConfig.PortParametersEntry\0325\n\023PortPa"
+      "rametersEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001("
+      "\t:\0028\001\"-\n\010PortType\022\020\n\014INGRESS_PORT\020\000\022\017\n\013E"
+      "GRESS_PORT\020\001"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 617);
+      descriptor, 572);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packet_processor_config.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
@@ -243,8 +238,6 @@ const int PacketProcessorConfig::kNumEgressPortsFieldNumber;
 const int PacketProcessorConfig::kPpParametersFieldNumber;
 const int PacketProcessorConfig::kPortConfigsFieldNumber;
 const int PacketProcessorConfig::kInstanceIdFieldNumber;
-const int PacketProcessorConfig::kShareCoreFieldNumber;
-const int PacketProcessorConfig::kSemaphoreCpuidFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PacketProcessorConfig::PacketProcessorConfig()
@@ -268,16 +261,16 @@ PacketProcessorConfig::PacketProcessorConfig(const PacketProcessorConfig& from)
     packet_processor_class_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.packet_processor_class_);
   }
   ::memcpy(&num_ingress_ports_, &from.num_ingress_ports_,
-    reinterpret_cast<char*>(&semaphore_cpuid_) -
-    reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(semaphore_cpuid_));
+    reinterpret_cast<char*>(&instance_id_) -
+    reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(instance_id_));
   // @@protoc_insertion_point(copy_constructor:PacketProcessorConfig)
 }
 
 void PacketProcessorConfig::SharedCtor() {
   _cached_size_ = 0;
   packet_processor_class_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&num_ingress_ports_, 0, reinterpret_cast<char*>(&semaphore_cpuid_) -
-    reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(semaphore_cpuid_));
+  ::memset(&num_ingress_ports_, 0, reinterpret_cast<char*>(&instance_id_) -
+    reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(instance_id_));
 }
 
 PacketProcessorConfig::~PacketProcessorConfig() {
@@ -320,9 +313,9 @@ void PacketProcessorConfig::Clear() {
     GOOGLE_DCHECK(!packet_processor_class_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
     (*packet_processor_class_.UnsafeRawStringPointer())->clear();
   }
-  if (_has_bits_[0 / 32] & 62u) {
-    ::memset(&num_ingress_ports_, 0, reinterpret_cast<char*>(&semaphore_cpuid_) -
-      reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(semaphore_cpuid_));
+  if (_has_bits_[0 / 32] & 14u) {
+    ::memset(&num_ingress_ports_, 0, reinterpret_cast<char*>(&instance_id_) -
+      reinterpret_cast<char*>(&num_ingress_ports_) + sizeof(instance_id_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -382,27 +375,23 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // map<string, string> pp_parameters = 4;
+      // map<string, int32> pp_parameters = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(34u)) {
           PacketProcessorConfig_PpParametersEntry::Parser< ::google::protobuf::internal::MapField<
               PacketProcessorConfig_PpParametersEntry,
-              ::std::string, ::std::string,
+              ::std::string, ::google::protobuf::int32,
               ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
               0 >,
-            ::google::protobuf::Map< ::std::string, ::std::string > > parser(&pp_parameters_);
+            ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 > > parser(&pp_parameters_);
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
               input, &parser));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             parser.key().data(), parser.key().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
             "PacketProcessorConfig.PpParametersEntry.key");
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            parser.value().data(), parser.value().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "PacketProcessorConfig.PpParametersEntry.value");
         } else {
           goto handle_unusual;
         }
@@ -429,34 +418,6 @@ bool PacketProcessorConfig::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &instance_id_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // required bool share_core = 7;
-      case 7: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(56u)) {
-          set_has_share_core();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &share_core_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // required int32 semaphore_cpuid = 8;
-      case 8: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(64u)) {
-          set_has_semaphore_cpuid();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &semaphore_cpuid_)));
         } else {
           goto handle_unusual;
         }
@@ -512,9 +473,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->num_egress_ports(), output);
   }
 
-  // map<string, string> pp_parameters = 4;
+  // map<string, int32> pp_parameters = 4;
   if (!this->pp_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+    typedef ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_pointer
         ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
@@ -524,10 +485,6 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
           p->first.data(), p->first.length(),
           ::google::protobuf::internal::WireFormat::SERIALIZE,
           "PacketProcessorConfig.PpParametersEntry.key");
-        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-          p->second.data(), p->second.length(),
-          ::google::protobuf::internal::WireFormat::SERIALIZE,
-          "PacketProcessorConfig.PpParametersEntry.value");
       }
     };
 
@@ -535,9 +492,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
         this->pp_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->pp_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+      for (::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_iterator
           it = this->pp_parameters().begin();
           it != this->pp_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
@@ -553,7 +510,7 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
       }
     } else {
       ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
-      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+      for (::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_iterator
           it = this->pp_parameters().begin();
           it != this->pp_parameters().end(); ++it) {
         entry.reset(pp_parameters_.NewEntryWrapper(
@@ -574,16 +531,6 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
   // required int32 instance_id = 6;
   if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->instance_id(), output);
-  }
-
-  // required bool share_core = 7;
-  if (cached_has_bits & 0x00000010u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->share_core(), output);
-  }
-
-  // required int32 semaphore_cpuid = 8;
-  if (cached_has_bits & 0x00000020u) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->semaphore_cpuid(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -621,9 +568,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->num_egress_ports(), target);
   }
 
-  // map<string, string> pp_parameters = 4;
+  // map<string, int32> pp_parameters = 4;
   if (!this->pp_parameters().empty()) {
-    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+    typedef ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_pointer
         ConstPtr;
     typedef ConstPtr SortItem;
     typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
@@ -633,10 +580,6 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
           p->first.data(), p->first.length(),
           ::google::protobuf::internal::WireFormat::SERIALIZE,
           "PacketProcessorConfig.PpParametersEntry.key");
-        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-          p->second.data(), p->second.length(),
-          ::google::protobuf::internal::WireFormat::SERIALIZE,
-          "PacketProcessorConfig.PpParametersEntry.value");
       }
     };
 
@@ -644,9 +587,9 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
         this->pp_parameters().size() > 1) {
       ::google::protobuf::scoped_array<SortItem> items(
           new SortItem[this->pp_parameters().size()]);
-      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
+      typedef ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::size_type size_type;
       size_type n = 0;
-      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+      for (::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_iterator
           it = this->pp_parameters().begin();
           it != this->pp_parameters().end(); ++it, ++n) {
         items[n] = SortItem(&*it);
@@ -664,7 +607,7 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
       }
     } else {
       ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
-      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+      for (::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_iterator
           it = this->pp_parameters().begin();
           it != this->pp_parameters().end(); ++it) {
         entry.reset(pp_parameters_.NewEntryWrapper(
@@ -688,16 +631,6 @@ void PacketProcessorConfig::SerializeWithCachedSizes(
   // required int32 instance_id = 6;
   if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->instance_id(), target);
-  }
-
-  // required bool share_core = 7;
-  if (cached_has_bits & 0x00000010u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->share_core(), target);
-  }
-
-  // required int32 semaphore_cpuid = 8;
-  if (cached_has_bits & 0x00000020u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->semaphore_cpuid(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -740,18 +673,6 @@ size_t PacketProcessorConfig::RequiredFieldsByteSizeFallback() const {
         this->instance_id());
   }
 
-  if (has_share_core()) {
-    // required bool share_core = 7;
-    total_size += 1 + 1;
-  }
-
-  if (has_semaphore_cpuid()) {
-    // required int32 semaphore_cpuid = 8;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->semaphore_cpuid());
-  }
-
   return total_size;
 }
 size_t PacketProcessorConfig::ByteSizeLong() const {
@@ -763,7 +684,7 @@ size_t PacketProcessorConfig::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  if (((_has_bits_[0] & 0x0000003f) ^ 0x0000003f) == 0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x0000000f) ^ 0x0000000f) == 0) {  // All required fields are present.
     // required string packet_processor_class = 1;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -784,23 +705,15 @@ size_t PacketProcessorConfig::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->instance_id());
 
-    // required bool share_core = 7;
-    total_size += 1 + 1;
-
-    // required int32 semaphore_cpuid = 8;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->semaphore_cpuid());
-
   } else {
     total_size += RequiredFieldsByteSizeFallback();
   }
-  // map<string, string> pp_parameters = 4;
+  // map<string, int32> pp_parameters = 4;
   total_size += 1 *
       ::google::protobuf::internal::FromIntSize(this->pp_parameters_size());
   {
     ::google::protobuf::scoped_ptr<PacketProcessorConfig_PpParametersEntry> entry;
-    for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+    for (::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >::const_iterator
         it = this->pp_parameters().begin();
         it != this->pp_parameters().end(); ++it) {
       entry.reset(pp_parameters_.NewEntryWrapper(it->first, it->second));
@@ -852,7 +765,7 @@ void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
   pp_parameters_.MergeFrom(from.pp_parameters_);
   port_configs_.MergeFrom(from.port_configs_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 63u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_packet_processor_class();
       packet_processor_class_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.packet_processor_class_);
@@ -865,12 +778,6 @@ void PacketProcessorConfig::MergeFrom(const PacketProcessorConfig& from) {
     }
     if (cached_has_bits & 0x00000008u) {
       instance_id_ = from.instance_id_;
-    }
-    if (cached_has_bits & 0x00000010u) {
-      share_core_ = from.share_core_;
-    }
-    if (cached_has_bits & 0x00000020u) {
-      semaphore_cpuid_ = from.semaphore_cpuid_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -891,7 +798,7 @@ void PacketProcessorConfig::CopyFrom(const PacketProcessorConfig& from) {
 }
 
 bool PacketProcessorConfig::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000003f) != 0x0000003f) return false;
+  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->port_configs())) return false;
   return true;
 }
@@ -907,8 +814,6 @@ void PacketProcessorConfig::InternalSwap(PacketProcessorConfig* other) {
   std::swap(num_ingress_ports_, other->num_ingress_ports_);
   std::swap(num_egress_ports_, other->num_egress_ports_);
   std::swap(instance_id_, other->instance_id_);
-  std::swap(share_core_, other->share_core_);
-  std::swap(semaphore_cpuid_, other->semaphore_cpuid_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1033,19 +938,19 @@ void PacketProcessorConfig::set_num_egress_ports(::google::protobuf::int32 value
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.num_egress_ports)
 }
 
-// map<string, string> pp_parameters = 4;
+// map<string, int32> pp_parameters = 4;
 int PacketProcessorConfig::pp_parameters_size() const {
   return pp_parameters_.size();
 }
 void PacketProcessorConfig::clear_pp_parameters() {
   pp_parameters_.Clear();
 }
- const ::google::protobuf::Map< ::std::string, ::std::string >&
+ const ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >&
 PacketProcessorConfig::pp_parameters() const {
   // @@protoc_insertion_point(field_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.GetMap();
 }
- ::google::protobuf::Map< ::std::string, ::std::string >*
+ ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >*
 PacketProcessorConfig::mutable_pp_parameters() {
   // @@protoc_insertion_point(field_mutable_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.MutableMap();
@@ -1103,54 +1008,6 @@ void PacketProcessorConfig::set_instance_id(::google::protobuf::int32 value) {
   set_has_instance_id();
   instance_id_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
-}
-
-// required bool share_core = 7;
-bool PacketProcessorConfig::has_share_core() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-void PacketProcessorConfig::set_has_share_core() {
-  _has_bits_[0] |= 0x00000010u;
-}
-void PacketProcessorConfig::clear_has_share_core() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-void PacketProcessorConfig::clear_share_core() {
-  share_core_ = false;
-  clear_has_share_core();
-}
-bool PacketProcessorConfig::share_core() const {
-  // @@protoc_insertion_point(field_get:PacketProcessorConfig.share_core)
-  return share_core_;
-}
-void PacketProcessorConfig::set_share_core(bool value) {
-  set_has_share_core();
-  share_core_ = value;
-  // @@protoc_insertion_point(field_set:PacketProcessorConfig.share_core)
-}
-
-// required int32 semaphore_cpuid = 8;
-bool PacketProcessorConfig::has_semaphore_cpuid() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-void PacketProcessorConfig::set_has_semaphore_cpuid() {
-  _has_bits_[0] |= 0x00000020u;
-}
-void PacketProcessorConfig::clear_has_semaphore_cpuid() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-void PacketProcessorConfig::clear_semaphore_cpuid() {
-  semaphore_cpuid_ = 0;
-  clear_has_semaphore_cpuid();
-}
-::google::protobuf::int32 PacketProcessorConfig::semaphore_cpuid() const {
-  // @@protoc_insertion_point(field_get:PacketProcessorConfig.semaphore_cpuid)
-  return semaphore_cpuid_;
-}
-void PacketProcessorConfig::set_semaphore_cpuid(::google::protobuf::int32 value) {
-  set_has_semaphore_cpuid();
-  semaphore_cpuid_ = value;
-  // @@protoc_insertion_point(field_set:PacketProcessorConfig.semaphore_cpuid)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

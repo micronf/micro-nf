@@ -10,7 +10,6 @@
 #include <memory>
 #include <vector>
 #include <semaphore.h>
-#include <sched.h>
 
 class PacketProcessor {
  public:
@@ -46,7 +45,7 @@ class PacketProcessor {
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
-									PacketProcessor* owner_pp = nullptr);
+			PacketProcessor* owner_pp = nullptr);
 
   int instance_id_;
   uint16_t num_ingress_ports_;
@@ -58,8 +57,13 @@ class PacketProcessor {
   ScaleBitVector *scale_bits;
 
   sem_t* semaphore_;
-  bool share_core_;
-  bool sem_enable_;
+  int share_core_;
+  int sem_enable_;
+  int cpu_id_; 
+  
+  static const std::string shareCoreFlag;
+  static const std::string semaphoreFlag;
+  static const std::string cpuId;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {

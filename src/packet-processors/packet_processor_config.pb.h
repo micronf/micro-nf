@@ -157,13 +157,13 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
 
   // accessors -------------------------------------------------------
 
-  // map<string, string> pp_parameters = 4;
+  // map<string, int32> pp_parameters = 4;
   int pp_parameters_size() const;
   void clear_pp_parameters();
   static const int kPpParametersFieldNumber = 4;
-  const ::google::protobuf::Map< ::std::string, ::std::string >&
+  const ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >&
       pp_parameters() const;
-  ::google::protobuf::Map< ::std::string, ::std::string >*
+  ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >*
       mutable_pp_parameters();
 
   // repeated .PortConfig port_configs = 5;
@@ -214,20 +214,6 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   ::google::protobuf::int32 instance_id() const;
   void set_instance_id(::google::protobuf::int32 value);
 
-  // required bool share_core = 7;
-  bool has_share_core() const;
-  void clear_share_core();
-  static const int kShareCoreFieldNumber = 7;
-  bool share_core() const;
-  void set_share_core(bool value);
-
-  // required int32 semaphore_cpuid = 8;
-  bool has_semaphore_cpuid() const;
-  void clear_semaphore_cpuid();
-  static const int kSemaphoreCpuidFieldNumber = 8;
-  ::google::protobuf::int32 semaphore_cpuid() const;
-  void set_semaphore_cpuid(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:PacketProcessorConfig)
  private:
   void set_has_packet_processor_class();
@@ -238,10 +224,6 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   void clear_has_num_egress_ports();
   void set_has_instance_id();
   void clear_has_instance_id();
-  void set_has_share_core();
-  void clear_has_share_core();
-  void set_has_semaphore_cpuid();
-  void clear_has_semaphore_cpuid();
 
   // helper for ByteSizeLong()
   size_t RequiredFieldsByteSizeFallback() const;
@@ -251,15 +233,15 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   mutable int _cached_size_;
   public:
   class PacketProcessorConfig_PpParametersEntry : public ::google::protobuf::internal::MapEntry<PacketProcessorConfig_PpParametersEntry, 
-      ::std::string, ::std::string,
+      ::std::string, ::google::protobuf::int32,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
       0 > {
   public:
     typedef ::google::protobuf::internal::MapEntry<PacketProcessorConfig_PpParametersEntry, 
-      ::std::string, ::std::string,
+      ::std::string, ::google::protobuf::int32,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
       0 > SuperType;
     PacketProcessorConfig_PpParametersEntry();
     PacketProcessorConfig_PpParametersEntry(::google::protobuf::Arena* arena);
@@ -270,9 +252,9 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   };
   ::google::protobuf::internal::MapField<
       PacketProcessorConfig_PpParametersEntry,
-      ::std::string, ::std::string,
+      ::std::string, ::google::protobuf::int32,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
       0 > pp_parameters_;
   private:
   ::google::protobuf::RepeatedPtrField< ::PortConfig > port_configs_;
@@ -280,8 +262,6 @@ class PacketProcessorConfig : public ::google::protobuf::Message /* @@protoc_ins
   ::google::protobuf::int32 num_ingress_ports_;
   ::google::protobuf::int32 num_egress_ports_;
   ::google::protobuf::int32 instance_id_;
-  bool share_core_;
-  ::google::protobuf::int32 semaphore_cpuid_;
   friend struct protobuf_packet_5fprocessor_5fconfig_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -593,19 +573,19 @@ inline void PacketProcessorConfig::set_num_egress_ports(::google::protobuf::int3
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.num_egress_ports)
 }
 
-// map<string, string> pp_parameters = 4;
+// map<string, int32> pp_parameters = 4;
 inline int PacketProcessorConfig::pp_parameters_size() const {
   return pp_parameters_.size();
 }
 inline void PacketProcessorConfig::clear_pp_parameters() {
   pp_parameters_.Clear();
 }
-inline const ::google::protobuf::Map< ::std::string, ::std::string >&
+inline const ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >&
 PacketProcessorConfig::pp_parameters() const {
   // @@protoc_insertion_point(field_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.GetMap();
 }
-inline ::google::protobuf::Map< ::std::string, ::std::string >*
+inline ::google::protobuf::Map< ::std::string, ::google::protobuf::int32 >*
 PacketProcessorConfig::mutable_pp_parameters() {
   // @@protoc_insertion_point(field_mutable_map:PacketProcessorConfig.pp_parameters)
   return pp_parameters_.MutableMap();
@@ -663,54 +643,6 @@ inline void PacketProcessorConfig::set_instance_id(::google::protobuf::int32 val
   set_has_instance_id();
   instance_id_ = value;
   // @@protoc_insertion_point(field_set:PacketProcessorConfig.instance_id)
-}
-
-// required bool share_core = 7;
-inline bool PacketProcessorConfig::has_share_core() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void PacketProcessorConfig::set_has_share_core() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void PacketProcessorConfig::clear_has_share_core() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void PacketProcessorConfig::clear_share_core() {
-  share_core_ = false;
-  clear_has_share_core();
-}
-inline bool PacketProcessorConfig::share_core() const {
-  // @@protoc_insertion_point(field_get:PacketProcessorConfig.share_core)
-  return share_core_;
-}
-inline void PacketProcessorConfig::set_share_core(bool value) {
-  set_has_share_core();
-  share_core_ = value;
-  // @@protoc_insertion_point(field_set:PacketProcessorConfig.share_core)
-}
-
-// required int32 semaphore_cpuid = 8;
-inline bool PacketProcessorConfig::has_semaphore_cpuid() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void PacketProcessorConfig::set_has_semaphore_cpuid() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void PacketProcessorConfig::clear_has_semaphore_cpuid() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void PacketProcessorConfig::clear_semaphore_cpuid() {
-  semaphore_cpuid_ = 0;
-  clear_has_semaphore_cpuid();
-}
-inline ::google::protobuf::int32 PacketProcessorConfig::semaphore_cpuid() const {
-  // @@protoc_insertion_point(field_get:PacketProcessorConfig.semaphore_cpuid)
-  return semaphore_cpuid_;
-}
-inline void PacketProcessorConfig::set_semaphore_cpuid(::google::protobuf::int32 value) {
-  set_has_semaphore_cpuid();
-  semaphore_cpuid_ = value;
-  // @@protoc_insertion_point(field_set:PacketProcessorConfig.semaphore_cpuid)
 }
 
 // -------------------------------------------------------------------
