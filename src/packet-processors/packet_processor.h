@@ -9,7 +9,15 @@
 
 #include <memory>
 #include <vector>
-#include <semaphore.h>
+
+#include <sys/sem.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#define PATH_TO_SEM "/home/h4bian/aqua10/micro-nf-datapath/src/VSEM"
+#define SEM_PROJECT_ID 100
+
+// fixme
+#define n_share_core_x 2
 
 class PacketProcessor {
  public:
@@ -46,6 +54,9 @@ class PacketProcessor {
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
 			PacketProcessor* owner_pp = nullptr);
+  int lookup_vsem();
+  int wait_vsem( int set_id, int idx );
+  int post_vsem( int set_id, int idx ); 
 
   int instance_id_;
   uint16_t num_ingress_ports_;
@@ -56,11 +67,13 @@ class PacketProcessor {
   const struct rte_memzone *scale_bits_mz;
   ScaleBitVector *scale_bits;
 
-  sem_t* semaphore_;
   int share_core_;
   int sem_enable_;
   int cpu_id_; 
-  
+  int sem_set_id_;
+  int share_p_idx_;   // my index among processes sharing the cpu
+  int share_np_idx_;   // index of next process sharing the cpu.
+
   static const std::string shareCoreFlag;
   static const std::string semaphoreFlag;
   static const std::string cpuId;

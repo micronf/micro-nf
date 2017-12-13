@@ -30,27 +30,24 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
          PacketProcessor::semaphoreFlag )->second;
    cpu_id_ = pp_config.pp_parameters().find( PacketProcessor::cpuId )->second;
 
-   fprintf( stdout, "mac_swapper.cc: share_core_: %d. sem_enable_: %d. cpu_id_:%d\n", share_core_, sem_enable_, cpu_id_ );
+   fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. sem_enable_: %d. \
+cpu_id_:%d\n", instance_id_, share_core_, sem_enable_, cpu_id_ );
+
    if ( sem_enable_ ) {
-      std::string sname = "/SEM_CORE_" + std::to_string( cpu_id_ );
-      std::cout << "!!!!!!!!!!!! sname: " << sname << std::endl;
-      semaphore_ = sem_open( sname.c_str(), 0 );
+      sem_set_id_ = PacketProcessor::lookup_vsem();
 
-      int val;
-      sem_getvalue(semaphore_, &val);
-      std::cout << this->instance_id_ << " MacSwapper Init Val: " << val << std::endl;
+      share_p_idx_ = instance_id_ - 1;
+      share_np_idx_= ( share_p_idx_ + 1 ) % n_share_core_x;
 
-      if ( semaphore_ == SEM_FAILED ) {
-         std::cerr << "sem_open failed!" << std::endl ;
-         return;
-      }
+      std::cout << "!!!!!!!!!!!!!!!!! sem_enable is 1 " \
+                << "p_idx: " << share_p_idx_ << " np_idx: " \
+                << share_np_idx_ << std::endl;
    } 
    else {
       std::cout << "!!!!!!!!!!!!!!!!! sem_enable is 0" << std::endl;
    }
    
    PacketProcessor::ConfigurePorts(pp_config, this);
-  
 }
 
 inline void MacSwapper::Run() {
@@ -60,18 +57,17 @@ inline void MacSwapper::Run() {
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
-//   int n = 0;
+   uint32_t counter = 0;
    while (true) {
+
+      // Wait for my turn to use the CPU
       if ( sem_enable_ ) {
-         res = sem_wait( semaphore_ );
+         res = PacketProcessor::wait_vsem( sem_set_id_, share_p_idx_ );
+         if ( res < 0 )
+            perror( "ERROR: wait_vsem()." );
       }
+
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-      // FIXME delete later
-/*      if (!(n++ % 100000)) {
-         if(this->instance_id_ != 3)
-            printf( "[%d] num_rx: %d\n", this->instance_id_, num_rx );
-      }
-*/
       for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - kNumPrefetch; ++i) {
@@ -82,8 +78,16 @@ inline void MacSwapper::Run() {
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+
+         // imitate processing
+         int n = 5;
+         int r = 0;
+         for ( int i = 0; i < n; i++ ) {
+            r = rand() % 30;
+         }
+
       }
-      //rte_delay_us_block(32);
+ 
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
       for (i=0; i < num_egress_ports_; i++){
          if (this->scale_bits->bits[this->instance_id_].test(i)){
@@ -94,22 +98,21 @@ inline void MacSwapper::Run() {
     
       // Signal Semaphore and yield CPU
       if ( sem_enable_ ) {
-         int val;
-         sem_getvalue(semaphore_, &val);
-         //std::cout << this->instance_id_ << " MacSwapper Before Val: " << val << std::endl;
-         res = sem_post( semaphore_ );
-         sem_getvalue(semaphore_, &val);
-         //std::cout << this->instance_id_ << " MacSwapper After Val: " << val << std::endl;
+         res = PacketProcessor::post_vsem( sem_set_id_, share_np_idx_ );
+         if ( res < 0 )
+            perror( "ERROR: post_vsem()." );
+      }
 
-      }
       if ( share_core_ ) {
-         res = sched_yield();
-         if ( res == -1 ) {
-            std::cerr << "sched_yield failed! Exitting." << std::endl;
-            return;
+         if ( counter % 2 == 0 ) {
+            res = sched_yield();
+            if ( res == -1 ) {
+               std::cerr << "sched_yield failed! Exitting." << std::endl;
+               return;
+            }
          }
-         //rte_delay_us_block(32);
       }
+      counter++;
    }
 }
 

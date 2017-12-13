@@ -15,9 +15,6 @@
 #include "packet-processors/packet_processors.h"
 #include "port/port_factory.h"
 
-#include <sched.h>
-#define MY_RT_PRIORITY 99
-
 std::unique_ptr<std::map<std::string, std::string>> ParseArgs(int argc,
                                                               char *argv[]) {
   auto ret_map = std::unique_ptr<std::map<std::string, std::string>>(
@@ -71,15 +68,11 @@ int main(int argc, char *argv[]) {
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);
   CPU_SET(ms_lcore_id, &cpuset);
-  printf( "ms_lcore_id: %d\n", ms_lcore_id );
-  printf( "before setaffinity\n" );
   fflush( stdout );
   int s = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
   if ( s != 0 ) { 
      fprintf( stderr, "FAILED: pthread_setaffinity_np\n" );
   } 
-  printf( "after setaffinity\n" );	
-  fflush( stdout );
 
   // Initialize and run the packet processor.
   PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();

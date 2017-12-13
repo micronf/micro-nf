@@ -34,3 +34,29 @@ void PacketProcessor::ConfigurePorts(const PacketProcessorConfig& pp_config,
     }
 }
 
+int PacketProcessor::lookup_vsem() {
+   key_t sem_key = ftok( PATH_TO_SEM, SEM_PROJECT_ID );
+   int sem_id = semget( sem_key, 0, 0666 );
+   if ( sem_id < 0 ) { 
+      perror( "ERROR: PacketProcessor::lookup_vsem() -> semget()." );
+      exit( -1 );
+   }
+
+   return sem_id; 
+}
+
+int PacketProcessor::wait_vsem( int set_id, int idx ) {
+   struct sembuf sb;
+   sb.sem_num = idx;
+   sb.sem_op = -1; 
+   sb.sem_flg = 0;
+   return semop( set_id, &sb, 1 );
+}
+
+int PacketProcessor::post_vsem( int set_id, int idx ) {
+   struct sembuf sb;
+   sb.sem_num = idx;
+   sb.sem_op = 1;
+   sb.sem_flg = 0;
+   return semop( set_id, &sb, 1 );
+}
