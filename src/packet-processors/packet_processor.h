@@ -73,6 +73,8 @@ class PacketProcessor {
   int sem_set_id_;
   int share_p_idx_;   // my index among processes sharing the cpu
   int share_np_idx_;   // index of next process sharing the cpu.
+  int comp_load_ = 1;
+  int debug_ = 0;
 
   static const std::string shareCoreFlag;
   static const std::string semaphoreFlag;
