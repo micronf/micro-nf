@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <rte_cycles.h>
 #include <iostream>
+#include <inttypes.h>
 
 __inline__ uint64_t start_rdtsc() {
    unsigned int lo,hi;
@@ -106,27 +107,23 @@ inline void MacSwapper::Run() {
 
    while ( true ) {
 
-      // Take the measurement and printf after certain interval
-      bool measure_flag = counter % 10 == 0;
-      bool print_flag = counter % 100000 == 0;
-      if ( debug_ ) {
-         if ( measure_flag ) {
-            start_cycles = start_rdtsc(); 
-            if ( share_core_ == 0 ) {
-               // Calculating running average of cycles spent in 
-               // sched_yield() until rescheduled.
-               // Only applicable for non-share core uNF
-               yield_avg = ( start_cycles - end_cycles ) ;
+      //  printf after certain interval
+      bool print_flag = ( (counter ^ 100000) == 0);
 
-               if ( print_flag ) {
-                  printf( "%d: yield cycles: %lu\n", this->instance_id_, yield_avg );
-               }
-            }
+      if ( likely( debug_ ) ) {
+         start_cycles = start_rdtsc(); 
+         // Calculating running average of cycles spent from sched_yield() until rescheduled.
+         // Only applicable for non-share core uNF
+         yield_avg = ( start_cycles - end_cycles ) ;
+
+         if ( print_flag ) {
+            printf( "%d: yield cycles: %" PRId64 "\n", this->instance_id_, yield_avg );
+            counter = 0;
          }
       }
 
       // Wait for my turn to use the CPU
-      if ( sem_enable_ ) {
+      if ( unlikely( sem_enable_ ) ) {
          res = PacketProcessor::wait_vsem( sem_set_id_, share_p_idx_ );
          if ( res < 0 )
             perror( "ERROR: wait_vsem()." );
@@ -158,30 +155,29 @@ inline void MacSwapper::Run() {
       }
     
       // Signal Semaphore and yield CPU
-      if ( sem_enable_ ) {
+      if ( unlikely( sem_enable_ ) ) {
          res = PacketProcessor::post_vsem( sem_set_id_, share_np_idx_ );
-         if ( res < 0 )
+         if ( unlikely( res < 0 ) )
             perror( "ERROR: post_vsem()." );
       }
+ 
+      if ( print_flag )
+         printf( "%d: avg_cycles: %" PRId64 "\n", this->instance_id_, avg_cycles );
       
-      if ( print_flag && debug_ )
-         printf( "%d: avg_cycles: %lu\n", this->instance_id_, avg_cycles );
+      if ( likely ( debug_ ) ) {
+         end_cycles =  end_rdtsc();
+         // Measure the running average of cycles spent in packet retrieval, 
+         // processing, extra work, and push back to next ring.
+         // This makes sense with SCHED_RR (RT) because process won't be 
+         // preempted during processing.
+         avg_cycles = ( end_cycles - start_cycles );
+      }
 
-      if ( measure_flag ) {
-         if ( debug_ ) {
-            // Measure the running average of cycles spent in packet retrieval, 
-            // processing, extra work, and push back to next ring.
-            // This makes sense with SCHED_RR (RT) because process won't be 
-            // preempted during processing.
-            end_cycles =  end_rdtsc();
-            avg_cycles = ( end_cycles - start_cycles );
-         }
-         if ( share_core_ ) {
-            res = sched_yield();
-            if ( res == -1 ) {
-               std::cerr << "sched_yield failed! Exitting." << std::endl;
-               return;
-            }
+      if ( likely( share_core_ ) ) {
+         res = sched_yield();
+         if ( unlikely( res == -1 ) ) {
+            std::cerr << "sched_yield failed! Exitting." << std::endl;
+            return;
          }
       }
            
