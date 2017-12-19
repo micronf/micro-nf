@@ -10,30 +10,6 @@
 #include <iostream>
 #include <inttypes.h>
 
-__inline__ uint64_t start_rdtsc() {
-   unsigned int lo,hi;
-   //preempt_disable();
-   //raw_local_irq_save(_flags);
-
-   __asm__ __volatile__ ("CPUID\n\t"
-                         "RDTSC\n\t"
-                         "mov %%edx, %0\n\t"
-                         "mov %%eax, %1\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
-   return ((uint64_t)hi << 32) | lo;
-}
-
-__inline__ uint64_t end_rdtsc() {
-   unsigned int lo, hi;
-
-   __asm__ __volatile__ ("RDTSCP\n\t"
-                         "mov %%edx, %0\n\t"
-                         "mov %%eax, %1\n\t"
-                         "CPUID\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
-   //raw_local_irq_save(_flags);
-   //preempt_enable();
-   return ((uint64_t)hi << 32) | lo;
-}
-
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_ = pp_config.num_egress_ports();
@@ -100,28 +76,8 @@ inline void MacSwapper::Run() {
    uint16_t num_rx = 0;
    int res = 0;
    uint32_t counter = 0;
-   uint64_t start_cycles = 0;
-   uint64_t end_cycles = 0;
-   int64_t avg_cycles = 0;
-   int64_t yield_avg = 0;
 
    while ( true ) {
-
-      //  printf after certain interval
-      bool print_flag = ( (counter ^ 100000) == 0);
-
-      if ( likely( debug_ ) ) {
-         start_cycles = start_rdtsc(); 
-         // Calculating running average of cycles spent from sched_yield() until rescheduled.
-         // Only applicable for non-share core uNF
-         yield_avg = ( start_cycles - end_cycles ) ;
-
-         if ( print_flag ) {
-            printf( "%d: yield cycles: %" PRId64 "\n", this->instance_id_, yield_avg );
-            counter = 0;
-         }
-      }
-
       // Wait for my turn to use the CPU
       if ( unlikely( sem_enable_ ) ) {
          res = PacketProcessor::wait_vsem( sem_set_id_, share_p_idx_ );
@@ -160,24 +116,15 @@ inline void MacSwapper::Run() {
          if ( unlikely( res < 0 ) )
             perror( "ERROR: post_vsem()." );
       }
- 
-      if ( print_flag )
-         printf( "%d: avg_cycles: %" PRId64 "\n", this->instance_id_, avg_cycles );
-      
-      if ( likely ( debug_ ) ) {
-         end_cycles =  end_rdtsc();
-         // Measure the running average of cycles spent in packet retrieval, 
-         // processing, extra work, and push back to next ring.
-         // This makes sense with SCHED_RR (RT) because process won't be 
-         // preempted during processing.
-         avg_cycles = ( end_cycles - start_cycles );
-      }
 
-      if ( likely( share_core_ ) ) {
-         res = sched_yield();
-         if ( unlikely( res == -1 ) ) {
-            std::cerr << "sched_yield failed! Exitting." << std::endl;
-            return;
+      if ( share_core_ ) {
+         if ( counter == 2 ) {
+            counter = 0;
+            res = sched_yield();
+            if ( unlikely( res == -1 ) ) {
+               std::cerr << "sched_yield failed! Exitting." << std::endl;
+               return;
+            }
          }
       }
            
