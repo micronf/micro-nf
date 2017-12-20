@@ -116,7 +116,7 @@ inline void MacSwapper::Run() {
 
       //  printf after certain interval
       sample_flag = ( (counter % 100000) == 0);
-      dump_flag   = ( (counter % 2000000) == 0);
+      dump_flag   = ( (counter % 4000000) == 0);
 
       if ( likely( debug_ ) ) {
          start_cycles = get_rdtscp(); 
@@ -167,7 +167,12 @@ inline void MacSwapper::Run() {
          if ( unlikely( res < 0 ) )
             perror( "ERROR: post_vsem()." );
       }
-      
+ 
+      if ( sample_flag ) {
+         acc_comp[q] = comp_cycles;
+         q++; 
+      }
+     
       if ( likely ( debug_ ) ) {
          end_cycles =  get_rdtscp();
          // Measure the running average of cycles spent in packet retrieval, 
@@ -176,10 +181,6 @@ inline void MacSwapper::Run() {
          // preempted during processing.
          comp_cycles = ( end_cycles - start_cycles );
        
-         if ( sample_flag ) {
-            acc_comp[q] = comp_cycles;
-            q++; 
-         }
       }
       
       if ( dump_flag ) {
