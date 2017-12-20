@@ -10,7 +10,7 @@
 #include <iostream>
 #include <inttypes.h>
 
-__inline__ uint64_t start_rdtsc() {
+/* __inline__ uint64_t start_rdtsc() {
    unsigned int lo,hi;
    //preempt_disable();
    //raw_local_irq_save(_flags);
@@ -21,8 +21,9 @@ __inline__ uint64_t start_rdtsc() {
                          "mov %%eax, %1\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
    return ((uint64_t)hi << 32) | lo;
 }
+*/
 
-__inline__ uint64_t end_rdtsc() {
+__inline__ uint64_t get_rdtscp() {
    unsigned int lo, hi;
 
    __asm__ __volatile__ ("RDTSCP\n\t"
@@ -99,26 +100,32 @@ inline void MacSwapper::Run() {
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
-   uint32_t counter = 0;
+  
+   uint32_t volatile counter = 0;
+   bool volatile sample_flag, dump_flag;
    uint64_t start_cycles = 0;
    uint64_t end_cycles = 0;
-   int64_t avg_cycles = 0;
-   int64_t yield_avg = 0;
+   int64_t comp_cycles = 0;
+   int64_t yield_cycles = 0;
+
+   uint32_t volatile  q = 0;
+   int64_t acc_comp[1000] = {};
+   int64_t acc_yield[1000] = {};
 
    while ( true ) {
 
       //  printf after certain interval
-      bool print_flag = ( (counter ^ 100000) == 0);
+      sample_flag = ( (counter % 100000) == 0);
+      dump_flag   = ( (counter % 2000000) == 0);
 
       if ( likely( debug_ ) ) {
-         start_cycles = start_rdtsc(); 
+         start_cycles = get_rdtscp(); 
          // Calculating running average of cycles spent from sched_yield() until rescheduled.
-         // Only applicable for non-share core uNF
-         yield_avg = ( start_cycles - end_cycles ) ;
+         // Only applicable for non-share core uNF. Ignore the first round value.
+         yield_cycles = ( start_cycles - end_cycles ) ;
 
-         if ( print_flag ) {
-            printf( "%d: yield cycles: %" PRId64 "\n", this->instance_id_, yield_avg );
-            counter = 0;
+         if ( sample_flag ) {
+            acc_yield[q] = yield_cycles;
          }
       }
 
@@ -160,18 +167,41 @@ inline void MacSwapper::Run() {
          if ( unlikely( res < 0 ) )
             perror( "ERROR: post_vsem()." );
       }
- 
-      if ( print_flag )
-         printf( "%d: avg_cycles: %" PRId64 "\n", this->instance_id_, avg_cycles );
       
       if ( likely ( debug_ ) ) {
-         end_cycles =  end_rdtsc();
+         end_cycles =  get_rdtscp();
          // Measure the running average of cycles spent in packet retrieval, 
          // processing, extra work, and push back to next ring.
          // This makes sense with SCHED_RR (RT) because process won't be 
          // preempted during processing.
-         avg_cycles = ( end_cycles - start_cycles );
+         comp_cycles = ( end_cycles - start_cycles );
+       
+         if ( sample_flag ) {
+            acc_comp[q] = comp_cycles;
+            q++; 
+         }
       }
+      
+      if ( dump_flag ) {
+         //   int64_t comp_avg = 0;
+         //int64_t yield_avg = 0;
+         for ( int i=0; i < q; i++ ){
+               printf( "ID: %d.   Comp_cycles: %lu.   Yield_cycles: %lu.\n", 
+                    this->instance_id_, acc_comp[i], acc_yield[i] );
+            //yield_avg += acc_yield[i];
+            //comp_avg += acc_comp[i];
+         }
+         //comp_avg /= q;
+         //yield_avg /= q;
+         //printf( "ID: %d.   Comp_avg: %lu.   Yield_avg: %lu.\n", 
+         //      this->instance_id_, comp_avg, yield_avg );
+
+         //printf( "q: %u. counter: %u\n", q, counter );
+         q = 0;
+         counter = 0; 
+      }
+
+      counter++;
 
       if ( likely( share_core_ ) ) {
          res = sched_yield();
@@ -180,8 +210,6 @@ inline void MacSwapper::Run() {
             return;
          }
       }
-           
-      counter++;
    } 
 }
 

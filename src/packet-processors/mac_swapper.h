@@ -10,6 +10,7 @@ class MacSwapper : public PacketProcessor {
   MacSwapper() {}
   void Init(const PacketProcessorConfig& pp_config) override;
   void Run() override;
+  //void Run() override __attribute__((optimize("O0")));
   void FlushState() override;
   void RecoverState() override;
   virtual ~MacSwapper() {}
