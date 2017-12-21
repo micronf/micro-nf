@@ -10,7 +10,7 @@
 #include <iostream>
 #include <inttypes.h>
 
-/* __inline__ uint64_t start_rdtsc() {
+__inline__ uint64_t get_rdtsc_cpuid() {
    unsigned int lo,hi;
    //preempt_disable();
    //raw_local_irq_save(_flags);
@@ -21,7 +21,6 @@
                          "mov %%eax, %1\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
    return ((uint64_t)hi << 32) | lo;
 }
-*/
 
 __inline__ uint64_t get_rdtscp() {
    unsigned int lo, hi;
@@ -119,7 +118,10 @@ inline void MacSwapper::Run() {
       dump_flag   = ( (counter % 4000000) == 0);
 
       if ( likely( debug_ ) ) {
-         start_cycles = get_rdtscp(); 
+         // start_cycles = rte_rdtsc_precise(); 
+         start_cycles = get_rdtsc_cpuid(); 
+         // start_cycles = get_rdtscp();
+ 
          // Calculating running average of cycles spent from sched_yield() until rescheduled.
          // Only applicable for non-share core uNF. Ignore the first round value.
          yield_cycles = ( start_cycles - end_cycles ) ;
@@ -167,37 +169,28 @@ inline void MacSwapper::Run() {
          if ( unlikely( res < 0 ) )
             perror( "ERROR: post_vsem()." );
       }
- 
-      if ( sample_flag ) {
-         acc_comp[q] = comp_cycles;
-         q++; 
-      }
-     
+      
       if ( likely ( debug_ ) ) {
-         end_cycles =  get_rdtscp();
+         // end_cycles = rte_rdtsc_precise();
+          end_cycles =  get_rdtsc_cpuid();
+         // end_cycles = get_rdtscp();
+
          // Measure the running average of cycles spent in packet retrieval, 
          // processing, extra work, and push back to next ring.
          // This makes sense with SCHED_RR (RT) because process won't be 
          // preempted during processing.
          comp_cycles = ( end_cycles - start_cycles );
-       
+         if ( sample_flag ) {
+            acc_comp[q] = comp_cycles;
+            q++; 
+         }
       }
       
       if ( dump_flag ) {
-         //   int64_t comp_avg = 0;
-         //int64_t yield_avg = 0;
          for ( int i=0; i < q; i++ ){
                printf( "ID: %d.   Comp_cycles: %lu.   Yield_cycles: %lu.\n", 
                     this->instance_id_, acc_comp[i], acc_yield[i] );
-            //yield_avg += acc_yield[i];
-            //comp_avg += acc_comp[i];
          }
-         //comp_avg /= q;
-         //yield_avg /= q;
-         //printf( "ID: %d.   Comp_avg: %lu.   Yield_avg: %lu.\n", 
-         //      this->instance_id_, comp_avg, yield_avg );
-
-         //printf( "q: %u. counter: %u\n", q, counter );
          q = 0;
          counter = 0; 
       }
