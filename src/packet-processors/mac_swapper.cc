@@ -27,31 +27,16 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    // Retrieve pp_params config
    auto pp_param_map = pp_config.pp_parameters();
    share_core_ = pp_param_map.find( PacketProcessor::shareCoreFlag )->second;
-   sem_enable_ = pp_param_map.find( PacketProcessor::semaphoreFlag )->second;
    cpu_id_ = pp_param_map.find( PacketProcessor::cpuId )->second;
-   auto it = pp_param_map.find( "comp_load" );
+   auto it = pp_param_map.find( PacketProcessor::compLoad );
    if ( it !=  pp_param_map.end() )
       comp_load_ = it->second;
    it = pp_param_map.find( "debug" );
    if ( it !=  pp_param_map.end() )
       debug_ = it->second;
 
-   fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. sem_enable_: %d. \
-cpu_id_:%d\n", instance_id_, share_core_, sem_enable_, cpu_id_ );
-
-   if ( sem_enable_ ) {
-      sem_set_id_ = PacketProcessor::lookup_vsem();
-
-      share_p_idx_ = instance_id_ - 1;
-      share_np_idx_= ( share_p_idx_ + 1 ) % n_share_core_x;
-
-      std::cout << "sem_enable is 1 " \
-                << "p_idx: " << share_p_idx_ << " np_idx: " \
-                << share_np_idx_ << std::endl;
-   } 
-   else {
-      std::cout << "sem_enable is 0" << std::endl;
-   }
+   fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. cpu_id_:%d\n"
+            , instance_id_, share_core_, cpu_id_ );
    
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
@@ -78,12 +63,6 @@ inline void MacSwapper::Run() {
    uint32_t counter = 0;
 
    while ( true ) {
-      // Wait for my turn to use the CPU
-      if ( unlikely( sem_enable_ ) ) {
-         res = PacketProcessor::wait_vsem( sem_set_id_, share_p_idx_ );
-         if ( res < 0 )
-            perror( "ERROR: wait_vsem()." );
-      }
 
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
       for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
@@ -110,13 +89,6 @@ inline void MacSwapper::Run() {
          }
       }
     
-      // Signal Semaphore and yield CPU
-      if ( unlikely( sem_enable_ ) ) {
-         res = PacketProcessor::post_vsem( sem_set_id_, share_np_idx_ );
-         if ( unlikely( res < 0 ) )
-            perror( "ERROR: post_vsem()." );
-      }
-
       if ( share_core_ ) {
          if ( counter == 2 ) {
             counter = 0;
