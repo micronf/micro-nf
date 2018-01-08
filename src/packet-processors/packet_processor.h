@@ -7,11 +7,8 @@
 #include "packet_processor_config.pb.h"
 #include "../common/scale_bit_vector.h"
 
-
 #include <memory>
 #include <vector>
-
-//class EgressPort;
 
 class PacketProcessor {
  public:
@@ -47,7 +44,7 @@ class PacketProcessor {
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
-									PacketProcessor* owner_pp);
+			PacketProcessor* owner_pp = nullptr);
 
   int instance_id_;
   uint16_t num_ingress_ports_;
@@ -55,9 +52,17 @@ class PacketProcessor {
   std::vector<std::unique_ptr<IngressPort>> ingress_ports_;
   std::vector<std::unique_ptr<EgressPort>> egress_ports_;
 
-	const struct rte_memzone *scale_bits_mz;
+  const struct rte_memzone *scale_bits_mz;
   ScaleBitVector *scale_bits;
 
+  int share_core_;
+  int cpu_id_; 
+  int comp_load_ = 1;
+  int debug_ = 0;
+
+  static const std::string shareCoreFlag;
+  static const std::string cpuId;
+  static const std::string compLoad;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {

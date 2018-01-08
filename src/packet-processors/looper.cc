@@ -13,7 +13,7 @@ inline void Looper::Init(const PacketProcessorConfig& pp_config) {
   for (i = 0; i < this->num_egress_ports_; ++i) 
     egress_ports_.emplace_back(nullptr);
   PacketProcessor::ConfigurePorts(pp_config, this);
-  this->loop_counter_ = std::stoi(pp_config.pp_parameters().find(Looper::kConfLoopCounter)->second);
+  this->loop_counter_ = pp_config.pp_parameters().find(Looper::kConfLoopCounter)->second;
 }
 
 inline void Looper::Run() {

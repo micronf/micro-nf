@@ -14,9 +14,8 @@ inline void Sleepy::Init(const PacketProcessorConfig& pp_config) {
     this->ingress_ports_.emplace_back(nullptr);
   for (i = 0; i < this->num_egress_ports_; ++i)
     this->egress_ports_.emplace_back(nullptr);
-  PacketProcessor::ConfigurePorts(pp_config, this);
-  this->sleep_duration_us_ = std::stoi(
-      pp_config.pp_parameters().find(Sleepy::kConfSleepDurationUs)->second);
+  PacketProcessor::ConfigurePorts(pp_config);
+  this->sleep_duration_us_ = pp_config.pp_parameters().find(Sleepy::kConfSleepDurationUs)->second;
 }
 
 inline void Sleepy::Run() {

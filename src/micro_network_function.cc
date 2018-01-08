@@ -63,13 +63,17 @@ int main(int argc, char *argv[]) {
   printf("%s\n", str.c_str());
 
   // First, pin the current thread to the CPU specified in CPU mask.
-  int ms_lcore_id = rte_lcore_id();
+  int ms_lcore_id = packet_processor_config.pp_parameters().find( "cpu_id" )->second;
   pthread_t current_thread = pthread_self();
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);
   CPU_SET(ms_lcore_id, &cpuset);
-  pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
-	
+  fflush( stdout );
+  int s = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
+  if ( s != 0 ) { 
+     fprintf( stderr, "FAILED: pthread_setaffinity_np\n" );
+  } 
+
   // Initialize and run the packet processor.
   PacketProcessorFactory *pp_factory = PacketProcessorFactory::GetInstance();
   auto packet_processor = pp_factory->CreatePacketProcessor(

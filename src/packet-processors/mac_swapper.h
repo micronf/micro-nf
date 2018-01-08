@@ -1,5 +1,5 @@
 #ifndef _MAC_SWAPPER_H_
-#define _MAC_SWAPPER_
+#define _MAC_SWAPPER_H_
 
 #include "../port/rte_egress_port.h"
 #include "../port/rte_ingress_port.h"
