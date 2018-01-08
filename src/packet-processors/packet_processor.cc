@@ -1,6 +1,10 @@
 #include  "packet_processor.h"
 #include  "../port/port_factory.h"
 
+const std::string PacketProcessor::shareCoreFlag = "share_core";
+const std::string PacketProcessor::cpuId = "cpu_id";
+const std::string PacketProcessor::compLoad = "comp_load";
+
 void PacketProcessor::ConfigurePorts(const PacketProcessorConfig& pp_config, 
 									PacketProcessor* owner_pp) {
     PortFactory* port_factory = PortFactory::GetInstance();
@@ -29,4 +33,3 @@ void PacketProcessor::ConfigurePorts(const PacketProcessorConfig& pp_config,
       }
     }
 }
-
