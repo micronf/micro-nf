@@ -4,6 +4,7 @@
 const std::string PacketProcessor::shareCoreFlag = "share_core";
 const std::string PacketProcessor::cpuId = "cpu_id";
 const std::string PacketProcessor::compLoad = "comp_load";
+const std::string PacketProcessor::yieldAfterBatch = "yield_after_kbatch";
 
 void PacketProcessor::ConfigurePorts(const PacketProcessorConfig& pp_config, 
 									PacketProcessor* owner_pp) {

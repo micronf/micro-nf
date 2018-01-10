@@ -35,6 +35,10 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    if ( it !=  pp_param_map.end() )
       debug_ = it->second;
 
+   it = pp_param_map.find( PacketProcessor::yieldAfterBatch );
+   if ( it !=  pp_param_map.end() )
+      yield_after_kbatch_ = it->second;
+
    fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. cpu_id_:%d\n"
             , instance_id_, share_core_, cpu_id_ );
    
@@ -60,7 +64,7 @@ inline void MacSwapper::Run() {
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
-   uint32_t counter = 0;
+   uint32_t counter = 1;
 
    while ( true ) {
 
@@ -90,7 +94,7 @@ inline void MacSwapper::Run() {
       }
     
       if ( share_core_ ) {
-         if ( counter == 2 ) {
+         if ( counter == yield_after_kbatch_ ) {
             counter = 0;
             res = sched_yield();
             if ( unlikely( res == -1 ) ) {
@@ -98,9 +102,8 @@ inline void MacSwapper::Run() {
                return;
             }
          }
-      }
-           
-      counter++;
+       }
+      counter++;          
    } 
 }
 
