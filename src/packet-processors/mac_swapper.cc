@@ -39,6 +39,10 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    if ( it !=  pp_param_map.end() )
       yield_after_kbatch_ = it->second;
 
+   this->has_dest_mac_ = pp_config.has_dest_mac(); 
+   if ( this->has_dest_mac_ )
+      this->dest_mac_ = pp_config.dest_mac();
+
    fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. cpu_id_:%d\n"
             , instance_id_, share_core_, cpu_id_ );
    
@@ -74,11 +78,25 @@ inline void MacSwapper::Run() {
       for (i = 0; i < num_rx - kNumPrefetch; ++i) {
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + kNumPrefetch], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+         if ( this->has_dest_mac_ ) {
+            // If mac swapper need to manually set dst MAC addr
+            // Useful for multinode experiment
+            void *tmp = &eth_hdr->d_addr.addr_bytes[0];
+            uint64_t mac_addr = std::stoul( this->dest_mac_, nullptr, 16 );
+            *(( uint64_t *) tmp) = mac_addr;
+         }
+         else 
+            std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+         if ( this->has_dest_mac_ ) {
+            void *tmp = &eth_hdr->d_addr.addr_bytes[0];
+            uint64_t mac_addr = std::stoul( this->dest_mac_, nullptr, 16 );
+            *(( uint64_t *) tmp) = mac_addr;
+         }
+         else
+            std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
       
       // Do some extra work 
