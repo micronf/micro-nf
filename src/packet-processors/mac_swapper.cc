@@ -26,11 +26,14 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    
    // Retrieve pp_params config
    auto pp_param_map = pp_config.pp_parameters();
-   share_core_ = pp_param_map.find( PacketProcessor::shareCoreFlag )->second;
-   cpu_id_ = pp_param_map.find( PacketProcessor::cpuId )->second;
    auto it = pp_param_map.find( PacketProcessor::compLoad );
    if ( it !=  pp_param_map.end() )
       comp_load_ = it->second;
+
+   it = pp_param_map.find( PacketProcessor::shareCoreFlag );
+   if ( it != pp_param_map.end() )
+      share_core_ = it->second;
+   
    it = pp_param_map.find( "debug" );
    if ( it !=  pp_param_map.end() )
       debug_ = it->second;
@@ -42,9 +45,6 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    this->has_dest_mac_ = pp_config.has_dest_mac(); 
    if ( this->has_dest_mac_ )
       this->dest_mac_ = pp_config.dest_mac();
-
-   fprintf( stdout, "mac_swapper.cc: Id:%d. share_core_: %d. cpu_id_:%d\n"
-            , instance_id_, share_core_, cpu_id_ );
    
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
