@@ -13,6 +13,11 @@ class MacSwapper : public PacketProcessor {
   void FlushState() override;
   void RecoverState() override;
   virtual ~MacSwapper() {}
+
+ private:
+  std::string dest_mac_ = "";
+  bool has_dest_mac_ = false;
+  
 };
 
 #endif  // _MAC_SWAPPER_H_

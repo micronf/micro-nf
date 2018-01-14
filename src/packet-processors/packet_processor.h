@@ -59,10 +59,12 @@ class PacketProcessor {
   int cpu_id_; 
   int comp_load_ = 1;
   int debug_ = 0;
+  int yield_after_kbatch_ = 2;
 
   static const std::string shareCoreFlag;
   static const std::string cpuId;
   static const std::string compLoad;
+  static const std::string yieldAfterBatch;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {
