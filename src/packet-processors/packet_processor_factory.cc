@@ -31,6 +31,12 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<Looper>();
   } else if (packet_processor_type == "Sleepy") {
     pp_ptr = CreatePacketProcessorInternal<Sleepy>();
+  } else if (packet_processor_type == "check_header") {
+    pp_ptr = CreatePacketProcessorInternal<CheckHeader>();
+  } else if (packet_processor_type == "classfy_http") {
+    pp_ptr = CreatePacketProcessorInternal<classfy_http>();
+  } else if (packet_processor_type == "validate_url") {
+    pp_ptr = CreatePacketProcessorInternal<validate_url>();
   }
   return std::move(pp_ptr);
 }

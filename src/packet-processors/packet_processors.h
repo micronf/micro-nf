@@ -10,5 +10,8 @@
 #include "packet_processor.h"
 #include "sleepy.h"
 #include "tcp_ip_classifier.h"
+#include "check_header.h"
+#include "classfy_http.h"
+#include "validate_url.h"
 
 #endif  // _PACKET_PROCESSORS_H_
