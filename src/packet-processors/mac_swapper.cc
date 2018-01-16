@@ -64,11 +64,28 @@ inline void MacSwapper::Run() {
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
-   uint32_t counter = 1;
+   uint32_t hit_count = 1;
 
    while ( true ) {
 
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
+
+      // If num_rx == 0 -> yield
+      // Otherwise, try again and until k consecutive hits and then yield
+      if ( share_core_ ) {
+         if ( num_rx == 0 || hit_count == yield_after_kbatch_ ) {
+            hit_count = 1;
+            res = sched_yield();
+            if ( unlikely( res == -1 ) ) {
+               std::cerr << "sched_yield failed! Exitting." << std::endl;
+               return;
+            }
+         }
+         else
+            hit_count++;
+      }
+
+      
       for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - kNumPrefetch; ++i) {
@@ -92,21 +109,7 @@ inline void MacSwapper::Run() {
             this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
-
-      // TODO
-      // If num_rx == 0 -> yield
-      // Otherwise, try again and until k consecutive hits
-      if ( share_core_ ) {
-         if ( counter == yield_after_kbatch_ ) {
-            counter = 0;
-            res = sched_yield();
-            if ( unlikely( res == -1 ) ) {
-               std::cerr << "sched_yield failed! Exitting." << std::endl;
-               return;
-            }
-         }
-       }
-      counter++;          
+  
    } 
 }
 
