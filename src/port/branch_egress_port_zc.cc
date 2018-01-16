@@ -2,6 +2,7 @@
 
 #include <rte_mbuf.h>
 #include <rte_memcpy.h>
+#include <algorithm>
 
 const std::string BranchEgressPortZC::kConfNumBranches = "num_branches";
 
@@ -27,17 +28,31 @@ inline int BranchEgressPortZC::TxBurst(tx_pkt_array_t &packets, uint16_t burst_s
   // Embed bitmap within the metadata area of each mbuf. i.e., set
   // kNumBitmapEntries bytes to 0.
   for (i = 0; i < burst_size; ++i) {
-    char *mdata_ptr = reinterpret_cast<char *>(
-        reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
-    memset(mdata_ptr, 0, this->num_bitmap_entries_);
+     char *mdata_ptr = reinterpret_cast<char *>(
+           reinterpret_cast<unsigned long>(packets[i]) + sizeof(struct rte_mbuf));
+     memset(mdata_ptr, 0, this->num_bitmap_entries_);
   }
+
+  uint16_t min_avail = (uint16_t) ~( 1 << 15 );
+  uint16_t ring_avail;
+  for (auto r : this->tx_rings_ ) {
+     ring_avail = rte_ring_free_count( r );
+     min_avail = std::min( min_avail, ring_avail );
+  }
+  auto final_burst_size =  std::min( min_avail, burst_size );
+  
   for (auto ring_ptr : this->tx_rings_) {
-		num_tx = rte_ring_enqueue_burst(
-                      ring_ptr, reinterpret_cast<void **>(packets.data()), burst_size, NULL );
-    this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 
-      (burst_size - num_tx);
-		for(i = num_tx; i < burst_size; ++i) rte_pktmbuf_free(packets[i]);
+     num_tx = rte_ring_enqueue_burst(
+           ring_ptr, reinterpret_cast<void **>(packets.data()), final_burst_size, NULL );
+    
+     if(unlikely((num_tx < burst_size))) {
+        this->micronf_stats->packet_drop[owner_packet_processor_->instance_id()][this->port_id_] += 
+           (burst_size - num_tx);
+     }
+     
+     for(i = num_tx; i < final_burst_size; ++i) rte_pktmbuf_free(packets[i]);
   }
+  
   // TODO: Not sure what exactly to return :/.
-  return 0;
+  return final_burst_size;
 }
