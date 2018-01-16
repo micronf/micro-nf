@@ -31,7 +31,10 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<Looper>();
   } else if (packet_processor_type == "Sleepy") {
     pp_ptr = CreatePacketProcessorInternal<Sleepy>();
+  } else if (packet_processor_type == "MacRewriter") {
+     pp_ptr = CreatePacketProcessorInternal<MacRewriter>();
   }
+   
   return std::move(pp_ptr);
 }
 

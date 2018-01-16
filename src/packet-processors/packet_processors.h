@@ -10,5 +10,6 @@
 #include "packet_processor.h"
 #include "sleepy.h"
 #include "tcp_ip_classifier.h"
+#include "mac_rewriter.h"
 
 #endif  // _PACKET_PROCESSORS_H_
