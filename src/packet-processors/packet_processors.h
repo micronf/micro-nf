@@ -13,5 +13,6 @@
 #include "check_header.h"
 #include "classfy_http.h"
 #include "validate_url.h"
+#include "mac_rewriter.h"
 
 #endif  // _PACKET_PROCESSORS_H_

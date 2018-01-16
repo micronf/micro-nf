@@ -29,10 +29,12 @@ inline void Sleepy::Init(const PacketProcessorConfig& pp_config) {
   it = pp_param_map.find(Sleepy::kConfSleepDurationUs);
   if ( it != pp_param_map.end() )
      this->sleep_duration_us_ = it->second;
-  std::cout << "SHARE_CORE: " << this->share_core_
+  
+/*  std::cout << "SHARE_CORE: " << this->share_core_
             << "YIELD: " << this->yield_after_kbatch_
             << "this->sleep_duration_us_: " << this->sleep_duration_us_
             << std::endl;
+*/
 } 
 
 inline void Sleepy::Run() {
@@ -40,27 +42,32 @@ inline void Sleepy::Run() {
    uint16_t num_rx = 0, num_tx = 0;
    register uint16_t i = 0, j = 0;
    struct ether_hdr* eth_hdr = nullptr;
-   uint32_t counter = 1;
-      
+   uint32_t hit_count = 1;
+   int res = 0;
+   
    while (true) {
       num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-      for (i = 0; i < num_rx; ++i) {
-         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-      }
-      rte_delay_us(this->sleep_duration_us_);
-      num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
-
+      
+      // If num_rx == 0 -> yield
+      // Otherwise, try again and until k consecutive hits and then yield
       if ( share_core_ ) {
-         if ( counter == yield_after_kbatch_ ) {
-            counter = 0;
-            int res = sched_yield();
+         if ( num_rx == 0 || hit_count == yield_after_kbatch_ ) {
+            hit_count = 1;
+            res = sched_yield();
             if ( unlikely( res == -1 ) ) {
                std::cerr << "sched_yield failed! Exitting." << std::endl;
                return;
             }
          }
+         else
+            hit_count++;
       }
-      counter++;          
+      
+      for (i = 0; i < num_rx; ++i) {
+         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
+      }
+      rte_delay_us(this->sleep_duration_us_);
+      num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
    }
 }
 

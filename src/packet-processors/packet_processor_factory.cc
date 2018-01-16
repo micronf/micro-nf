@@ -37,7 +37,10 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<classfy_http>();
   } else if (packet_processor_type == "validate_url") {
     pp_ptr = CreatePacketProcessorInternal<validate_url>();
+  } else if (packet_processor_type == "MacRewriter") {
+     pp_ptr = CreatePacketProcessorInternal<MacRewriter>();
   }
+   
   return std::move(pp_ptr);
 }
 
