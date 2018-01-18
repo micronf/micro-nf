@@ -2,6 +2,7 @@
 
 #include <rte_cycles.h>
 #include <rte_ether.h>
+#include <iostream>
 
 const std::string Sleepy::kConfSleepDurationUs = "sleep_duration_us";
 
