@@ -8,8 +8,7 @@ const std::string SyncIngressPort::kConfNumPrevMs = "num_prev_ms";
 
 void SyncIngressPort::Init(std::map<std::string, std::string> &port_config) {
   this->num_prev_ms_ = std::stoi(port_config[SyncIngressPort::kConfNumPrevMs]);
-  this->num_bitmap_entries_ =
-      (num_prev_ms_ >> 3) + static_cast<int>((num_prev_ms_ & 8) != 0);
+  this->num_bitmap_entries_ = ( num_prev_ms_ / 8 ) + ( ( num_prev_ms_ % 8 ) ? 1 : 0 );
   this->mask_ =
       std::unique_ptr<unsigned char>(reinterpret_cast<unsigned char *>(
           malloc(this->num_bitmap_entries_ * sizeof(unsigned char))));

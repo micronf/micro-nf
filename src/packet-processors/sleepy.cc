@@ -29,12 +29,6 @@ inline void Sleepy::Init(const PacketProcessorConfig& pp_config) {
   it = pp_param_map.find(Sleepy::kConfSleepDurationUs);
   if ( it != pp_param_map.end() )
      this->sleep_duration_us_ = it->second;
-  
-/*  std::cout << "SHARE_CORE: " << this->share_core_
-            << "YIELD: " << this->yield_after_kbatch_
-            << "this->sleep_duration_us_: " << this->sleep_duration_us_
-            << std::endl;
-*/
 } 
 
 inline void Sleepy::Run() {
@@ -66,7 +60,9 @@ inline void Sleepy::Run() {
       for (i = 0; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
       }
+      
       rte_delay_us(this->sleep_duration_us_);
+
       num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
    }
 }
