@@ -31,6 +31,16 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<Looper>();
   } else if (packet_processor_type == "Sleepy") {
     pp_ptr = CreatePacketProcessorInternal<Sleepy>();
+  } else if (packet_processor_type == "check_header") {
+    pp_ptr = CreatePacketProcessorInternal<CheckHeader>();
+  } else if (packet_processor_type == "classfy_http") {
+    pp_ptr = CreatePacketProcessorInternal<classfy_http>();
+  } else if (packet_processor_type == "validate_url") {
+    pp_ptr = CreatePacketProcessorInternal<validate_url>();
+  } else if (packet_processor_type == "filt_udptcp") {
+     pp_ptr = CreatePacketProcessorInternal<filt_udptcp>();
+  } else if (packet_processor_type == "count_url") {
+     pp_ptr = CreatePacketProcessorInternal<count_url>();
   } else if (packet_processor_type == "MacRewriter") {
      pp_ptr = CreatePacketProcessorInternal<MacRewriter>();
   }

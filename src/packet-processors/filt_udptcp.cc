@@ -6,6 +6,7 @@
 #include <rte_udp.h>
 #include "common/protocol_header_offset.h"
 
+#include <rte_byteorder.h>
 
 inline void 
 filt_udptcp::Init(const PacketProcessorConfig& pp_config) {
@@ -37,58 +38,53 @@ filt_udptcp::Run() {
 
   while (true) {
     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-
+	num_tx = num_rx;
     for (i = 0; i < num_rx; i++) {
+		tcp = nullptr;
+		udp = nullptr;
+		port = 0;
+
         rte_prefetch0(rx_packets[i]->buf_addr);
         eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-        header_offsets.eth_hdr_addr = reinterpret_cast<uint64_t>(eth);
-        header_offsets.ip_hdr_addr =
-                        header_offsets.eth_hdr_addr + sizeof(struct ether_hdr);
-        ip = reinterpret_cast<struct ipv4_hdr*>(header_offsets.ip_hdr_addr);
-        //ip = reinterpret_cast<struct ipv4_hdr*>((void*)eth + sizeof(struct ether_hdr));
-   
+		ip  = reinterpret_cast<struct ipv4_hdr*>(eth + 1);
      
         switch(ip->next_proto_id) {
             case PROTOCOL_TCP:
             case PROTOCOL_UDP:
                 break;
             default:
-                printf("wrong proto\n");
-                fflush(stdout);
                 rte_pktmbuf_free(rx_packets[i]);
                 tcp = nullptr;
                 udp = nullptr;
+                num_tx--;
                 continue;
         }
 
         if (likely(ip->next_proto_id == IPPROTO_TCP)) {
-            //printf("tcp");
-            //fflush(stdout); 
-            tcp = reinterpret_cast<struct tcp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
+            //tcp = reinterpret_cast<struct tcp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
+            tcp = reinterpret_cast<struct tcp_hdr*>(ip + 1);
         } else if (ip->next_proto_id == IPPROTO_UDP) {
-            udp = reinterpret_cast<struct udp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
+            //udp = reinterpret_cast<struct udp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
+            udp = reinterpret_cast<struct udp_hdr*>(ip + 1);
         } else {
             printf("WHAAAAAAAAAAAAAAT?\n");
             fflush(stdout); 
         }
         
         port = tcp? tcp->dst_port : udp->dst_port;
-        switch(port) {
+        switch(rte_be_to_cpu_16(port)) {
             case 21:
             case 22:
                 rte_pktmbuf_free(rx_packets[i]);
                 tcp = nullptr;
                 udp = nullptr;
+                num_tx--;
                 continue;
             default:
                 break;
         }
     }
-    num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
-    tcp = nullptr;
-    udp = nullptr;
-    printf("num_tx: %d\n", num_tx);
-    fflush(stdout);
+    num_tx = egress_ports_[0]->TxBurst(rx_packets, num_tx);
   }
 }
 

@@ -46,30 +46,22 @@ count_url::Run() {
         for (i = 0; i < num_rx; ++i) {
             rte_prefetch0(rx_packets[i]->buf_addr);
             eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-            header_offsets.eth_hdr_addr = reinterpret_cast<uint64_t>(eth);
-            header_offsets.ip_hdr_addr =
-                    header_offsets.eth_hdr_addr + sizeof(struct ether_hdr);
-            header_offsets.transport_hdr_addr =
-                    header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr);
-            ip = reinterpret_cast<struct ipv4_hdr*>(header_offsets.ip_hdr_addr);
+			ip = reinterpret_cast<struct ipv4_hdr*>(eth + 1);
 
-            //if (likely(ip->next_proto_id == IPPROTO_TCP)) {
-            //printf("the next proto id is: %d\n", ip->next_proto_id);
-            if (likely(ip->next_proto_id == 0x06)) {
+			if (likely(ip->next_proto_id == 0x06)) {
                 tcp = reinterpret_cast<struct tcp_hdr*>(
-                        header_offsets.transport_hdr_addr);
-                header_offsets.payload_addr =
-                    header_offsets.transport_hdr_addr + tcp->data_off;
+												ip + 1);
+                payload = reinterpret_cast<char *>(tcp) + (tcp->data_off << 2);
+//                    header_offsets.transport_hdr_addr + tcp->data_off;
 
             } else if (ip->next_proto_id == IPPROTO_UDP) {
-                header_offsets.payload_addr = 
-                    header_offsets.transport_hdr_addr + sizeof(struct udp_hdr);
+				continue;
+				// for now, don't look into udp traffic
             }
-            
     
             //++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
             /* find the head and tail of the url in the packet here */
-            payload = (char*)(header_offsets.payload_addr);
+            //payload = (char*)(header_offsets.payload_addr);
             url = payload + 4;
             key = std::string(url);
     
@@ -79,6 +71,7 @@ count_url::Run() {
             } else {
                 _urlmap.insert(std::pair<std::string, double>(key, 1));
             }
+
         }
 
         num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
