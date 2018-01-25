@@ -9,7 +9,7 @@
 
 class SetBitmapEgressPort : public EgressPort {
  public:
-  SetBitmapEgressPort() : bitmap_index_(-1) {}
+  SetBitmapEgressPort() {}
   SetBitmapEgressPort(int port_id, const std::string& ring_id);
   void Init(std::map<std::string, std::string>& port_config,
             PacketProcessor* owner_pp) override;
