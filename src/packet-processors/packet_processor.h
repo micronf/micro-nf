@@ -55,9 +55,9 @@ class PacketProcessor {
   const struct rte_memzone *scale_bits_mz;
   ScaleBitVector *scale_bits;
 
-  int share_core_;
+  int share_core_ = 0;
   int cpu_id_; 
-  int comp_load_ = 1;
+  int comp_load_ = 0;
   int debug_ = 0;
   int yield_after_kbatch_ = 2;
 
