@@ -49,7 +49,7 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
 void static inline imitate_processing( int load ) __attribute__((optimize("O0"))); 
 void static inline imitate_processing( int load ) {   
    // Imitate extra processing
-   int n = 500 * load;
+   int n = 1000 * load;
    for ( int i = 0; i < n; i++ ) {
       int r = 0;
       int s = 999;
@@ -64,9 +64,17 @@ inline void MacSwapper::Run() {
    uint16_t num_rx = 0;
    int res = 0;
    uint32_t hit_count = 1;
-
+   uint64_t start_ts, end_ts;
+   const static int ar_size = 100;
+   uint64_t diff_ts[ ar_size ];
+   uint32_t sample_counter = 0;
+   uint ts_idx = 0;
+   
    while ( true ) {
-
+      
+      sample_counter++;
+      start_ts = this->start_rdtsc();
+         
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
 
       // If num_rx == 0 -> yield
@@ -100,6 +108,29 @@ inline void MacSwapper::Run() {
             this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
+
+      end_ts = this->end_rdtsc();
+      
+      if ( unlikely( ( sample_counter & 0x3FFF ) == 0 )
+             && num_rx != 0 ) {
+         //std::cout<< std::hex << sample_counter << std::endl ;
+         diff_ts[ ts_idx++ ] = end_ts - start_ts;
+         
+         if ( unlikely( ts_idx == ar_size ) ) {
+            unsigned long sum = 0;
+            for ( int i = 0; i < ar_size; i++ ) {
+               sum += diff_ts[i];
+               printf( "%" PRIu64 "\n", diff_ts[i] );
+            }
+            
+            ts_idx = 0;
+            sample_counter = 0;
+            printf( "Average: %lu\n", sum/ar_size );
+            printf( "Finish collecting %d data. Returning . . .\n", ar_size );
+            fflush(stdout);
+         }
+      }
+
   
    } 
 }

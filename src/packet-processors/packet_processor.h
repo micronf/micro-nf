@@ -46,6 +46,31 @@ class PacketProcessor {
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
 			PacketProcessor* owner_pp = nullptr);
 
+  __inline__ uint64_t start_rdtsc() {
+     unsigned int lo,hi;
+     //preempt_disable();
+     //raw_local_irq_save(_flags);
+
+     __asm__ __volatile__ ("CPUID\n\t"
+                           "RDTSC\n\t"
+                           "mov %%edx, %0\n\t"
+                           "mov %%eax, %1\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
+     return ((uint64_t)hi << 32) | lo;
+  }
+
+  __inline__ uint64_t end_rdtsc() {
+     unsigned int lo, hi;
+
+     __asm__ __volatile__ ("RDTSCP\n\t"
+                           "mov %%edx, %0\n\t"
+                           "mov %%eax, %1\n\t"
+                           "CPUID\n\t": "=r" (hi), "=r" (lo):: "%rax", "%rbx", "%rcx", "%rdx");
+     //raw_local_irq_save(_flags);
+     //preempt_enable();
+     return ((uint64_t)hi << 32) | lo;
+  }
+  
+
   int instance_id_;
   uint16_t num_ingress_ports_;
   uint16_t num_egress_ports_;
