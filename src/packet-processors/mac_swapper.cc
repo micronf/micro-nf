@@ -45,18 +45,6 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
 
-// Imitating work load.
-void static inline imitate_processing( int load ) __attribute__((optimize("O0"))); 
-void static inline imitate_processing( int load ) {   
-   // Imitate extra processing
-   int n = 1000 * load;
-   for ( int i = 0; i < n; i++ ) {
-      int r = 0;
-      int s = 999;
-      r =  s * s;
-   }
-}
-
 inline void MacSwapper::Run() {
    rx_pkt_array_t rx_packets;
    register int16_t i = 0;
@@ -110,27 +98,26 @@ inline void MacSwapper::Run() {
       }
 
       end_ts = this->end_rdtsc();
-      
+
+      // Take sample every interval 
       if ( unlikely( ( sample_counter & 0x3FFF ) == 0 )
              && num_rx != 0 ) {
-         //std::cout<< std::hex << sample_counter << std::endl ;
+
          diff_ts[ ts_idx++ ] = end_ts - start_ts;
          
          if ( unlikely( ts_idx == ar_size ) ) {
             unsigned long sum = 0;
             for ( int i = 0; i < ar_size; i++ ) {
                sum += diff_ts[i];
-               printf( "%" PRIu64 "\n", diff_ts[i] );
+               //printf( "%" PRIu64 "\n", diff_ts[i] );
             }
             
             ts_idx = 0;
             sample_counter = 0;
-            printf( "Average: %lu\n", sum/ar_size );
-            printf( "Finish collecting %d data. Returning . . .\n", ar_size );
+            printf( "[%d] Average: %lu\n", this->instance_id(), sum/ar_size );
             fflush(stdout);
          }
       }
-
   
    } 
 }

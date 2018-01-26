@@ -69,7 +69,19 @@ class PacketProcessor {
      //preempt_enable();
      return ((uint64_t)hi << 32) | lo;
   }
-  
+
+  // Imitating work load.
+  // void imitate_processing( int load ) __attribute__((optimize("O0"))); 
+  void __inline__ imitate_processing( int load ) __attribute__((optimize("O0"))){   
+     // Imitate extra processing
+     int n = 1000 * load;
+     for ( int i = 0; i < n; i++ ) {
+        int volatile r = 0;
+        int volatile s = 999;
+        r =  s * s;
+     }
+  }
+
 
   int instance_id_;
   uint16_t num_ingress_ports_;
