@@ -60,7 +60,6 @@ void static inline imitate_processing( int load ) {
 inline void MacSwapper::Run() {
    rx_pkt_array_t rx_packets;
    register int16_t i = 0;
-   const int16_t kNumPrefetch = 8;
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
    int res = 0;
@@ -85,15 +84,7 @@ inline void MacSwapper::Run() {
             hit_count++;
       }
 
-      
-      for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
-      for (i = 0; i < num_rx - kNumPrefetch; ++i) {
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + kNumPrefetch], void*));
-         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
-      }
-      for ( ; i < num_rx; ++i) {
+      for (i = 0; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
