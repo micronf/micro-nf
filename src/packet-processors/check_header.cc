@@ -43,13 +43,9 @@ inline void CheckHeader::Run() {
 
   while (true) {
 
-	_cpu_ctr.update();
     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
 	num_tx = 0;
-    /*if (num_rx) {
-        printf("NUM_RX: %d\n", num_rx);
-        fflush(stdout); 
-    }*/
+
     for (i = 0; i < num_rx; ++i) {
       rte_prefetch0(rx_packets[i]->buf_addr);
       eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
@@ -116,18 +112,6 @@ inline void CheckHeader::Run() {
     } 
     
     num_tx = egress_ports_[0]->TxBurst(rx_packets, num_tx);
-    if(num_rx) {
-		_cpu_ctr.addmany(num_rx);
-		//cout << "stdev: " << _cpu_ctr.get_stdev() << endl;
-		//cout << "mean: " << _cpu_ctr.get_mean() << endl;
-	}
-	/*
-    if (num_tx) {
-        printf("num_tx: %d", num_tx);
-        fflush(stdout);
-    }
-    */
-
   }
 }
 

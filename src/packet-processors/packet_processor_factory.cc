@@ -31,16 +31,16 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
     pp_ptr = CreatePacketProcessorInternal<Looper>();
   } else if (packet_processor_type == "Sleepy") {
     pp_ptr = CreatePacketProcessorInternal<Sleepy>();
-  } else if (packet_processor_type == "check_header") {
+  } else if (packet_processor_type == "CheckHeader") {
     pp_ptr = CreatePacketProcessorInternal<CheckHeader>();
-  } else if (packet_processor_type == "classfy_http") {
-    pp_ptr = CreatePacketProcessorInternal<classfy_http>();
-  } else if (packet_processor_type == "validate_url") {
-    pp_ptr = CreatePacketProcessorInternal<validate_url>();
-  } else if (packet_processor_type == "filt_udptcp") {
-     pp_ptr = CreatePacketProcessorInternal<filt_udptcp>();
-  } else if (packet_processor_type == "count_url") {
-     pp_ptr = CreatePacketProcessorInternal<count_url>();
+  } else if (packet_processor_type == "ClassfyHTTP") {
+    pp_ptr = CreatePacketProcessorInternal<ClassfyHTTP>();
+  } else if (packet_processor_type == "ValidateURL") {
+    pp_ptr = CreatePacketProcessorInternal<ValidateURL>();
+  } else if (packet_processor_type == "FiltUDPTCP") {
+     pp_ptr = CreatePacketProcessorInternal<FiltUDPTCP>();
+  } else if (packet_processor_type == "CountURL") {
+     pp_ptr = CreatePacketProcessorInternal<CountURL>();
   } else if (packet_processor_type == "MacRewriter") {
      pp_ptr = CreatePacketProcessorInternal<MacRewriter>();
   }

@@ -4,9 +4,9 @@
 #include "packet_processor.h"
 
 
-class filt_udptcp : public PacketProcessor {
+class FiltUDPTCP : public PacketProcessor {
   public:
-    filt_udptcp() {}
+    FiltUDPTCP() {}
     void Init(const PacketProcessorConfig& config) override;
     void Run()          override;
     void FlushState()   override;
