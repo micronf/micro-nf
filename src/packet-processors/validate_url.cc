@@ -4,7 +4,10 @@
 #include <rte_memcpy.h>
 #include <rte_tcp.h>
 #include <rte_udp.h>
- 
+#include <string>
+#include <iostream>
+#include <rte_byteorder.h>
+
 inline void validate_url::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
@@ -29,6 +32,8 @@ validate_url::Run() {
     struct ipv4_hdr* ip   = nullptr;
     struct tcp_hdr* tcp   = nullptr;
     char* payload         = nullptr;
+    char* payload1         = nullptr;
+    char* payload2         = nullptr;
 
 
     //std::string pattern = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*([a-    z\\!\\@\\#\\$\\%\\^\\&\\*])*\\/?$";
@@ -38,6 +43,11 @@ validate_url::Run() {
     while (true) {
         //for (auto& iport : this->ingress_ports_) {
         num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+        /*if(num_rx) {
+			printf("num_rx: %d", num_rx);
+			fflush(stdout);
+        }*/
+
         for (i = 0; i < num_rx; ++i) {
 			head = nullptr;
 			tail = nullptr;
@@ -46,17 +56,18 @@ validate_url::Run() {
             eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
             ip  = reinterpret_cast<ipv4_hdr*>(eth + 1);
             tcp = reinterpret_cast<tcp_hdr*>(ip + 1);
-            payload = reinterpret_cast<char*>(tcp + 1);
-		
+            //payload = reinterpret_cast<char *>(tcp) + ((tcp->data_off & 0xf0) >> 2);
+            payload = reinterpret_cast<char *>(tcp) + 8;
+			
             //++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
             /* find the head and tail of the url in the packet here */
-    
-			head = payload + 1;
-			tail = head + 10;
+			head = strstr(payload, "GET") + 4; // original 2
+			tail = strchr(head, ' '); // original 10
             std::string url(head, tail);
+            //std::regex_match(url, url_regex);
             if (!std::regex_match(url, url_regex)) {
-				//printf("invalid url!\n");
-				//fflush(stdout);
+				printf("invalid url!\n");
+				fflush(stdout);
             }
         }
         num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);

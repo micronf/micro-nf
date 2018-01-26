@@ -53,6 +53,8 @@ filt_udptcp::Run() {
             case PROTOCOL_UDP:
                 break;
             default:
+				printf("strange shit happening here!!!!!!!!!!\n");
+				fflush(stdout);
                 rte_pktmbuf_free(rx_packets[i]);
                 tcp = nullptr;
                 udp = nullptr;

@@ -6,6 +6,11 @@
 #include <rte_udp.h>
 #include "common/protocol_header_offset.h"
 #include "common/checksum.h"
+#include <iostream>
+
+CheckHeader::~CheckHeader() {
+  _cpu_ctr.get_stdev();
+}
 
 inline void CheckHeader::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
@@ -22,6 +27,7 @@ inline void CheckHeader::Init(const PacketProcessorConfig& pp_config) {
 
 inline void CheckHeader::Run() {
   rx_pkt_array_t rx_packets;
+  rx_pkt_array_t tx_packets;
   register uint16_t i = 0;
   uint16_t num_rx = 0;
   uint16_t num_tx = 0;
@@ -36,12 +42,14 @@ inline void CheckHeader::Run() {
   unsigned hlen;
 
   while (true) {
+
+	_cpu_ctr.update();
     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+	num_tx = 0;
     /*if (num_rx) {
         printf("NUM_RX: %d\n", num_rx);
         fflush(stdout); 
     }*/
-
     for (i = 0; i < num_rx; ++i) {
       rte_prefetch0(rx_packets[i]->buf_addr);
       eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
@@ -79,7 +87,7 @@ inline void CheckHeader::Run() {
           continue;
       }
 
-      // check checksum 
+      // check checksum
       if (ip_check_sum(reinterpret_cast<unsigned char*>(ip), hlen)) {
           printf("drop for checksum length\n");
           rte_pktmbuf_free(rx_packets[i]);
@@ -101,14 +109,24 @@ inline void CheckHeader::Run() {
           reinterpret_cast<unsigned long>(rx_packets[i]) +
           sizeof(struct rte_mbuf));
       rte_mov32(mdata_ptr, kHeaderOffsetPtr);
+
+	  // copy right packets to tx array
+	  tx_packets[num_tx++] = rx_packets[i];
+
     } 
     
-    num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
-
-    /*if (num_tx) {
+    num_tx = egress_ports_[0]->TxBurst(rx_packets, num_tx);
+    if(num_rx) {
+		_cpu_ctr.addmany(num_rx);
+		//cout << "stdev: " << _cpu_ctr.get_stdev() << endl;
+		//cout << "mean: " << _cpu_ctr.get_mean() << endl;
+	}
+	/*
+    if (num_tx) {
         printf("num_tx: %d", num_tx);
         fflush(stdout);
-    }*/
+    }
+    */
 
   }
 }
