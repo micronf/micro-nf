@@ -44,7 +44,7 @@ class PacketProcessor {
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
-			PacketProcessor* owner_pp = nullptr);
+			PacketProcessor* owner_pp );
 
   __inline__ uint64_t start_rdtsc() {
      unsigned int lo,hi;
