@@ -9,6 +9,9 @@
 
 #include <memory>
 #include <vector>
+#include <rte_ip.h>
+#include <rte_tcp.h>
+#include <rte_ether.h>
 
 class PacketProcessor {
  public:
@@ -81,6 +84,18 @@ class PacketProcessor {
         r =  s * s;
      }
   }
+
+  void iterate_payload( struct ether_hdr* eth_hdr, int num_bytes, bool write = false ){
+     struct ipv4_hdr* ipv4 = reinterpret_cast<struct ipv4_hdr*>(eth_hdr + 1);
+     struct tcp_hdr* tcp = reinterpret_cast<struct tcp_hdr*>(ipv4 + 1); 
+     char c;
+     for ( int i = 0; i < num_bytes; i++ ) {
+        c = *(char *)( tcp +  ( ( tcp->data_off & 0xf0 ) >> 2 ) );
+        if ( write )
+           *(char *)( tcp +  ( ( tcp->data_off & 0xf0 ) >> 2 ) ) = 'a';
+     }
+  }
+
 
 
   int instance_id_;

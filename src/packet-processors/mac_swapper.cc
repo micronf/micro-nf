@@ -60,6 +60,8 @@ inline void MacSwapper::Run() {
    uint64_t diff_ts[ ar_size ];
    uint32_t sample_counter = 0;
    uint ts_idx = 0;
+
+   int kNumPrefetch = 8;
    
    while ( true ) {
 
@@ -85,8 +87,37 @@ inline void MacSwapper::Run() {
             hit_count++;
       }
 
+      for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
+      for (i = 0; i < num_rx - kNumPrefetch; ++i) {
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + kNumPrefetch], void*));
+         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
+         // Read num_bytes of tcp payload. add true add last to write to payload.
+         // this->iterate_payload( eth_hdr, 32 );
+         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+      }
+      for ( ; i < num_rx; ++i) {
+         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
+         // Read num_bytes of tcp payload. add true add last to write to payload.
+         //this->iterate_payload( eth_hdr, 32 );
+         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+      }
+
+      // Do some extra work
+      // (desterministic and not compiler optimized.)
+      imitate_processing( comp_load_ );
+
+      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+      for (i=0; i < num_egress_ports_; i++){
+         if (this->scale_bits->bits[this->instance_id_].test(i)){
+            // TODO  Change port to smart port.
+            // this->scale_bits->bits[this->instance_id_].set(i, false);
+         }
+      }
+/*
       for (i = 0; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
+         
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
       
@@ -101,7 +132,8 @@ inline void MacSwapper::Run() {
             this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
-
+*/
+         
 #ifdef MEASURE
       end_ts = this->end_rdtsc();
       // Take sample every interval 
