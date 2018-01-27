@@ -9,6 +9,7 @@
 #include <rte_cycles.h>
 #include <iostream>
 #include <inttypes.h>
+#include <rte_log.h>
 
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
@@ -41,6 +42,12 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    it = pp_param_map.find( PacketProcessor::yieldAfterBatch );
    if ( it !=  pp_param_map.end() )
       yield_after_kbatch_ = it->second;
+
+   it = pp_param_map.find( PacketProcessor::kNumPrefetch );
+   if ( it != pp_param_map.end() )
+      k_num_prefetch_ = it->second;
+
+   RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);
    
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
@@ -84,11 +91,18 @@ inline void MacSwapper::Run() {
             hit_count++;
       }
 
-      for (i = 0; i < num_rx; ++i) {
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
-      
+      for ( ; i < num_rx; ++i) {
+         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
+         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+      }
+            
       // Do some extra work 
       // (desterministic and not compiler optimized.) 
       imitate_processing( comp_load_ );
