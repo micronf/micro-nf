@@ -10,6 +10,9 @@
 #include <iostream>
 #include <inttypes.h>
 
+// define = measurement code will be inserted
+// #define MEASURE
+
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_ = pp_config.num_egress_ports();
@@ -59,10 +62,12 @@ inline void MacSwapper::Run() {
    uint ts_idx = 0;
    
    while ( true ) {
-      
+
+#ifdef MEASURE
       sample_counter++;
       start_ts = this->start_rdtsc();
-         
+#endif
+      
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
 
       // If num_rx == 0 -> yield
@@ -97,8 +102,8 @@ inline void MacSwapper::Run() {
          }
       }
 
+#ifdef MEASURE
       end_ts = this->end_rdtsc();
-
       // Take sample every interval 
       if ( unlikely( ( sample_counter & 0x3FFF ) == 0 )
              && num_rx != 0 ) {
@@ -118,7 +123,8 @@ inline void MacSwapper::Run() {
             fflush(stdout);
          }
       }
-  
+#endif
+      
    } 
 }
 
