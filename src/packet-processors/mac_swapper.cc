@@ -92,9 +92,9 @@ inline void MacSwapper::Run() {
       }
 
       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
