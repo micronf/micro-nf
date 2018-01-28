@@ -9,6 +9,9 @@
 
 #include <memory>
 #include <vector>
+#include <rte_ip.h>
+#include <rte_tcp.h>
+#include <rte_ether.h>
 
 class PacketProcessor {
  public:
@@ -44,7 +47,30 @@ class PacketProcessor {
   // configuration. This will be a method private to each PacketProcessor
   // implementation. 
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
-			PacketProcessor* owner_pp = nullptr);
+			PacketProcessor* owner_pp );
+
+  // Imitating work load.
+  // void imitate_processing( int load ) __attribute__((optimize("O0"))); 
+  void __inline__ imitate_processing( int load ) __attribute__((optimize("O0"))){   
+     // Imitate extra processing
+     int n = 1000 * load;
+     for ( int i = 0; i < n; i++ ) {
+        int volatile r = 0;
+        int volatile s = 999;
+        r =  s * s;
+     }
+  }
+
+  void iterate_payload( struct ether_hdr* eth_hdr, int num_bytes, bool write = false ){
+     struct ipv4_hdr* ipv4 = reinterpret_cast<struct ipv4_hdr*>(eth_hdr + 1);
+     struct tcp_hdr* tcp = reinterpret_cast<struct tcp_hdr*>(ipv4 + 1); 
+     char c;
+     for ( int i = 0; i < num_bytes; i++ ) {
+        c = *(char *)( tcp +  ( ( tcp->data_off & 0xf0 ) >> 2 ) );
+        if ( write )
+           *(char *)( tcp +  ( ( tcp->data_off & 0xf0 ) >> 2 ) ) = 'a';
+     }
+  }
 
   int instance_id_;
   uint16_t num_ingress_ports_;
@@ -61,13 +87,14 @@ class PacketProcessor {
   int debug_ = 0;
   int yield_after_kbatch_ = 2;
   int k_num_prefetch_ = 8;
+  int iter_payload_ = 16;
 
   static const std::string shareCoreFlag;
   static const std::string cpuId;
   static const std::string compLoad;
   static const std::string yieldAfterBatch;
-  static const std::string kNumPrefetch; 
-
+  static const std::string kNumPrefetch;
+  static const std::string iterPayload;
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {
