@@ -5,9 +5,9 @@
 #include <regex>
 #include <string>
 
-class classfy_http : public PacketProcessor {
+class ClassfyHTTP : public PacketProcessor {
 public:
-    classfy_http() {}
+    ClassfyHTTP() {}
     void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
     void FlushState() override;
@@ -17,4 +17,4 @@ private:
     char *tail;
 };
 
-#endif
+#endif // _CLASSFY_HTTP_H_

@@ -9,7 +9,7 @@
 #include <rte_byteorder.h>
 
 inline void 
-filt_udptcp::Init(const PacketProcessorConfig& pp_config) {
+FiltUDPTCP::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
   instance_id_ = pp_config.instance_id();
@@ -23,8 +23,9 @@ filt_udptcp::Init(const PacketProcessorConfig& pp_config) {
 }
 
 void 
-filt_udptcp::Run() {
+FiltUDPTCP::Run() {
   rx_pkt_array_t rx_packets;
+  rx_pkt_array_t tx_packets;
   register uint16_t i = 0;
   uint16_t num_rx = 0;
   uint16_t num_tx = 0;
@@ -38,13 +39,12 @@ filt_udptcp::Run() {
 
   while (true) {
     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-	num_tx = num_rx;
+	num_tx = 0;
     for (i = 0; i < num_rx; i++) {
 		tcp = nullptr;
 		udp = nullptr;
 		port = 0;
 
-        rte_prefetch0(rx_packets[i]->buf_addr);
         eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
 		ip  = reinterpret_cast<struct ipv4_hdr*>(eth + 1);
      
@@ -53,23 +53,21 @@ filt_udptcp::Run() {
             case PROTOCOL_UDP:
                 break;
             default:
-				printf("strange shit happening here!!!!!!!!!!\n");
+				printf("strange traffic here!\n");
 				fflush(stdout);
                 rte_pktmbuf_free(rx_packets[i]);
                 tcp = nullptr;
                 udp = nullptr;
-                num_tx--;
+                port = 0;
                 continue;
         }
 
         if (likely(ip->next_proto_id == IPPROTO_TCP)) {
-            //tcp = reinterpret_cast<struct tcp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
             tcp = reinterpret_cast<struct tcp_hdr*>(ip + 1);
         } else if (ip->next_proto_id == IPPROTO_UDP) {
-            //udp = reinterpret_cast<struct udp_hdr*>(header_offsets.ip_hdr_addr + sizeof(struct ipv4_hdr));
             udp = reinterpret_cast<struct udp_hdr*>(ip + 1);
         } else {
-            printf("WHAAAAAAAAAAAAAAT?\n");
+            printf("other traffic here!\n");
             fflush(stdout); 
         }
         
@@ -80,15 +78,17 @@ filt_udptcp::Run() {
                 rte_pktmbuf_free(rx_packets[i]);
                 tcp = nullptr;
                 udp = nullptr;
-                num_tx--;
+                port = 0;
                 continue;
             default:
+				
                 break;
         }
+        tx_packets[num_tx++] = rx_packets[i];
     }
-    num_tx = egress_ports_[0]->TxBurst(rx_packets, num_tx);
+    num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
   }
 }
 
-void filt_udptcp::FlushState() {}
-void filt_udptcp::RecoverState() {}
+void FiltUDPTCP::FlushState() {}
+void FiltUDPTCP::RecoverState() {}

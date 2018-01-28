@@ -9,6 +9,7 @@
 #include <rte_cycles.h>
 #include <iostream>
 #include <inttypes.h>
+#include <rte_log.h>
 
 // define = measurement code will be inserted
 // #define MEASURE
@@ -44,6 +45,12 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    it = pp_param_map.find( PacketProcessor::yieldAfterBatch );
    if ( it !=  pp_param_map.end() )
       yield_after_kbatch_ = it->second;
+
+   it = pp_param_map.find( PacketProcessor::kNumPrefetch );
+   if ( it != pp_param_map.end() )
+      k_num_prefetch_ = it->second;
+
+   RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);
    
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
@@ -114,26 +121,7 @@ inline void MacSwapper::Run() {
             // this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
-/*
-      for (i = 0; i < num_rx; ++i) {
-         eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         
-         std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
-      }
-      
-      // Do some extra work 
-      // (desterministic and not compiler optimized.) 
-      imitate_processing( comp_load_ );
- 
-      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
-      for (i=0; i < num_egress_ports_; i++){
-         if (this->scale_bits->bits[this->instance_id_].test(i)){
-            // TODO  Change port to smart port.
-            this->scale_bits->bits[this->instance_id_].set(i, false);
-         }
-      }
-*/
-         
+        
 #ifdef MEASURE
       end_ts = this->end_rdtsc();
       // Take sample every interval 

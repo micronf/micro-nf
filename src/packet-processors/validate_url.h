@@ -1,13 +1,13 @@
- #ifndef _VALIDATE_URL_H_
- #define _VALIDATE_URL_H_
+#ifndef _VALIDATE_URL_H_
+#define _VALIDATE_URL_H_
  
- #include "packet_processor.h"
- #include <regex>
- #include <string>
+#include "packet_processor.h"
+#include <regex>
+#include <string>
  
-class validate_url : public PacketProcessor {
+class ValidateURL : public PacketProcessor {
 public:
-    validate_url() {}
+    ValidateURL() {}
     void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
     void FlushState() override;
@@ -17,5 +17,4 @@ private:
     char *tail;
 };
  
- #endif
-
+#endif // _VALIDATE_URL_H_

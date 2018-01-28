@@ -8,7 +8,7 @@
 #include <iostream>
 #include <rte_byteorder.h>
 
-inline void validate_url::Init(const PacketProcessorConfig& pp_config) {
+inline void ValidateURL::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
   instance_id_ = pp_config.instance_id();
@@ -23,7 +23,7 @@ inline void validate_url::Init(const PacketProcessorConfig& pp_config) {
 
 
 void
-validate_url::Run() {
+ValidateURL::Run() {
     rx_pkt_array_t rx_packets;
     uint16_t num_rx = 0;
     uint16_t num_tx = 0;
@@ -35,18 +35,12 @@ validate_url::Run() {
     char* payload1         = nullptr;
     char* payload2         = nullptr;
 
-
-    //std::string pattern = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*([a-    z\\!\\@\\#\\$\\%\\^\\&\\*])*\\/?$";
 	std::string pattern = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*([a-z\\!\\@\\#\\$\\%\\^\\&\\*])*\\/?$";
 	std::regex url_regex(pattern);
 
     while (true) {
         //for (auto& iport : this->ingress_ports_) {
         num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-        /*if(num_rx) {
-			printf("num_rx: %d", num_rx);
-			fflush(stdout);
-        }*/
 
         for (i = 0; i < num_rx; ++i) {
 			head = nullptr;
@@ -56,16 +50,14 @@ validate_url::Run() {
             eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
             ip  = reinterpret_cast<ipv4_hdr*>(eth + 1);
             tcp = reinterpret_cast<tcp_hdr*>(ip + 1);
-            //payload = reinterpret_cast<char *>(tcp) + ((tcp->data_off & 0xf0) >> 2);
             payload = reinterpret_cast<char *>(tcp) + 8;
 			
-            //++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
             /* find the head and tail of the url in the packet here */
 			head = strstr(payload, "GET") + 4; // original 2
 			tail = strchr(head, ' '); // original 10
             std::string url(head, tail);
-            //std::regex_match(url, url_regex);
-            if (!std::regex_match(url, url_regex)) {
+
+			if (!std::regex_match(url, url_regex)) {
 				printf("invalid url!\n");
 				fflush(stdout);
             }
@@ -76,5 +68,5 @@ validate_url::Run() {
 	}
 }
 
-void validate_url::FlushState() {}
-void validate_url::RecoverState() {}
+void ValidateURL::FlushState() {}
+void ValidateURL::RecoverState() {}

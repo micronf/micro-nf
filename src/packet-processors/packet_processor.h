@@ -112,11 +112,14 @@ class PacketProcessor {
   int comp_load_ = 0;
   int debug_ = 0;
   int yield_after_kbatch_ = 2;
+  int k_num_prefetch_ = 8;
 
   static const std::string shareCoreFlag;
   static const std::string cpuId;
   static const std::string compLoad;
   static const std::string yieldAfterBatch;
+  static const std::string kNumPrefetch; 
+
 };
 
 // template <> class PacketProcessor <RteIngressPort, RteEgressPort> {

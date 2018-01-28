@@ -5,11 +5,11 @@
 #include "../port/rte_egress_port.h"
 #include "../port/rte_ingress_port.h"
 #include <map>
-//#include <string>
+#include <string>
 
-class count_url : public PacketProcessor {
+class CountURL : public PacketProcessor {
 public:
-    count_url(){}
+    CountURL(){}
     void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
     void FlushState() override;

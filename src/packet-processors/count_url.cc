@@ -8,7 +8,7 @@
 #include <string>
 
 void
-count_url::Init(const PacketProcessorConfig& pp_config) {
+CountURL::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_  = pp_config.num_egress_ports();
    instance_id_       = pp_config.instance_id();
@@ -25,7 +25,7 @@ count_url::Init(const PacketProcessorConfig& pp_config) {
 
 
 void
-count_url::Run() {
+CountURL::Run() {
     rx_pkt_array_t rx_packets;
     uint16_t num_rx = 0;
     uint16_t num_tx = 0;
@@ -34,9 +34,11 @@ count_url::Run() {
     struct ether_hdr* eth = nullptr;
     struct ipv4_hdr* ip   = nullptr;
     struct tcp_hdr* tcp   = nullptr;
+    struct udp_hdr* udp   = nullptr;
     char*  payload = nullptr;
-    char*  url     = nullptr;
-    std::string key;
+    char*  head     = nullptr;
+    char*  tail     = nullptr;
+    std::string url;
 
 
     std::map<std::string, double>::iterator it;
@@ -44,32 +46,33 @@ count_url::Run() {
     while (true) {
         num_rx = ingress_ports_[0]->RxBurst(rx_packets);
         for (i = 0; i < num_rx; ++i) {
-            rte_prefetch0(rx_packets[i]->buf_addr);
             eth = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
 			ip = reinterpret_cast<struct ipv4_hdr*>(eth + 1);
 
 			if (likely(ip->next_proto_id == 0x06)) {
                 tcp = reinterpret_cast<struct tcp_hdr*>(
 												ip + 1);
-                payload = reinterpret_cast<char *>(tcp) + (tcp->data_off << 2);
-//                    header_offsets.transport_hdr_addr + tcp->data_off;
+                payload = reinterpret_cast<char *>(tcp) + ((tcp->data_off & 0xf0) >> 2);
 
             } else if (ip->next_proto_id == IPPROTO_UDP) {
+                udp = reinterpret_cast<struct udp_hdr*>(
+												ip + 1);
+                payload = reinterpret_cast<char *>(udp) + sizeof(struct udp_hdr);
+            } else {
+				// don't check other traffic
 				continue;
-				// for now, don't look into udp traffic
             }
     
-            //++pkt_size_bucket_[rx_packets[i]->pkt_len / this->kBucketSize];
             /* find the head and tail of the url in the packet here */
-            //payload = (char*)(header_offsets.payload_addr);
-            url = payload + 4;
-            key = std::string(url);
+            // targeting specifically to http get traffic
+			head = strstr(payload, "GET") + 4;
+			tail = strchr(head, ' ');
+			url = std::string(head, tail);
     
-            //std::string key(head, tail);
-            if ((it = _urlmap.find(key)) != _urlmap.end()) {
+            if ((it = _urlmap.find(url)) != _urlmap.end()) {
                 it->second += 1;
             } else {
-                _urlmap.insert(std::pair<std::string, double>(key, 1));
+                _urlmap.insert(std::pair<std::string, double>(url, 1));
             }
 
         }
@@ -79,5 +82,5 @@ count_url::Run() {
     }
 }
 
-void count_url::FlushState() {}
-void count_url::RecoverState() {} 
+void CountURL::FlushState() {}
+void CountURL::RecoverState() {} 
