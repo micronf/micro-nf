@@ -5,6 +5,7 @@
 #include "count_subnet_packets.h"
 #include "drop_packet.h"
 #include "header_parser.h"
+#include "ip_ttl_decrementer.h"
 #include "looper.h"
 #include "mac_swapper.h"
 #include "packet_processor.h"
