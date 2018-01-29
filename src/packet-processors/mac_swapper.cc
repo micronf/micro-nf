@@ -96,13 +96,13 @@ inline void MacSwapper::Run() {
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          // Read num_bytes of tcp payload. add true add last to write to payload.
-         this->iterate_payload( eth_hdr, iter_payload_, true );
+         //this->iterate_payload( eth_hdr, iter_payload_, true );
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          // Read num_bytes of tcp payload. add true add last to write to payload.
-         this->iterate_payload( eth_hdr, iter_payload_, true );
+         //this->iterate_payload( eth_hdr, iter_payload_, true );
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
 
