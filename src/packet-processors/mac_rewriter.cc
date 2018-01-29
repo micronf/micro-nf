@@ -46,7 +46,14 @@ inline void MacRewriter::Init(const PacketProcessorConfig& pp_config) {
    this->has_dest_mac_ = pp_config.has_dest_mac(); 
    if ( this->has_dest_mac_ )
       this->dest_mac_ = pp_config.dest_mac();
-   
+
+   it = pp_param_map.find( PacketProcessor::kNumPrefetch );
+   if ( it != pp_param_map.end() )
+      k_num_prefetch_ = it->second;
+
+   RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);
+     
+
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
 
@@ -76,10 +83,10 @@ inline void MacRewriter::Run() {
    while ( true ) {
       
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-      for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
-      for (i = 0; i < num_rx - kNumPrefetch; ++i) {
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + kNumPrefetch], void*));
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          void *tmp = &eth_hdr->d_addr.addr_bytes[0];
          *(( uint64_t *) tmp) = mac_addr;

@@ -77,7 +77,7 @@ class PacketProcessor {
   // void imitate_processing( int load ) __attribute__((optimize("O0"))); 
   void __inline__ imitate_processing( int load ) __attribute__((optimize("O0"))){   
      // Imitate extra processing
-     int n = 1000 * load;
+     int n = 1110 * load;
      for ( int i = 0; i < n; i++ ) {
         int volatile r = 0;
         int volatile s = 999;

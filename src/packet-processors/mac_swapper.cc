@@ -10,9 +10,11 @@
 #include <iostream>
 #include <inttypes.h>
 #include <rte_log.h>
+#include <cmath>
 
 // define = measurement code will be inserted
 // #define MEASURE
+#define RTE_LOGTYPE_MACSWAPPER RTE_LOGTYPE_USER1
 
 inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
@@ -51,7 +53,7 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
       k_num_prefetch_ = it->second;
 
    RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);
-   
+     
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
 
@@ -63,22 +65,21 @@ inline void MacSwapper::Run() {
    int res = 0;
    uint32_t hit_count = 1;
    uint64_t start_ts, end_ts;
-   const static int ar_size = 100;
+   const static int ar_size = 2000;
    uint64_t diff_ts[ ar_size ];
    uint32_t sample_counter = 0;
    uint ts_idx = 0;
-
-   int kNumPrefetch = 8;
-   
+   uint32_t counter = 1;
+       
    while ( true ) {
+
+      num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
 
 #ifdef MEASURE
       sample_counter++;
       start_ts = this->start_rdtsc();
 #endif
       
-      num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits and then yield
       if ( share_core_ ) {
@@ -93,11 +94,11 @@ inline void MacSwapper::Run() {
          else
             hit_count++;
       }
-
-      for (i = 0; i < num_rx && i < kNumPrefetch; ++i)
+      
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
          rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i], void*));
-      for (i = 0; i < num_rx - kNumPrefetch; ++i) {
-         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + kNumPrefetch], void*));
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch0(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          // Read num_bytes of tcp payload. add true add last to write to payload.
          // this->iterate_payload( eth_hdr, 32 );
@@ -113,6 +114,36 @@ inline void MacSwapper::Run() {
       // Do some extra work
       // (desterministic and not compiler optimized.)
       imitate_processing( comp_load_ );
+ 
+#ifdef MEASURE
+      end_ts = this->end_rdtsc();
+      // Take sample every interval 
+      if ( unlikely( ( sample_counter & 0xFFF ) == 0 )
+             && num_rx != 0 ) {
+         
+         diff_ts[ ts_idx++ ] = (end_ts - start_ts) / num_rx;
+
+         if ( unlikely( ts_idx == ar_size ) ) {
+            unsigned long sum = 0;
+            float dev = 0;
+            for ( int i = 0; i < ar_size; i++ ) {
+               sum += diff_ts[i];
+               
+            }
+            float mean = sum / ar_size;
+            for ( int i = 0; i < ar_size; i++ ) {
+               dev += std::pow( diff_ts[i] - mean, 2);
+               
+            }
+            float stddev = std::sqrt( dev / ar_size );
+            
+            ts_idx = 0;
+            sample_counter = 0;
+            RTE_LOG( INFO, MACSWAPPER, "[%d] Average per packet: %f\n", this->instance_id(), mean );
+            RTE_LOG( INFO, MACSWAPPER, "[%d] Std Dev per packet: %f\n", this->instance_id(), stddev );
+         }
+      }
+#endif
 
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
       for (i=0; i < num_egress_ports_; i++){
@@ -121,30 +152,7 @@ inline void MacSwapper::Run() {
             // this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
-        
-#ifdef MEASURE
-      end_ts = this->end_rdtsc();
-      // Take sample every interval 
-      if ( unlikely( ( sample_counter & 0x3FFF ) == 0 )
-             && num_rx != 0 ) {
-
-         diff_ts[ ts_idx++ ] = end_ts - start_ts;
-         
-         if ( unlikely( ts_idx == ar_size ) ) {
-            unsigned long sum = 0;
-            for ( int i = 0; i < ar_size; i++ ) {
-               sum += diff_ts[i];
-               //printf( "%" PRIu64 "\n", diff_ts[i] );
-            }
             
-            ts_idx = 0;
-            sample_counter = 0;
-            printf( "[%d] Average: %lu\n", this->instance_id(), sum/ar_size );
-            fflush(stdout);
-         }
-      }
-#endif
-      
    } 
 }
 
