@@ -93,7 +93,7 @@ inline void IPTtlDecrementer::Run() {
          --ip_hdr->time_to_live;
       }
       this->egress_ports_[current_tx_port_index]->TxBurst(rx_packets, num_rx);
-      current_tx_port_index = (current_tx_port_index + 1) % this->num_egress_ports_;
+      //current_tx_port_index = (current_tx_port_index + 1) % this->num_egress_ports_;
   }
 }
 
