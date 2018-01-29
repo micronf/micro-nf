@@ -63,14 +63,8 @@ inline void MacSwapper::Run() {
    uint16_t num_rx = 0;
    int res = 0;
    uint32_t hit_count = 1;
-   uint64_t start_ts, end_ts;
-   const static int ar_size = 100;
-   uint64_t diff_ts[ ar_size ];
-   uint32_t sample_counter = 0;
-   uint ts_idx = 0;
-
-   int kNumPrefetch = 8;
-   
+   uint32_t counter = 0;
+  
    while ( true ) {
 
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
@@ -96,13 +90,13 @@ inline void MacSwapper::Run() {
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          // Read num_bytes of tcp payload. add true add last to write to payload.
-         this->iterate_payload( eth_hdr, iter_payload_, true );
+         //this->iterate_payload( eth_hdr, iter_payload_, true );
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
          // Read num_bytes of tcp payload. add true add last to write to payload.
-         this->iterate_payload( eth_hdr, iter_payload_, true );
+         //this->iterate_payload( eth_hdr, iter_payload_, true );
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
 
@@ -110,13 +104,16 @@ inline void MacSwapper::Run() {
       // (desterministic and not compiler optimized.)
       imitate_processing( comp_load_ );
 
-      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+      this->egress_ports_[ counter++ % num_egress_ports_ ]->TxBurst(rx_packets, num_rx);
+      
+      /*
       for (i=0; i < num_egress_ports_; i++){
          if (this->scale_bits->bits[this->instance_id_].test(i)){
             // TODO  Change port to smart port.
             // this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
+      */
    } 
 }
 

@@ -87,7 +87,7 @@ class PacketProcessor {
   int debug_ = 0;
   int yield_after_kbatch_ = 2;
   int k_num_prefetch_ = 8;
-  int iter_payload_ = 16;
+  int iter_payload_ = 0;
 
   static const std::string shareCoreFlag;
   static const std::string cpuId;
