@@ -110,45 +110,36 @@ inline bool CheckHeader::process(struct rte_mbuf *rx_packet) {
 } 
 
 inline void CheckHeader::Run() {
-  rx_pkt_array_t rx_packets;
-  rx_pkt_array_t tx_packets;
-  register uint16_t i = 0;
-  uint16_t num_rx = 0;
-  uint16_t num_tx = 0;
+   rx_pkt_array_t rx_packets;
+   rx_pkt_array_t tx_packets;
+   register uint16_t i = 0;
+   uint16_t num_rx = 0;
+   uint16_t num_tx = 0;
 
-  while (true) {
+   while (true) {
 
-    num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-	num_tx = 0;
+      num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+      num_tx = 0;
+    
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
+      
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
+         
+         if( process(rx_packets[i]) )
+            tx_packets[num_tx++] = rx_packets[i];
+      }
 
-	/* ADDED FOR MEASURING CPU CYCLES */
-	//_cpu_ctr.update();
-	/*#################################*/
+      for ( ; i < num_rx; ++i) {
+         if( process(rx_packets[i]) )
+            tx_packets[num_tx++] = rx_packets[i];
+      }
+  
+      if(num_tx) 
+         num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
 
-	/* prefetch the packets */
-
-	/* process packets and fetch at the same time */
-    for (i = 0; i < num_rx; ++i) {
-	  
-	  if(process(rx_packets[i]))
-	  	tx_packets[num_tx++] = rx_packets[i];
-
-    }
-
-	/* handle the left packets */
-
-	/* added for counting cycles */ 
-	/*if(num_rx > 1) {
-		_cpu_ctr.addmany(num_rx);
-	} else {
-		_cpu_ctr.end_rdtsc();
-	}*/
-	/*############################*/
-
-    if(num_tx) 
-    	num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
-
-  }
+   }
 }
 
 void CheckHeader::FlushState() {}
