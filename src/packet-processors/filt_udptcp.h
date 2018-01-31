@@ -10,7 +10,7 @@ class FiltUDPTCP : public PacketProcessor {
     FiltUDPTCP() {}
     void Init(const PacketProcessorConfig& config) override;
     void Run()          override;
-	static bool process(struct rte_mbuf *);
+	bool process(struct rte_mbuf *);
     void FlushState()   override;
     void RecoverState() override;
   private:

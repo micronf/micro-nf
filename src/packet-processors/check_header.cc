@@ -26,7 +26,7 @@ inline void CheckHeader::Init(const PacketProcessorConfig& pp_config) {
   _cpu_ctr.setfname("CheckHeader"+std::to_string(instance_id_));
 }
 
-static inline bool CheckHeader::process(struct rte_mbuf *rx_packet) {
+inline bool CheckHeader::process(struct rte_mbuf *rx_packet) {
   uint8_t* mdata_ptr = nullptr;
   struct ProtocolHeaderOffset header_offsets;
   struct ether_hdr* eth = nullptr;

@@ -23,7 +23,7 @@ FiltUDPTCP::Init(const PacketProcessorConfig& pp_config) {
   _cpu_ctr.setfname("FiltUDPTCP"+std::to_string(instance_id_));
 }
 
-static inline bool 
+inline bool 
 FiltUDPTCP::process(struct rte_mbuf *rx_packet) {
   struct ether_hdr* eth = nullptr;
   struct ipv4_hdr*  ip  = nullptr;
