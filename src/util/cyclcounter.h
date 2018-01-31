@@ -4,6 +4,7 @@
 #include <vector>
 //#include <linux/hardirq.h>
 //#include <linux/preempt.h>
+#define _BUFFER_SIZE_ 1000000 
 
 using namespace std;
 
@@ -15,10 +16,13 @@ class cyclcounter { public:
     void addone();  // push back cycle
     void addmany(int );
 
-    void writresult(string str);
+	void accum_result();
+
 
     string get_stdev();
     string get_mean();
+
+	void setfname(string str);
 
     __inline__ uint64_t start_rdtsc() {
          unsigned int lo,hi;
@@ -46,11 +50,15 @@ class cyclcounter { public:
     }
 
     private:
+    uint32_t _idx;
+    uint32_t _round;
     uint64_t _cycle;
     double _stdev, _mean;
-    std::vector<uint64_t> _cycles;
+    bool _stop;
+    uint64_t _cycles[_BUFFER_SIZE_];
+    std::vector<string> _sumary;
     unsigned long _flags;
-
+	std::string _fname;
 
 };
 

@@ -62,13 +62,16 @@ inline void MacSwapper::Run() {
    register int16_t i = 0;
    struct ether_hdr* eth_hdr = nullptr;
    uint16_t num_rx = 0;
+   uint16_t num_tx = 0;
    int res = 0;
    uint32_t hit_count = 1;
 
    while ( true ) {
 
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-
+   /*   if(num_rx && instance_id_ == 6)
+		  printf("MAC SWAPPER %d NUM_RX IS : %d\n", instance_id_, num_rx);
+	  fflush(stdout);*/
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits and then yield
       if ( share_core_ ) {
@@ -92,8 +95,13 @@ inline void MacSwapper::Run() {
       // Do some extra work 
       // (desterministic and not compiler optimized.) 
       imitate_processing( comp_load_ );
- 
-      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+
+	  num_tx = this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+	  if ( num_tx != num_rx) {
+		printf("MAC SWAPPER %d NUM_TX IS : %d NUM_RX IS : %d\n", instance_id_, num_tx, num_rx);
+	    fflush(stdout);
+	  }
+      //this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
       for (i=0; i < num_egress_ports_; i++){
          if (this->scale_bits->bits[this->instance_id_].test(i)){
             // TODO  Change port to smart port.

@@ -9,9 +9,10 @@
 class CheckHeader : public PacketProcessor {
   public:
     CheckHeader() {}
-    ~CheckHeader(); 
+    ~CheckHeader() {} 
     void Init(const PacketProcessorConfig& pp_config) override;
     void Run() override;
+	static bool process(struct rte_mbuf *);
     void FlushState() override;
     void RecoverState() override;
   private:

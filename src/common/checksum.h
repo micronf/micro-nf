@@ -1,6 +1,6 @@
 #ifndef _IP_CKSUM_H_
 #define _IP_CKSUM_H_
-uint16_t
+inline uint16_t
 ip_check_sum(const unsigned char *addr, int len)
 {
     int nleft = len;

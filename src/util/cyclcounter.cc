@@ -5,7 +5,7 @@
 #include <cmath>
 #include <stdio.h>
 
-cyclcounter::cyclcounter() : _cycle(0), _stdev(0.0), _mean(0.0)
+cyclcounter::cyclcounter() : _cycle(0), _stdev(0.0), _mean(0.0), _idx(0), _round(0), _stop(false)
 {
 }
 
@@ -22,44 +22,69 @@ cyclcounter::update()
 void
 cyclcounter::addone()
 {
-    _cycles.push_back(cyclcounter::end_rdtsc() - _cycle);
+	if(_idx < _BUFFER_SIZE_)
+		_cycles[_idx++] = cyclcounter::end_rdtsc() - _cycle;
+	else
+		accum_result();
 }
 
 void
 cyclcounter::addmany(int num) {
 	uint64_t ttl = cyclcounter::end_rdtsc() - _cycle;
 	uint64_t each = ttl / num;
-	for (int i = 0; i < num; i++)
-		_cycles.push_back(each);
+	int i = 0;
+	if(_stop) return;
+	for (; i < num && _idx < _BUFFER_SIZE_; i++) {
+		_cycles[_idx++] = each;
+	}
+	if(i < num) {
+		accum_result();
+		for(; i < num; i++)
+			_cycles[_idx++] = each;
+	}
 }
 
 void
-cyclcounter::writresult(string str)
-{
-    std::ofstream file;
-    std::vector<uint64_t>::iterator it;
+cyclcounter::setfname(std::string str) {
+	_fname = str;
+}
 
-    file.open(str.c_str());
-    if ( !file.fail() ) {
-        for (it=_cycles.begin(); it!=_cycles.end(); it++) {
-            file << *it;
-            file << "\n";
-        }
-        file.close();
-    }
+void
+cyclcounter::accum_result() {
+    std::ofstream file(_fname, std::ofstream::out | std::ofstream::app);
+    std::ofstream sfile(_fname+"summary", std::ofstream::out | std::ofstream::app);
+
+	if(_round > 20) {
+		_idx = 0;
+		_stop = true;
+		return;
+	}
+	_round++;
+	// write all results to file
+//	file.open(_fname, std::ofstream::out | std::ofstream::app);
+	for(int i = 0; i < _BUFFER_SIZE_; i++)
+		file << _cycles[i] << "\n";
+	file.close();
+	// put result in result vector
+//	sfile.open(_fname+"summary", std::ofstream::out | std::ofstream::app);
+	get_stdev();
+	sfile << _mean << ", " << _stdev << "\n";
+	sfile.close();
+
+	// reset index
+	_idx = 0;
 }
 
 string
 cyclcounter::get_stdev()
 {
     double dev = 0.0;
-    std::vector<uint64_t>::iterator it;
-    //get_mean();
+    get_mean();
     
-    for (it=_cycles.begin(); it!=_cycles.end(); it++) {
-        dev += std::pow(*it - _mean, 2);
+    for (int i = 0; i < _BUFFER_SIZE_; i++) {
+        dev += std::pow(_cycles[i] - _mean, 2);
     }
-    _stdev = std::sqrt(dev/_cycles.size());
+    _stdev = std::sqrt(dev/_BUFFER_SIZE_);
     return "stdev: " + to_string(_stdev);
 }
 
@@ -67,10 +92,9 @@ string
 cyclcounter::get_mean()
 {
     uint64_t sum = 0;
-    std::vector<uint64_t>::iterator it;
-    for (it=_cycles.begin(); it!=_cycles.end(); it++) {
-        sum += *it;
-    }
-    _mean = sum / _cycles.size();
-    return "    mean: " + to_string(_mean);
+    for(int i = 0; i < _BUFFER_SIZE_; i++)
+        sum += _cycles[i];
+    
+    _mean = sum / _BUFFER_SIZE_;
+    return "mean: " + to_string(_mean);
 }
