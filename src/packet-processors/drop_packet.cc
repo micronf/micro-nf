@@ -20,23 +20,25 @@ void DropPacket::Run() {
   uint16_t num_rx = 0;
   register uint16_t i = 0;
   while(true) {
-    for (auto& ingress_port : ingress_ports_) {
-      num_rx = ingress_port->RxBurst(packets);
-      for (i = 0; i < num_rx; ++i) {
-        rte_pktmbuf_free(packets[i]);
-      }
-    }
+     for (auto& ingress_port : ingress_ports_) {
+        num_rx = ingress_port->RxBurst(packets);
 
-		for(int i; i < num_egress_ports_; i++){
-      if(this->scale_bits->bits[this->instance_id_].test(i)){
-          // TODO 
-          // Change port to smart port.
+        for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+           rte_prefetch_non_temporal(rte_pktmbuf_mtod(packets[i], void*));
+        for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+           rte_prefetch_non_temporal(rte_pktmbuf_mtod(packets[i + k_num_prefetch_], void*));         
+           rte_pktmbuf_free(packets[i]); 
+        }
+        for ( ; i < num_rx; ++i) {
+           rte_pktmbuf_free(packets[i]);  
+        }
 
-          this->scale_bits->bits[this->instance_id_].set(i, false);
-
-      }
-    }
-
+        /*  without prefetch 
+        for (i = 0; i < num_rx; ++i) {
+           rte_pktmbuf_free(packets[i]);
+        }
+        */
+     }
   }
 }
 

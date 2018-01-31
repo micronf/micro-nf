@@ -81,13 +81,12 @@ inline void MacRewriter::Run() {
    while ( true ) {
       
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
+
       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         //void *tmp = &eth_hdr->d_addr.addr_bytes[0];
-         //*(( uint64_t *) tmp) = mac_addr;
          memcpy((uint64_t*)  &eth_hdr->d_addr.addr_bytes[0], &mac_addr, sizeof(uint64_t));
 
       }
@@ -98,15 +97,9 @@ inline void MacRewriter::Run() {
       
       // Do some extra work 
       // (desterministic and not compiler optimized.) 
-      imitate_processing( comp_load_ );
+      //imitate_processing( comp_load_ );
  
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
-      for (i=0; i < num_egress_ports_; i++){
-         if (this->scale_bits->bits[this->instance_id_].test(i)){
-            // TODO  Change port to smart port.
-            this->scale_bits->bits[this->instance_id_].set(i, false);
-         }
-      }
 
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits

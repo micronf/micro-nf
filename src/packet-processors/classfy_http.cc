@@ -55,11 +55,11 @@ ClassfyHTTP::process(struct rte_mbuf *rx_packet) {
 	std::string url(head, strnlen(head, 200));
 
 	/* ADDED FOR MEASURING CPU CYCLES */
-    _cpu_ctr.update();
+        //_cpu_ctr.update();
     /*#################################*/
 	_match = std::regex_match(url, *_url_regex);
 
-	_cpu_ctr.addone();
+	//_cpu_ctr.addone();
 
 	/* added for counting cycles */ 
 	if(_match) {
@@ -92,34 +92,34 @@ ClassfyHTTP::Run() {
     register int i = 0;
     
     while (true) {
-        num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-        num_tx_1 = 0;
-        num_tx_2 = 0;
-
-	    /* ADDED FOR MEASURING CPU CYCLES */
-//	    _cpu_ctr.update();
-	    /*#################################*/
+       num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+       num_tx_1 = 0;
+       num_tx_2 = 0;
 		
-		for (i = 0; i < num_rx; ++i) {
-			if(process(rx_packets[i])){
-				tx_packets_1[num_tx_1++] = rx_packets[i];
-			} else {
-				tx_packets_2[num_tx_2++] = rx_packets[i];
-			}
-		}
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
+
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
+          if(process(rx_packets[i])){
+             tx_packets_1[num_tx_1++] = rx_packets[i];
+          } else {
+             tx_packets_2[num_tx_2++] = rx_packets[i];
+          }
+       }
+
+      for ( ; i < num_rx; ++i) {
+         if(process(rx_packets[i])){
+            tx_packets_1[num_tx_1++] = rx_packets[i];
+         } else {
+            // Packets to be dropped
+            tx_packets_2[num_tx_2++] = rx_packets[i];
+         }
+      }
 
 		
-		/* added for counting cycles */ 
-/*		if(num_rx > 1) {
-			_cpu_ctr.addmany(num_rx);
-		} else {
-			_cpu_ctr.end_rdtsc();
-		}
-*/		/*############################*/
-		
-
-        num_tx_1 = egress_ports_[0]->TxBurst(tx_packets_1, num_tx_1);
-        num_tx_2 = egress_ports_[0]->TxBurst(tx_packets_2, num_tx_2);
+       num_tx_1 = egress_ports_[0]->TxBurst(tx_packets_1, num_tx_1);
+       num_tx_2 = egress_ports_[1]->TxBurst(tx_packets_2, num_tx_2);
     }
 }
 

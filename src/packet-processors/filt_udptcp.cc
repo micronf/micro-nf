@@ -90,27 +90,23 @@ FiltUDPTCP::Run() {
   uint16_t num_tx = 0;
 
   while (true) {
-    num_rx = ingress_ports_[0]->RxBurst(rx_packets);
-	num_tx = 0;
+     num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+     num_tx = 0;
 
-	/* ADDED FOR MEASURING CPU CYCLES */
-	//_cpu_ctr.update();
-	/*#################################*/
-
-    for (i = 0; i < num_rx; i++) {
+     for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+        rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
+    
+     for (i = 0; i < num_rx - k_num_prefetch_; ++i) {    
         if(process(rx_packets[i]))
-	        tx_packets[num_tx++] = rx_packets[i];
-    }
+           tx_packets[num_tx++] = rx_packets[i];
+     }
+     
+     for ( ; i < num_rx; ++i) {
+        if( process(rx_packets[i]) )
+           tx_packets[num_tx++] = rx_packets[i];
+     }
 
-	/* added for counting cycles */ 
-	/*if(num_rx > 1) {
-		_cpu_ctr.addmany(num_rx);
-	} else {
-		_cpu_ctr.end_rdtsc();
-	}*/
-	/*############################*/
-
-    num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
+     num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
   }
 }
 

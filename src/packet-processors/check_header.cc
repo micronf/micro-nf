@@ -123,14 +123,11 @@ inline void CheckHeader::Run() {
     
       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
-      
       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
-         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
-         
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));         
          if( process(rx_packets[i]) )
             tx_packets[num_tx++] = rx_packets[i];
       }
-
       for ( ; i < num_rx; ++i) {
          if( process(rx_packets[i]) )
             tx_packets[num_tx++] = rx_packets[i];

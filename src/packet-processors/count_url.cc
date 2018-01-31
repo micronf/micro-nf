@@ -94,25 +94,31 @@ CountURL::Run() {
     register int i = 0;
 
     while (true) {
-        num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+       num_rx = ingress_ports_[0]->RxBurst(rx_packets);
 
-	    /* ADDED FOR MEASURING CPU CYCLES */
-	    _cpu_ctr.update();
-	    /*#################################*/
+       /* ADDED FOR MEASURING CPU CYCLES */
+       //_cpu_ctr.update();
+       /*#################################*/
 
-        for (i = 0; i < num_rx; ++i) {
-			process(rx_packets[i]);
-        }
+       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));      
+       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));         
+          process(rx_packets[i]);
+       }
+       for ( ; i < num_rx; ++i) {
+          process(rx_packets[i]);
+       }
 
-		/* added for counting cycles */ 
-		if(num_rx > 1) {
-			_cpu_ctr.addmany(num_rx);
-		} else {
-			_cpu_ctr.end_rdtsc();
-		}
-		/*############################*/
+       /* added for counting cycles 
+       if(num_rx > 1) {
+          _cpu_ctr.addmany(num_rx);
+       } else {
+          _cpu_ctr.end_rdtsc();
+       }
+       ############################*/
 
-        num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
+       num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
  
     }
 }
