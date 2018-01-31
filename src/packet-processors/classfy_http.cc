@@ -5,6 +5,7 @@
 #include <rte_tcp.h>
 #include <rte_udp.h>
 #include <rte_byteorder.h>
+#include <rte_log.h>
 
 ClassfyHTTP::~ClassfyHTTP(){
 	delete _url_regex;
@@ -63,9 +64,9 @@ ClassfyHTTP::process(struct rte_mbuf *rx_packet) {
 
 	/* added for counting cycles */ 
 	if(_match) {
-		return true;
+       		return true;
 	} else {
-		return false;
+       		return false;
 	}
 	/*############################*/
 

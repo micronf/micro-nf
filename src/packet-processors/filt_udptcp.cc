@@ -14,7 +14,8 @@ FiltUDPTCP::Init(const PacketProcessorConfig& pp_config) {
   num_egress_ports_ = pp_config.num_egress_ports();
   instance_id_ = pp_config.instance_id();
   assert(num_ingress_ports_ == 1);
-  assert(num_egress_ports_ == 1);
+  // one port goes to drop muNF (garbage collector) or macRewriter to send back
+  assert(num_egress_ports_ == 2);
   for (int i = 0; i < num_ingress_ports_; ++i)
     ingress_ports_.emplace_back(nullptr);
   for (int j = 0; j < num_egress_ports_; ++j)
@@ -46,9 +47,10 @@ FiltUDPTCP::process(struct rte_mbuf *rx_packet) {
       case PROTOCOL_UDP:
          break;
       default:
-    	printf("strange traffic here!\n");
-		fflush(stdout);
-        rte_pktmbuf_free(rx_packet);
+    	RTE_LOG( WARNING, USER1, "filt_udptcp: strange traffic here!\n");
+	
+        // send to drop micronf
+        //rte_pktmbuf_free(rx_packet);
         tcp = nullptr;
         udp = nullptr;
         port = 0;
@@ -69,7 +71,8 @@ FiltUDPTCP::process(struct rte_mbuf *rx_packet) {
   switch(rte_be_to_cpu_16(port)) {
      case 21:
      case 22:
-         rte_pktmbuf_free(rx_packet);
+       // send to drop micronf
+       //rte_pktmbuf_free(rx_packet);
          tcp = nullptr;
          udp = nullptr;
          port = 0;
@@ -85,28 +88,36 @@ void
 FiltUDPTCP::Run() {
   rx_pkt_array_t rx_packets;
   rx_pkt_array_t tx_packets;
+  rx_pkt_array_t tx_packets_1;
   register uint16_t i = 0;
   uint16_t num_rx = 0;
   uint16_t num_tx = 0;
+  uint16_t num_tx_1 = 0;
 
   while (true) {
      num_rx = ingress_ports_[0]->RxBurst(rx_packets);
      num_tx = 0;
-
+     num_tx_1 = 0;
+     
      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
     
      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {    
         if(process(rx_packets[i]))
            tx_packets[num_tx++] = rx_packets[i];
+        else
+           tx_packets_1[num_tx_1++] = rx_packets[i];
      }
      
      for ( ; i < num_rx; ++i) {
         if( process(rx_packets[i]) )
            tx_packets[num_tx++] = rx_packets[i];
+        else
+           tx_packets_1[num_tx_1++] = rx_packets[i];
      }
 
      num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
+     num_tx = egress_ports_[1]->TxBurst(tx_packets_1, num_tx_1);
   }
 }
 
