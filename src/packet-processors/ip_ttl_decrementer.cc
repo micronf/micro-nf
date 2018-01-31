@@ -1,9 +1,10 @@
-#include "mac_swapper.h"
+#include "ip_ttl_decrementer.h"
 
 #include <algorithm>
 #include <assert.h>
 #include <google/protobuf/map.h>
 #include <rte_ether.h>
+#include <rte_ip.h>
 #include <rte_prefetch.h>
 #include <stdlib.h>
 #include <rte_cycles.h>
@@ -11,7 +12,7 @@
 #include <inttypes.h>
 #include <rte_log.h>
 
-inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
+inline void IPTtlDecrementer::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_ = pp_config.num_egress_ports();
    instance_id_ = pp_config.instance_id();
@@ -27,70 +28,53 @@ inline void MacSwapper::Init(const PacketProcessorConfig& pp_config) {
    
    // Retrieve pp_params config
    auto pp_param_map = pp_config.pp_parameters();
-   auto it = pp_param_map.find( PacketProcessor::compLoad );
-   if ( it !=  pp_param_map.end() )
+   auto it = pp_param_map.find(PacketProcessor::compLoad);
+   if (it !=  pp_param_map.end())
       comp_load_ = it->second;
-
-   it = pp_param_map.find( PacketProcessor::shareCoreFlag );
+   it = pp_param_map.find(PacketProcessor::shareCoreFlag);
    if ( it != pp_param_map.end() )
       share_core_ = it->second;
-   
    it = pp_param_map.find( "debug" );
    if ( it !=  pp_param_map.end() )
       debug_ = it->second;
-
-   it = pp_param_map.find( PacketProcessor::yieldAfterBatch );
+   it = pp_param_map.find(PacketProcessor::yieldAfterBatch);
    if ( it !=  pp_param_map.end() )
       yield_after_kbatch_ = it->second;
-
-   it = pp_param_map.find( PacketProcessor::kNumPrefetch );
-   if ( it != pp_param_map.end() )
+   it = pp_param_map.find(PacketProcessor::kNumPrefetch);
+   if (it != pp_param_map.end())
       k_num_prefetch_ = it->second;
-	
-   it = pp_param_map.find( PacketProcessor::iterPayload );
-   if ( it != pp_param_map.end() )
+   it = pp_param_map.find(PacketProcessor::iterPayload);
+   if (it != pp_param_map.end())
       iter_payload_ = it->second;
-
-   RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);   
-
+   RTE_LOG(INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);   
    PacketProcessor::ConfigurePorts(pp_config, this);
 }
 
-inline void MacSwapper::Run() {
+inline void IPTtlDecrementer::Run() {
    rx_pkt_array_t rx_packets;
    register int16_t i = 0;
    struct ether_hdr* eth_hdr = nullptr;
+   struct ipv4_hdr* ip_hdr = nullptr;
    uint16_t num_rx = 0;
-   uint16_t num_tx = 0;
-   int res = 0;
+   int32_t res = 0;
    uint32_t hit_count = 1;
-   uint64_t start_ts, end_ts;
-   const static int ar_size = 100;
-   uint64_t diff_ts[ ar_size ];
-   uint32_t sample_counter = 0;
-   uint ts_idx = 0;
-
-   int kNumPrefetch = 8;
-   
-   while ( true ) {
-
+   register uint8_t current_tx_port_index = 0;
+   while (true) {
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-   /*   if(num_rx && instance_id_ == 6)
-		  printf("MAC SWAPPER %d NUM_RX IS : %d\n", instance_id_, num_rx);
-	  fflush(stdout);*/
+
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits and then yield
-      if ( share_core_ ) {
-         if ( num_rx == 0 || hit_count == yield_after_kbatch_ ) {
+      if (share_core_) {
+         if (unlikely(num_rx == 0 || hit_count == yield_after_kbatch_)) {
             hit_count = 1;
             res = sched_yield();
-            if ( unlikely( res == -1 ) ) {
+            if (unlikely(res == -1)) {
                std::cerr << "sched_yield failed! Exitting." << std::endl;
                return;
             }
          }
          else
-            hit_count++;
+            ++hit_count;
       }
 
       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
@@ -98,24 +82,20 @@ inline void MacSwapper::Run() {
       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         // Read num_bytes of tcp payload. add true add last to write to payload.
-         //this->iterate_payload( eth_hdr, iter_payload_, true );
+         ip_hdr = reinterpret_cast<ipv4_hdr*>(eth_hdr + 1);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+         --ip_hdr->time_to_live;
       }
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
-         // Read num_bytes of tcp payload. add true add last to write to payload.
-         //this->iterate_payload( eth_hdr, iter_payload_, true );
+         ip_hdr = reinterpret_cast<ipv4_hdr*>(eth_hdr + 1);
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
+         --ip_hdr->time_to_live;
       }
-
-      // Do some extra work
-      // (desterministic and not compiler optimized.)
-      imitate_processing( comp_load_ );
-
-      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
-   } 
+      this->egress_ports_[current_tx_port_index]->TxBurst(rx_packets, num_rx);
+      //current_tx_port_index = (current_tx_port_index + 1) % this->num_egress_ports_;
+  }
 }
 
-inline void MacSwapper::FlushState() {}
-inline void MacSwapper::RecoverState() {}
+inline void IPTtlDecrementer::FlushState() {}
+inline void IPTtlDecrementer::RecoverState() {}

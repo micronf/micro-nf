@@ -43,8 +43,9 @@ std::unique_ptr<PacketProcessor> PacketProcessorFactory::CreatePacketProcessor(
      pp_ptr = CreatePacketProcessorInternal<CountURL>();
   } else if (packet_processor_type == "MacRewriter") {
      pp_ptr = CreatePacketProcessorInternal<MacRewriter>();
+  } else if (packet_processor_type == "IPTtlDecrementer") {
+     pp_ptr = CreatePacketProcessorInternal<IPTtlDecrementer>();
   }
-   
   return std::move(pp_ptr);
 }
 
