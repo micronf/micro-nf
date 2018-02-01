@@ -17,6 +17,7 @@ inline void ValidateURL::Init(const PacketProcessorConfig& pp_config) {
   num_ingress_ports_ = pp_config.num_ingress_ports();
   num_egress_ports_ = pp_config.num_egress_ports();
   instance_id_ = pp_config.instance_id();
+  assert(num_egress_ports_ == 2);  
   for (int i = 0; i < num_ingress_ports_; ++i)
     ingress_ports_.emplace_back(nullptr);
   for (int j = 0; j < num_egress_ports_; ++j)
@@ -30,9 +31,10 @@ inline void ValidateURL::Init(const PacketProcessorConfig& pp_config) {
   _cpu_ctr.setfname("ValidateURL"+std::to_string(instance_id_));
 }
 
+// return true = good traffic
 inline bool
 ValidateURL::process(struct rte_mbuf *rx_packet) {
-	struct ether_hdr* eth = nullptr;
+    struct ether_hdr* eth = nullptr;
     struct ipv4_hdr* ip   = nullptr;
     struct tcp_hdr* tcp   = nullptr;
     char* payload         = nullptr;
@@ -72,38 +74,52 @@ ValidateURL::process(struct rte_mbuf *rx_packet) {
 
 void
 ValidateURL::Run() {
-    rx_pkt_array_t rx_packets;
-    uint16_t num_rx = 0;
-    uint16_t num_tx = 0;
-    register int i = 0;
+   rx_pkt_array_t rx_packets;
+   rx_pkt_array_t tx_packets;
+   rx_pkt_array_t tx_packets_1;
 
-    while (true) {
-       num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+   uint16_t num_rx = 0;
+   uint16_t num_tx = 0;
+   uint16_t num_tx_1 = 0;
+   register int i = 0;
 
-       /* ADDED FOR MEASURING CPU CYCLES */
-       //_cpu_ctr.update();
-       /*#################################*/
+   while (true) {
+      num_rx = ingress_ports_[0]->RxBurst(rx_packets);
+      num_tx = 0;
+      num_tx_1 = 0;
 
-       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
-          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));      
-       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
-          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));         
-          process(rx_packets[i]);
-       }
-       for ( ; i < num_rx; ++i) {
-          process(rx_packets[i]);
-       }
+      /* ADDED FOR MEASURING CPU CYCLES */
+      //_cpu_ctr.update();
+      /*#################################*/
 
-       /* added for counting cycles 
-          if(num_rx > 1) {
-          _cpu_ctr.addmany(num_rx);
-          } else {
-          _cpu_ctr.end_rdtsc();
-          }
-       ############################*/
+      for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));      
+      for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
+         rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i + k_num_prefetch_], void*));         
+         if ( process(rx_packets[i]) )
+            tx_packets[num_tx++] = rx_packets[i];
+         else
+            tx_packets_1[num_tx_1++] = rx_packets[i];
 
-       num_tx = egress_ports_[0]->TxBurst(rx_packets, num_rx);
-    }
+      }
+      for ( ; i < num_rx; ++i) {
+         if ( process(rx_packets[i]) )
+            tx_packets[num_tx++] = rx_packets[i];
+         else
+            tx_packets_1[num_tx_1++] = rx_packets[i];
+      }
+
+      /* added for counting cycles 
+         if(num_rx > 1) {
+         _cpu_ctr.addmany(num_rx);
+         } else {
+         _cpu_ctr.end_rdtsc();
+         }
+         ############################*/
+
+      num_tx = egress_ports_[0]->TxBurst(tx_packets, num_tx);
+      num_tx_1 = egress_ports_[1]->TxBurst(tx_packets_1, num_tx_1);
+   }
 }
 
 void ValidateURL::FlushState() {}
