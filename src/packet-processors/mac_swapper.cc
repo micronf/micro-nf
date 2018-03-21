@@ -72,9 +72,7 @@ inline void MacSwapper::Run() {
    int kNumPrefetch = 8;
    
    while ( true ) {
-
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
-
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits and then yield
       if ( share_core_ ) {
@@ -105,10 +103,11 @@ inline void MacSwapper::Run() {
          //this->iterate_payload( eth_hdr, iter_payload_, true );
          std::swap(eth_hdr->s_addr.addr_bytes, eth_hdr->d_addr.addr_bytes);
       }
-
-      // Do some extra work
-      // (desterministic and not compiler optimized.)
-      imitate_processing( comp_load_ );
+      
+      // Imitate the processing cost a batch of packets
+      if ( num_rx > 0 ){
+         imitate_processing( comp_load_ );
+      }
 
       this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
       for (i=0; i < num_egress_ports_; i++){
