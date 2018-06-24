@@ -64,13 +64,27 @@ class PacketProcessor {
   }
 
   void __inline__
-     imitate_processing_pktsize( int pkt_sz ) __attribute__((optimize("O0"))) {   
+     imitate_processing_pktsize( int sz ) __attribute__((optimize("O0"))) {   
      // imitate load per packet
-     int min_pktsz = 20;
-     int range1 = 1500 - min_pktsz;   // range of pkt size
-     int range2 = 30;     // obtained by try and error to avoid link bottleneck. 
-     int n = ( float ) ( pkt_sz - min_pktsz ) / range1 * range2; 
-     //RTE_LOG( INFO, MICRONF, "pktsz: %d.   loop size %d.\n", pkt_sz, n );
+     uint base = 3;
+
+     if ( comp_load_ )
+        base = comp_load_;
+
+     uint n = base;
+
+     if ( sz > 80 && sz <= 160 )
+        n = base * 2;
+     else if ( sz > 160 && sz <= 320 )
+        n = base * 3;
+     else if ( sz > 320 && sz <= 640 )
+        n = base * 4;
+     else if ( sz > 640 && sz <= 1280 )
+        n = base * 5;
+     else if ( sz > 1280 && sz <= 2560 )
+        n = base * 6;
+
+     //RTE_LOG( INFO, MICRONF, "pktsz: %d.   loop size %d.\n", sz, n );
    
      int volatile w, r, s;
      for ( int i = 0; i < n; i++ ) {

@@ -47,10 +47,6 @@ inline void ImitatorPktsize::Init(const PacketProcessorConfig& pp_config) {
    it = pp_param_map.find( PacketProcessor::kNumPrefetch );
    if ( it != pp_param_map.end() )
       k_num_prefetch_ = it->second;
-
-   it = pp_param_map.find( PacketProcessor::compLoad );
-   if ( it !=  pp_param_map.end() )
-      base_load_ = it->second;
 	
    RTE_LOG( INFO, PMD, "k_num_prefetch_ : %d\n", k_num_prefetch_);   
 

@@ -13,9 +13,6 @@ class ImitatorPktsize : public PacketProcessor {
   void FlushState() override;
   void RecoverState() override;
   virtual ~ImitatorPktsize() {}
-
- private:
-  int base_load_ = 5;
 };
 
 #endif
