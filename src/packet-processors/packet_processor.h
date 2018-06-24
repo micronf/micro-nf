@@ -12,6 +12,8 @@
 #include <rte_ip.h>
 #include <rte_tcp.h>
 #include <rte_ether.h>
+#include <rte_log.h>
+#define RTE_LOGTYPE_MICRONF RTE_LOGTYPE_USER1
 
 class PacketProcessor {
  public:
@@ -49,14 +51,31 @@ class PacketProcessor {
   void ConfigurePorts(const PacketProcessorConfig& pp_config, 
 			PacketProcessor* owner_pp );
 
-  // Imitating work load.
-  // void imitate_processing( int load ) __attribute__((optimize("O0"))); 
-  void __inline__ imitate_processing( int load ) __attribute__((optimize("O0"))){   
-     // Imitate extra processing
+  // Imitating work load according to configuration file.
+  void __inline__ 
+  imitate_processing( int load ) __attribute__((optimize("O0"))){   
+     // Imitate extra processing per batch
      int n = 1000 * load;
      for ( int i = 0; i < n; i++ ) {
         int volatile r = 0;
         int volatile s = 999;
+        r =  s * s;
+     }
+  }
+
+  void __inline__
+     imitate_processing_pktsize( int pkt_sz ) __attribute__((optimize("O0"))) {   
+     // imitate load per packet
+     int min_pktsz = 20;
+     int range1 = 1500 - min_pktsz;   // range of pkt size
+     int range2 = 30;     // obtained by try and error to avoid link bottleneck. 
+     int n = ( float ) ( pkt_sz - min_pktsz ) / range1 * range2; 
+     //RTE_LOG( INFO, MICRONF, "pktsz: %d.   loop size %d.\n", pkt_sz, n );
+   
+     int volatile w, r, s;
+     for ( int i = 0; i < n; i++ ) {
+        w = 0;
+        s = 999;
         r =  s * s;
      }
   }

@@ -11,6 +11,10 @@
 #include <iostream>
 #include <inttypes.h>
 
+#include <rte_log.h>
+#define RTE_LOGTYPE_UNF RTE_LOGTYPE_USER1
+
+
 inline void MacRewriter::Init(const PacketProcessorConfig& pp_config) {
    num_ingress_ports_ = pp_config.num_ingress_ports();
    num_egress_ports_ = pp_config.num_egress_ports();
@@ -72,15 +76,32 @@ inline void MacRewriter::Run() {
    rx_pkt_array_t rx_packets;
    register int16_t i = 0;
    struct ether_hdr* eth_hdr = nullptr;
-   uint16_t num_rx = 0;
+   uint16_t num_rx = 0, num_tx = 0;
    int res = 0;
    uint32_t counter = 1;
+   uint32_t hit_count = 1;
 
    uint64_t mac_addr = std::stoul( this->dest_mac_, nullptr, 16 );
       
    while ( true ) {
       
       num_rx = this->ingress_ports_[0]->RxBurst(rx_packets);
+
+      // If num_rx == 0 -> yield
+      // Otherwise, try again and until k consecutive hits and then yield
+      if ( share_core_ ) {
+         if ( num_rx == 0 || hit_count == yield_after_kbatch_ ) {
+            hit_count = 1;
+            res = sched_yield();
+            if ( unlikely( res == -1 ) ) {
+               std::cerr << "sched_yield failed! Exitting." << std::endl;
+               return;
+            }
+         }
+         else
+            hit_count++;
+      }
+
       for (i = 0; i < num_rx && i < k_num_prefetch_; ++i)
          rte_prefetch_non_temporal(rte_pktmbuf_mtod(rx_packets[i], void*));
       for (i = 0; i < num_rx - k_num_prefetch_; ++i) {
@@ -100,27 +121,17 @@ inline void MacRewriter::Run() {
       // (desterministic and not compiler optimized.) 
       imitate_processing( comp_load_ );
  
-      this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+      num_tx = this->egress_ports_[0]->TxBurst(rx_packets, num_rx);
+
+/*      if ( num_rx != 0 && num_tx < num_rx )
+         RTE_LOG( INFO, UNF, "%d -> num_rx: %d. num_tx: %d. ring_count: %d\n", this->instance_id_, num_rx, num_tx, ( (RteEgressPort*) this->egress_ports_[0].get() )->Count() );
+*/
       for (i=0; i < num_egress_ports_; i++){
          if (this->scale_bits->bits[this->instance_id_].test(i)){
             // TODO  Change port to smart port.
             this->scale_bits->bits[this->instance_id_].set(i, false);
          }
       }
-
-      // If num_rx == 0 -> yield
-      // Otherwise, try again and until k consecutive hits
-      if ( share_core_ ) {
-         if ( counter == yield_after_kbatch_ ) {
-            counter = 0;
-            res = sched_yield();
-            if ( unlikely( res == -1 ) ) {
-               std::cerr << "sched_yield failed! Exitting." << std::endl;
-               return;
-            }
-         }
-       }
-      counter++;          
    } 
 }
 

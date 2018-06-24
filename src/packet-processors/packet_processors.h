@@ -17,5 +17,6 @@
 #include "filt_udptcp.h"
 #include "mac_rewriter.h"
 #include "count_url.h"
+#include "imitator_pktsize.h"
 
 #endif  // _PACKET_PROCESSORS_H_
