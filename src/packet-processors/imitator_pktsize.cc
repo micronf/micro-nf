@@ -99,7 +99,10 @@ inline void ImitatorPktsize::Run() {
             //RTE_LOG( INFO, MICRONF, "total_len: %u\n", rte_be_to_cpu_16(ip_hdr->total_length ) );
             imitate_processing_pktsize( rte_be_to_cpu_16(ip_hdr->total_length ) );
          }
-
+         else {
+            //RTE_LOG( INFO, MICRONF, "using mbuf_len: %u\n", rte_pktmbuf_pkt_len( rx_packets[ i ]  ) );
+            imitate_processing_pktsize( rte_pktmbuf_pkt_len( rx_packets[ i ] ) );   
+         }
       }
       for ( ; i < num_rx; ++i) {
          eth_hdr = rte_pktmbuf_mtod(rx_packets[i], struct ether_hdr*);
@@ -107,6 +110,10 @@ inline void ImitatorPktsize::Run() {
          if ( rte_be_to_cpu_16(eth_hdr->ether_type ) == ETHER_TYPE_IPv4 ) {
             //RTE_LOG( INFO, MICRONF, "total_len: %u\n", rte_be_to_cpu_16(ip_hdr->total_length ) );
             imitate_processing_pktsize( rte_be_to_cpu_16(ip_hdr->total_length ) );
+         }
+         else {
+            //RTE_LOG( INFO, MICRONF, "using mbuf_len\n" );
+            imitate_processing_pktsize( rte_pktmbuf_pkt_len( rx_packets[ i ] ) );   
          }
 
       }
