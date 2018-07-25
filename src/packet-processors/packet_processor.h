@@ -66,7 +66,7 @@ class PacketProcessor {
   void __inline__
      imitate_processing_pktsize( int sz ) __attribute__((optimize("O0"))) {   
      // imitate load per packet
-     uint base = 3;
+     uint base = 5;
 
      if ( comp_load_ )
         base = comp_load_;

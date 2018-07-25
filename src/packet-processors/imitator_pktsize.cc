@@ -72,7 +72,7 @@ inline void ImitatorPktsize::Run() {
       // If num_rx == 0 -> yield
       // Otherwise, try again and until k consecutive hits and then yield
       if ( share_core_ ) {
-         if ( num_rx == 0 || hit_count == yield_after_kbatch_ ) {
+         if ( hit_count == yield_after_kbatch_ ) {
             hit_count = 1;
             res = sched_yield();
             if ( unlikely( res == -1 ) ) {
